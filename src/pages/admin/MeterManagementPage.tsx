@@ -56,16 +56,12 @@ export const MeterManagementPage: React.FC = () => {
     const fetchMeterData = async () => {
         setIsLoading(true);
         try {
-            // 1. Get all active rooms/contracts (or all rooms?)
-            // Usually we want active contracts. 
-            // Also need to handle cases where there is no active contract but we want to record meter? 
-            // For now, let's stick to active contracts + rooms.
-
+            // 1. Get all active rooms/contracts
             const { data: contracts, error: contractError } = await supabase
                 .from('contracts')
                 .select('*, room:rooms(*), tenant:tenants(*)')
                 .eq('status', ContractStatus.ACTIVE)
-                .order('room_id'); // We might want to order by room number logic
+                .order('room_id');
 
             if (contractError) throw contractError;
 
@@ -78,10 +74,20 @@ export const MeterManagementPage: React.FC = () => {
             if (historyError) throw historyError;
 
             // 3. Get history_meter for PREVIOUS month
-            // Calculate previous month string
             const [year, month] = selectedMonth.split('-').map(Number);
-            const prevDate = new Date(year, month - 2, 1); // month is 0-indexed in Date, so month-1 is current, month-2 is prev
-            const prevMonthStr = prevDate.toISOString().slice(0, 7);
+            // Calculate previous month correctly (handle year boundary)
+            let prevYear = year;
+            let prevMonth = month - 1;
+
+            if (prevMonth === 0) {
+                prevMonth = 12;
+                prevYear = year - 1;
+            }
+
+            const prevMonthStr = `${prevYear}-${String(prevMonth).padStart(2, '0')}`;
+
+            console.log('Selected month:', selectedMonth);
+            console.log('Previous month:', prevMonthStr);
 
             const { data: prevHistory, error: prevHistoryError } = await supabase
                 .from('history_meter')
@@ -89,6 +95,9 @@ export const MeterManagementPage: React.FC = () => {
                 .eq('month', prevMonthStr);
 
             if (prevHistoryError) throw prevHistoryError;
+
+            console.log('Current history records:', currentHistory?.length);
+            console.log('Previous history records:', prevHistory?.length);
 
             // Map data
             const mappedRows: MeterRow[] = contracts.map(contract => {
@@ -100,18 +109,16 @@ export const MeterManagementPage: React.FC = () => {
                 const currRecord = currentHistory?.find(h => h.room_id === roomId);
                 const prevRecord = prevHistory?.find(h => h.room_id === roomId);
 
-                // Determine Previous Values
+                // Determine Previous Values - ONLY from history_meter
                 let waterPrev = 0;
                 let elecPrev = 0;
 
                 if (prevRecord) {
-                    waterPrev = prevRecord.water_meter;
-                    elecPrev = prevRecord.electricity_meter;
+                    waterPrev = prevRecord.water_meter || 0;
+                    elecPrev = prevRecord.electricity_meter || 0;
+                    console.log(`Room ${room.room_number}: Found prev history - water=${waterPrev}, elec=${elecPrev}`);
                 } else {
-                    // Fallback to room's initial if not found in history? 
-                    // Or keep 0. Let's try room's current if strictly 0? 
-                    // Better to just show what we have.
-                    // If no previous history, maybe valid 0.
+                    console.log(`Room ${room.room_number}: No prev history for ${prevMonthStr}`);
                 }
 
                 return {
@@ -120,8 +127,8 @@ export const MeterManagementPage: React.FC = () => {
                     tenantName: tenant?.full_name || '-',
                     waterMeterPrev: waterPrev,
                     electricityMeterPrev: elecPrev,
-                    waterMeterCurr: currRecord ? currRecord.water_meter : waterPrev, // Default to prev if no curr
-                    electricityMeterCurr: currRecord ? currRecord.electricity_meter : elecPrev,
+                    waterMeterCurr: currRecord ? currRecord.water_meter : 0,
+                    electricityMeterCurr: currRecord ? currRecord.electricity_meter : 0,
                     hasHistory: !!currRecord
                 };
             });
