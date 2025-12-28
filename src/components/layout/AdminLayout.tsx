@@ -52,20 +52,20 @@ export const AdminLayout: React.FC = () => {
     };
 
     return (
-        <Flex minH="100vh" bg="gray.50">
+        <Flex minH="100vh" bg="bg.subtle">
             {/* Sidebar */}
             <Box
                 w="280px"
-                bg="white"
+                bg="bg.canvas"
                 borderRight="1px"
-                borderColor="gray.200"
+                borderColor="border.default"
                 position="fixed"
                 h="100vh"
                 overflowY="auto"
             >
                 <VStack gap={0} align="stretch" h="full">
                     {/* Logo */}
-                    <Box p={6} borderBottom="1px" borderColor="gray.200">
+                    <Box p={6} borderBottom="1px" borderColor="border.default">
                         <HStack justify="space-between" mb={1}>
                             <Heading
                                 size="xl"
@@ -78,7 +78,7 @@ export const AdminLayout: React.FC = () => {
                             </Heading>
                             <ColorModeButton />
                         </HStack>
-                        <Text color="gray.600" fontSize="sm">
+                        <Text color="fg.muted" fontSize="sm">
                             ระบบจัดการหอพัก
                         </Text>
                     </Box>
@@ -105,7 +105,7 @@ export const AdminLayout: React.FC = () => {
                     </VStack>
 
                     {/* User Menu */}
-                    <Box p={4} borderTop="1px" borderColor="gray.200">
+                    <Box p={4} borderTop="1px" borderColor="border.default">
                         <MenuRoot>
                             <MenuTrigger asChild>
                                 <Button

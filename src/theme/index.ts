@@ -84,6 +84,36 @@ const customConfig = defineConfig({
                     solid: { value: "{colors.gray.600}" },
                     contrast: { value: "white" },
                 },
+                bg: {
+                    canvas: {
+                        value: { base: "white", _dark: "gray.900" }
+                    },
+                    subtle: {
+                        value: { base: "gray.50", _dark: "gray.800" }
+                    },
+                    muted: {
+                        value: { base: "gray.100", _dark: "gray.700" }
+                    }
+                },
+                fg: {
+                    default: {
+                        value: { base: "gray.900", _dark: "gray.100" }
+                    },
+                    muted: {
+                        value: { base: "gray.600", _dark: "gray.400" }
+                    },
+                    subtle: {
+                        value: { base: "gray.500", _dark: "gray.500" }
+                    }
+                },
+                border: {
+                    default: {
+                        value: { base: "gray.200", _dark: "gray.700" }
+                    },
+                    muted: {
+                        value: { base: "gray.100", _dark: "gray.800" }
+                    }
+                }
             },
         },
     },

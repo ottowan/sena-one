@@ -46,13 +46,13 @@ export const TenantLayout: React.FC = () => {
     };
 
     return (
-        <Flex minH="100vh" bg="gray.50">
+        <Flex minH="100vh" bg="bg.subtle">
             {/* Sidebar */}
             <Box
                 w="250px"
-                bg="white"
+                bg="bg.canvas"
                 borderRight="1px solid"
-                borderColor="gray.200"
+                borderColor="border.default"
                 display={{ base: 'none', md: 'block' }}
                 position="fixed"
                 h="100vh"

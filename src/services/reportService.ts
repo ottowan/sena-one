@@ -178,6 +178,7 @@ export const reportService = {
         const totalRooms = rooms?.length || 0;
         const availableRooms = rooms?.filter(r => r.status === 'available').length || 0;
         const occupiedRooms = rooms?.filter(r => r.status === 'occupied').length || 0;
+        const maintenanceRooms = rooms?.filter(r => r.status === 'maintenance').length || 0;
 
         // 2. Revenue (Paid Invoices in Current Month)
         const { data: paidInvoices } = await supabase
@@ -213,6 +214,7 @@ export const reportService = {
             totalRooms,
             availableRooms,
             occupiedRooms,
+            maintenanceRooms,
             monthlyRevenue,
             overduePayments: overdueCount || 0,
             activeTenants: activeTenants || 0,

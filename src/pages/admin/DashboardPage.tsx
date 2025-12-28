@@ -218,6 +218,13 @@ export const DashboardPage: React.FC = () => {
                             </HStack>
                             <HStack justify="space-between">
                                 <HStack gap={2}>
+                                    <Box w={3} h={3} borderRadius="full" bg="warning.500" />
+                                    <Text>ซ่อมบำรุง</Text>
+                                </HStack>
+                                <Text fontWeight="bold">{stats.maintenanceRooms || 0} ห้อง</Text>
+                            </HStack>
+                            <HStack justify="space-between">
+                                <HStack gap={2}>
                                     <Box w={3} h={3} borderRadius="full" bg="gray.300" />
                                     <Text>ห้องทั้งหมด</Text>
                                 </HStack>
