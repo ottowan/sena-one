@@ -3,12 +3,16 @@ import { Table, Badge, HStack, IconButton, Icon } from '@chakra-ui/react';
 import { LuEye, LuTrash2, LuDownload } from 'react-icons/lu';
 import type { Invoice } from '../../types';
 import { Tooltip } from '../ui/tooltip';
+import { Checkbox } from '../ui/checkbox';
 
 interface InvoiceTableProps {
     invoices: Invoice[];
     onView: (invoice: Invoice) => void;
     onDelete?: (invoice: Invoice) => void;
     onExportRoom?: (roomNumber: string) => void;
+    selectedInvoices?: string[];
+    onSelectInvoice?: (id: string) => void;
+    onSelectAll?: () => void;
 }
 
 const getStatusColor = (status: string): string => {
@@ -46,11 +50,22 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({
     onView,
     onDelete,
     onExportRoom,
+    selectedInvoices = [],
+    onSelectInvoice,
+    onSelectAll,
 }) => {
     return (
         <Table.Root size="sm" variant="outline">
             <Table.Header>
                 <Table.Row>
+                    {onSelectAll && (
+                        <Table.ColumnHeader width="50px">
+                            <Checkbox
+                                checked={selectedInvoices.length === invoices.length && invoices.length > 0}
+                                onCheckedChange={onSelectAll}
+                            />
+                        </Table.ColumnHeader>
+                    )}
                     <Table.ColumnHeader>เดือน/ปี</Table.ColumnHeader>
                     <Table.ColumnHeader>ผู้เช่า</Table.ColumnHeader>
                     <Table.ColumnHeader>ห้อง</Table.ColumnHeader>
@@ -64,6 +79,14 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({
             <Table.Body>
                 {invoices.map((invoice) => (
                     <Table.Row key={invoice.id}>
+                        {onSelectInvoice && (
+                            <Table.Cell>
+                                <Checkbox
+                                    checked={selectedInvoices.includes(invoice.id)}
+                                    onCheckedChange={() => onSelectInvoice(invoice.id)}
+                                />
+                            </Table.Cell>
+                        )}
                         <Table.Cell fontWeight="medium">
                             {new Date(invoice.billing_month).toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })}
                         </Table.Cell>

@@ -37,6 +37,8 @@ export const InvoicesPage: React.FC = () => {
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
     const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
     const [viewMode, setViewMode] = useState<ViewMode>('table');
+    const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const { data: invoices, isLoading } = useInvoices({
         searchTerm: searchTerm || undefined,
@@ -54,6 +56,49 @@ export const InvoicesPage: React.FC = () => {
     const handleDelete = async (invoice: Invoice) => {
         if (confirm(`ต้องการลบใบแจ้งหนี้ของเดือน ${new Date(invoice.billing_month).toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })} ของ ${invoice.tenant?.full_name} ใช่หรือไม่?`)) {
             deleteInvoice.mutate(invoice.id);
+        }
+    };
+
+    const handleSelectAll = () => {
+        if (selectedInvoices.length === invoices?.length) {
+            setSelectedInvoices([]);
+        } else {
+            setSelectedInvoices(invoices?.map(inv => inv.id) || []);
+        }
+    };
+
+    const handleSelectInvoice = (id: string) => {
+        setSelectedInvoices(prev =>
+            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+        );
+    };
+
+    const handleDeleteSelected = async () => {
+        if (selectedInvoices.length === 0) return;
+
+        if (confirm(`ต้องการลบใบแจ้งหนี้ ${selectedInvoices.length} รายการ ใช่หรือไม่?`)) {
+            try {
+                setIsDeleting(true);
+                const { invoiceService } = await import('../../services/invoiceService');
+                await invoiceService.deleteAllInvoices(selectedInvoices);
+
+                toaster.create({
+                    title: 'ลบสำเร็จ',
+                    description: `ลบใบแจ้งหนี้ ${selectedInvoices.length} รายการแล้ว`,
+                    type: 'success',
+                });
+
+                setSelectedInvoices([]);
+                window.location.reload(); // Refresh to update list
+            } catch (error: any) {
+                toaster.create({
+                    title: 'เกิดข้อผิดพลาด',
+                    description: error.message || 'ไม่สามารถลบใบแจ้งหนี้ได้',
+                    type: 'error',
+                });
+            } finally {
+                setIsDeleting(false);
+            }
         }
     };
 
@@ -135,6 +180,16 @@ export const InvoicesPage: React.FC = () => {
                         </Text>
                     </Box>
                     <HStack>
+                        {selectedInvoices.length > 0 && (
+                            <Button
+                                colorPalette="red"
+                                variant="solid"
+                                onClick={handleDeleteSelected}
+                                loading={isDeleting}
+                            >
+                                ลบที่เลือก ({selectedInvoices.length})
+                            </Button>
+                        )}
                         <Button
                             variant="outline"
                             onClick={handleExport}
@@ -233,6 +288,9 @@ export const InvoicesPage: React.FC = () => {
                                 onView={handleView}
                                 onDelete={handleDelete}
                                 onExportRoom={handleExportByRoom}
+                                selectedInvoices={selectedInvoices}
+                                onSelectInvoice={handleSelectInvoice}
+                                onSelectAll={handleSelectAll}
                             />
                         ) : (
                             <Grid

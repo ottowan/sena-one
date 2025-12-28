@@ -219,6 +219,16 @@ export const invoiceService = {
         if (error) throw error;
     },
 
+    // Delete multiple invoices
+    deleteAllInvoices: async (ids: string[]): Promise<void> => {
+        const { error } = await supabase
+            .from('invoices')
+            .delete()
+            .in('id', ids);
+
+        if (error) throw error;
+    },
+
     // Get last meter readings for a room
     getLastMeterReading: async (roomId: string): Promise<{ water: number; electricity: number }> => {
         // 1. Try to fetch from history_meter
