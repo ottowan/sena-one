@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex, VStack, Text, Button, Container, Icon } from '@chakra-ui/react';
+import { Box, Flex, VStack, Text, Button, Container, Icon, HStack } from '@chakra-ui/react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
     LuLayoutDashboard,
@@ -10,6 +10,7 @@ import {
 } from 'react-icons/lu';
 import { useAuth } from '../../contexts/AuthContext';
 import { Toaster, toaster } from '../ui/toaster';
+import { ColorModeButton } from '../ui/color-mode';
 
 const SidebarItem = ({ icon, label, to }: { icon: any; label: string; to: string }) => {
     return (
@@ -58,10 +59,13 @@ export const TenantLayout: React.FC = () => {
             >
                 <VStack h="full" p={4} justify="space-between" align="stretch">
                     <Box>
-                        <Flex align="center" gap={3} mb={8} px={2}>
-                            <Box w={8} h={8} bg="brand.500" borderRadius="md" />
-                            <Text fontSize="xl" fontWeight="bold">Sena-One</Text>
-                        </Flex>
+                        <HStack justify="space-between" mb={8} px={2}>
+                            <Flex align="center" gap={3}>
+                                <Box w={8} h={8} bg="brand.500" borderRadius="md" />
+                                <Text fontSize="xl" fontWeight="bold">Sena-One</Text>
+                            </Flex>
+                            <ColorModeButton />
+                        </HStack>
 
                         <VStack align="stretch" gap={1}>
                             <Text fontSize="xs" color="gray.500" px={2} mb={2} fontWeight="bold">MENU</Text>

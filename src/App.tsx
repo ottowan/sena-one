@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ChakraProvider } from '@chakra-ui/react';
+import { ColorModeProvider } from './components/ui/color-mode';
 import { system } from './theme';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Toaster } from './components/ui/toaster';
@@ -62,59 +63,61 @@ const RootRedirect = () => {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider value={system}>
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Root */}
-              <Route path="/" element={<RootRedirect />} />
+      <ColorModeProvider>
+        <ChakraProvider value={system}>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Root */}
+                <Route path="/" element={<RootRedirect />} />
 
-              {/* Auth Routes */}
-              <Route path="/login" element={<LoginPage />} />
+                {/* Auth Routes */}
+                <Route path="/login" element={<LoginPage />} />
 
-              {/* Admin Routes */}
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.OWNER]}>
-                    <AdminLayout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<DashboardPage />} />
-                <Route path="users" element={<UserManagementPage />} />
-                <Route path="rooms" element={<RoomsPage />} />
-                <Route path="tenants" element={<TenantsPage />} />
-                <Route path="contracts" element={<ContractsPage />} />
-                <Route path="invoices" element={<InvoicesPage />} />
-                <Route path="maintenance" element={<MaintenancePage />} />
-                <Route path="reports" element={<ReportsPage />} />
-                <Route path="settings" element={<SettingsPage />} />
-                <Route path="meters" element={<MeterManagementPage />} />
-              </Route>
+                {/* Admin Routes */}
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.OWNER]}>
+                      <AdminLayout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<DashboardPage />} />
+                  <Route path="users" element={<UserManagementPage />} />
+                  <Route path="rooms" element={<RoomsPage />} />
+                  <Route path="tenants" element={<TenantsPage />} />
+                  <Route path="contracts" element={<ContractsPage />} />
+                  <Route path="invoices" element={<InvoicesPage />} />
+                  <Route path="maintenance" element={<MaintenancePage />} />
+                  <Route path="reports" element={<ReportsPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                  <Route path="meters" element={<MeterManagementPage />} />
+                </Route>
 
-              {/* Tenant Routes */}
-              <Route
-                path="/tenant"
-                element={
-                  <ProtectedRoute allowedRoles={[UserRole.TENANT]}>
-                    <TenantLayout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<TenantDashboardPage />} />
-                <Route path="bills" element={<MyBillsPage />} />
-                <Route path="maintenance" element={<MyMaintenancePage />} />
-                <Route path="contract" element={<MyContractPage />} />
-              </Route>
+                {/* Tenant Routes */}
+                <Route
+                  path="/tenant"
+                  element={
+                    <ProtectedRoute allowedRoles={[UserRole.TENANT]}>
+                      <TenantLayout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<TenantDashboardPage />} />
+                  <Route path="bills" element={<MyBillsPage />} />
+                  <Route path="maintenance" element={<MyMaintenancePage />} />
+                  <Route path="contract" element={<MyContractPage />} />
+                </Route>
 
-              {/* 404 */}
-              <Route path="*" element={<div>404 - ไม่พบหน้าที่คุณต้องการ</div>} />
-            </Routes>
-          </BrowserRouter>
-          <Toaster />
-        </AuthProvider>
-      </ChakraProvider>
+                {/* 404 */}
+                <Route path="*" element={<div>404 - ไม่พบหน้าที่คุณต้องการ</div>} />
+              </Routes>
+            </BrowserRouter>
+            <Toaster />
+          </AuthProvider>
+        </ChakraProvider>
+      </ColorModeProvider>
     </QueryClientProvider>
   );
 }

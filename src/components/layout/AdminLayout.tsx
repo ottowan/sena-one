@@ -20,6 +20,7 @@ import {
     MenuTrigger,
 } from '../../components/ui/menu';
 import { Button } from '../ui/button';
+import { ColorModeButton } from '../ui/color-mode';
 import { LuLayoutDashboard, LuDoorOpen, LuUsers, LuFileText, LuDollarSign, LuWrench, LuClipboardList, LuLogOut, LuUser, LuSettings, LuShield, LuActivity } from 'react-icons/lu';
 
 interface NavItem {
@@ -65,16 +66,19 @@ export const AdminLayout: React.FC = () => {
                 <VStack gap={0} align="stretch" h="full">
                     {/* Logo */}
                     <Box p={6} borderBottom="1px" borderColor="gray.200">
-                        <Heading
-                            size="xl"
-                            bgGradient="to-r"
-                            gradientFrom="brand.500"
-                            gradientTo="brand.700"
-                            bgClip="text"
-                        >
-                            Sena-One
-                        </Heading>
-                        <Text color="gray.600" fontSize="sm" mt={1}>
+                        <HStack justify="space-between" mb={1}>
+                            <Heading
+                                size="xl"
+                                bgGradient="to-r"
+                                gradientFrom="brand.500"
+                                gradientTo="brand.700"
+                                bgClip="text"
+                            >
+                                Sena-One
+                            </Heading>
+                            <ColorModeButton />
+                        </HStack>
+                        <Text color="gray.600" fontSize="sm">
                             ระบบจัดการหอพัก
                         </Text>
                     </Box>
