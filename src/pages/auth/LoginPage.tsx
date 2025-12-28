@@ -24,7 +24,7 @@ export const LoginPage: React.FC = () => {
     const location = useLocation();
     const { signIn, profile } = useAuth();
 
-    const [phone, setPhone] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -34,7 +34,7 @@ export const LoginPage: React.FC = () => {
         e.preventDefault();
         setLoading(true);
 
-        const { error } = await signIn(phone, password);
+        const { error } = await signIn(username, password);
 
         if (error) {
             toaster.create({
@@ -98,12 +98,12 @@ export const LoginPage: React.FC = () => {
                                         เข้าสู่ระบบ
                                     </Heading>
 
-                                    <Field label="เบอร์โทรศัพท์" required>
+                                    <Field label="ชื่อผู้ใช้" required>
                                         <Input
                                             type="text"
-                                            placeholder="0812345678"
-                                            value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
+                                            placeholder="sena301"
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
                                             size="lg"
                                             required
                                         />

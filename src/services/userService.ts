@@ -12,78 +12,34 @@ export const userService = {
     // that doesn't persist the session to the same storage key or uses memory storage.
 
     createUserWithPhone: async (phone: string, password: string, fullName: string, role: UserRole) => {
-        // สร้าง email อัตโนมัติจากเบอร์โทร
-        const email = `${phone}@senaone.local`;
-        
         // ตรวจสอบว่าเบอร์โทรซ้ำหรือไม่
-        const { data: existingProfile } = await supabase
-            .from('profiles')
+        const { data: existingUser } = await supabase
+            .from('users')
             .select('phone')
             .eq('phone', phone)
             .single();
-            
-        if (existingProfile) {
+
+        if (existingUser) {
             throw new Error('เบอร์โทรศัพท์นี้ถูกใช้งานแล้ว');
         }
 
-        // สร้าง temporary client เพื่อไม่ให้กระทบ session ปัจจุบัน
-        const tempClient = createClient(supabaseUrl, supabaseAnonKey, {
-            auth: {
-                persistSession: false,
-                autoRefreshToken: false,
-                detectSessionInUrl: false
-            }
-        });
-
-        // 1. Sign Up ผู้ใช้ใหม่ (auto-confirmed)
-        const { data: authData, error: authError } = await tempClient.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    full_name: fullName,
-                    phone: phone,
-                    role: role
-                },
-                emailRedirectTo: undefined // ไม่ต้องส่ง confirmation email
-            }
-        });
-
-        if (authError) throw authError;
-        if (!authData.user) throw new Error('ไม่สามารถสร้างผู้ใช้ได้');
-
-        const userId = authData.user.id;
-        
-        // หากผู้ใช้ยังไม่ได้ confirmed ให้ลอง confirm (อาจต้องใช้ service role)
-        if (!authData.user.email_confirmed_at) {
-            try {
-                // ลองอัปเดท confirmation status ผ่าน profiles trigger
-                console.log('User created but not confirmed automatically, will be handled by trigger');
-            } catch (error) {
-                console.warn('Could not auto-confirm user:', error);
-            }
-        }
-
-        // 2. อัปเดท profile ด้วยข้อมูลเพิ่มเติม
-        const { error: profileError } = await supabase
-            .from('profiles')
-            .upsert({
-                id: userId,
-                email: email, // เก็บไว้เพื่อความ backward compatible
-                full_name: fullName,
-                phone: phone,
-                role: role,
-                updated_at: new Date().toISOString()
+        // สร้างผู้ใช้ใหม่ผ่าน RPC function
+        const { data, error } = await supabase
+            .rpc('create_user', {
+                phone_input: phone,
+                password_input: password,
+                full_name_input: fullName,
+                role_input: role
             });
 
-        if (profileError) {
-            console.error('Profile update error:', profileError);
-            throw profileError;
+        if (error) {
+            console.error('Create user error:', error);
+            throw error;
         }
 
-        return authData.user;
+        return { id: data };
     },
-    
+
     // เก็บฟังก์ชันเก่าไว้เพื่อ backward compatibility
     createUser: async (email: string, password: string, fullName: string, phone: string, role: UserRole) => {
         // Create a temporary client with no persistence to avoid overwriting Admin's session
@@ -160,14 +116,14 @@ export const userService = {
         // เนื่องจากต้องใช้ service role key ที่ไม่ควรเปิดเผยใน client
         // จึงจำลองอัปเดทผ่าน profile ให้ผู้ใช้รีเซ็ตเอง
         const tempPassword = `temp-${Date.now()}`;
-        
+
         // อัปเดทข้อมูลใน profiles เพื่อแจ้งผู้ใช้ว่ารหัสผ่านถูกเปลี่ยน
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('phone, full_name')
             .eq('id', userId)
             .single();
-            
+
         if (profileError || !profile) {
             throw new Error('ไม่พบข้อมูลผู้ใช้');
         }
@@ -183,7 +139,7 @@ export const userService = {
             .eq('id', userId);
 
         if (updateError) throw updateError;
-        
+
         return {
             message: `รหัสผ่านใหม่คือ: ${newPassword}`,
             phone: profile.phone,

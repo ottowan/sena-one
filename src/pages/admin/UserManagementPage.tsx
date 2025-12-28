@@ -58,7 +58,7 @@ export const UserManagementPage: React.FC = () => {
         try {
             setLoading(true);
             const { data, error } = await supabase
-                .from('profiles')
+                .from('users')
                 .select('*')
                 .order('created_at', { ascending: false });
 
@@ -330,6 +330,7 @@ export const UserManagementPage: React.FC = () => {
                             <Table.Header>
                                 <Table.Row>
                                     <Table.ColumnHeader>ชื่อ-นามสกุล</Table.ColumnHeader>
+                                    <Table.ColumnHeader>ชื่อผู้ใช้</Table.ColumnHeader>
                                     <Table.ColumnHeader>เบอร์โทร</Table.ColumnHeader>
                                     <Table.ColumnHeader>บทบาท</Table.ColumnHeader>
                                     <Table.ColumnHeader>วันที่สมัคร</Table.ColumnHeader>
@@ -348,6 +349,11 @@ export const UserManagementPage: React.FC = () => {
                                                     ID: {user.id.slice(0, 8)}...
                                                 </Text>
                                             </VStack>
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <Text fontWeight="medium" color="brand.600">
+                                                {(user as any).username || '-'}
+                                            </Text>
                                         </Table.Cell>
                                         <Table.Cell>{user.phone || '-'}</Table.Cell>
                                         <Table.Cell>
