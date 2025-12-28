@@ -99,6 +99,16 @@ export const MeterManagementPage: React.FC = () => {
             console.log('Current history records:', currentHistory?.length);
             console.log('Previous history records:', prevHistory?.length);
 
+            // Fallback: Get invoices from previous month if no history_meter data
+            const { data: prevMonthInvoices } = await supabase
+                .from('invoices')
+                .select('room_id, water_meter_current, electricity_meter_current')
+                .gte('billing_month', prevMonthStr)
+                .lt('billing_month', selectedMonth)
+                .order('billing_month', { ascending: false });
+
+            console.log('Previous month invoices:', prevMonthInvoices?.length);
+
             // Map data
             const mappedRows: MeterRow[] = contracts.map(contract => {
                 const room = contract.room;
@@ -109,7 +119,7 @@ export const MeterManagementPage: React.FC = () => {
                 const currRecord = currentHistory?.find(h => h.room_id === roomId);
                 const prevRecord = prevHistory?.find(h => h.room_id === roomId);
 
-                // Determine Previous Values - ONLY from history_meter
+                // Determine Previous Values - Try history_meter first, then invoices
                 let waterPrev = 0;
                 let elecPrev = 0;
 
@@ -118,7 +128,15 @@ export const MeterManagementPage: React.FC = () => {
                     elecPrev = prevRecord.electricity_meter || 0;
                     console.log(`Room ${room.room_number}: Found prev history - water=${waterPrev}, elec=${elecPrev}`);
                 } else {
-                    console.log(`Room ${room.room_number}: No prev history for ${prevMonthStr}`);
+                    // Fallback to invoice from previous month
+                    const prevInvoice = prevMonthInvoices?.find(inv => inv.room_id === roomId);
+                    if (prevInvoice) {
+                        waterPrev = prevInvoice.water_meter_current || 0;
+                        elecPrev = prevInvoice.electricity_meter_current || 0;
+                        console.log(`Room ${room.room_number}: Using prev invoice - water=${waterPrev}, elec=${elecPrev}`);
+                    } else {
+                        console.log(`Room ${room.room_number}: No prev data for ${prevMonthStr}`);
+                    }
                 }
 
                 return {
