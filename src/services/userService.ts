@@ -112,39 +112,23 @@ export const userService = {
     },
 
     resetUserPassword: async (userId: string, newPassword: string) => {
-        // ในระบบที่ไม่ใช้ email Admin สามารถรีเซ็ตรหัสผ่านโดยตรงได้
-        // เนื่องจากต้องใช้ service role key ที่ไม่ควรเปิดเผยใน client
-        // จึงจำลองอัปเดทผ่าน profile ให้ผู้ใช้รีเซ็ตเอง
-        const tempPassword = `temp-${Date.now()}`;
+        try {
+            const { data, error } = await supabase
+                .rpc('update_user_password', {
+                    user_id_input: userId,
+                    new_password_input: newPassword
+                });
 
-        // อัปเดทข้อมูลใน profiles เพื่อแจ้งผู้ใช้ว่ารหัสผ่านถูกเปลี่ยน
-        const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('phone, full_name')
-            .eq('id', userId)
-            .single();
+            if (error) throw error;
 
-        if (profileError || !profile) {
-            throw new Error('ไม่พบข้อมูลผู้ใช้');
+            return {
+                message: `รหัสผ่านใหม่คือ: ${newPassword}`,
+                tempPassword: newPassword
+            };
+        } catch (error: any) {
+            console.error('Update password error:', error);
+            throw new Error('ไม่สามารถเปลี่ยนรหัสผ่านได้');
         }
-
-        // เก็บรหัสผ่านใหม่ไว้ใน profiles สำหรับผู้ใช้ที่ยังไม่ได้ตั้งรหัสผ่าน
-        const { error: updateError } = await supabase
-            .from('profiles')
-            .update({
-                temp_password: newPassword,
-                password_reset_required: true,
-                updated_at: new Date().toISOString()
-            })
-            .eq('id', userId);
-
-        if (updateError) throw updateError;
-
-        return {
-            message: `รหัสผ่านใหม่คือ: ${newPassword}`,
-            phone: profile.phone,
-            tempPassword: newPassword
-        };
     },
 
     deleteUser: async (id: string) => {
