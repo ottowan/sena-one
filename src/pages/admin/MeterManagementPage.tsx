@@ -29,6 +29,7 @@ interface MeterRow {
     roomId: string;
     roomNumber: string;
     tenantName: string;
+    statusColor?: string;
     waterMeterPrev: number;
     waterMeterCurr: number;
     electricityMeterPrev: number;
@@ -56,16 +57,23 @@ export const MeterManagementPage: React.FC = () => {
     const fetchMeterData = async () => {
         setIsLoading(true);
         try {
-            // 1. Get all active rooms/contracts
+            // 1. Get ALL Rooms (to include Vacant, Maintenance, etc.)
+            const { data: allRooms, error: roomError } = await supabase
+                .from('rooms')
+                .select('*')
+                .order('room_number'); // Use room_number for natural sorting if possible, but it's string.
+
+            if (roomError) throw roomError;
+
+            // 2. Get active contracts to map tenants
             const { data: contracts, error: contractError } = await supabase
                 .from('contracts')
-                .select('*, room:rooms(*), tenant:tenants(*)')
-                .eq('status', ContractStatus.ACTIVE)
-                .order('room_id');
+                .select('*, tenant:tenants(*)')
+                .eq('status', ContractStatus.ACTIVE);
 
             if (contractError) throw contractError;
 
-            // 2. Get history_meter for SELECTED month
+            // 3. Get history_meter for SELECTED month
             const { data: currentHistory, error: historyError } = await supabase
                 .from('history_meter')
                 .select('*')
@@ -73,79 +81,98 @@ export const MeterManagementPage: React.FC = () => {
 
             if (historyError) throw historyError;
 
-            // 3. Get history_meter for PREVIOUS month
+            // 4. Get history_meter for PREVIOUS month (Logic matched with other fix)
             const [year, month] = selectedMonth.split('-').map(Number);
-            // Calculate previous month correctly (handle year boundary)
             let prevYear = year;
             let prevMonth = month - 1;
-
             if (prevMonth === 0) {
                 prevMonth = 12;
-                prevYear = year - 1;
+                prevYear = prevYear - 1;
             }
-
             const prevMonthStr = `${prevYear}-${String(prevMonth).padStart(2, '0')}`;
 
-            console.log('Selected month:', selectedMonth);
-            console.log('Previous month:', prevMonthStr);
-
+            // Flexible search for prev month (TEXT column)
             const { data: prevHistory, error: prevHistoryError } = await supabase
                 .from('history_meter')
                 .select('*')
-                .eq('month', prevMonthStr);
+                .ilike('month', `${prevMonthStr}%`);
 
             if (prevHistoryError) throw prevHistoryError;
 
-            console.log('Current history records:', currentHistory?.length);
-            console.log('Previous history records:', prevHistory?.length);
-
-            // Fallback: Get invoices from previous month if no history_meter data
+            // 5. Fallback: Get invoices for PREVIOUS month
+            // Note: Invoices are tied to contracts. Vacant rooms won't have invoices.
+            // But we still fetch them for occupied rooms fallback.
             const { data: prevMonthInvoices } = await supabase
                 .from('invoices')
                 .select('room_id, water_meter_current, electricity_meter_current')
-                .gte('billing_month', prevMonthStr)
-                .lt('billing_month', selectedMonth)
+                .gte('billing_month', `${prevMonthStr}-01`)
+                .lt('billing_month', `${selectedMonth}-01`)
                 .order('billing_month', { ascending: false });
 
-            console.log('Previous month invoices:', prevMonthInvoices?.length);
-
             // Map data
-            const mappedRows: MeterRow[] = contracts.map(contract => {
-                const room = contract.room;
-                const tenant = contract.tenant;
+            const mappedRows: MeterRow[] = (allRooms || []).map(room => {
                 const roomId = room.id;
+
+                // Find Active Contract/Tenant
+                const activeContract = contracts?.find(c => c.room_id === roomId);
+                let tenantName = '-';
+                let statusColor = undefined;
+
+                if (activeContract && activeContract.tenant) {
+                    tenantName = activeContract.tenant.full_name;
+                } else {
+                    // Use Room Status
+                    if (room.status === 'maintenance') {
+                        tenantName = 'ห้องชำรุด/ซ่อมบำรุง';
+                        statusColor = 'red.600';
+                    }
+                    else if (room.status === 'available') {
+                        tenantName = 'ห้องว่าง';
+                        statusColor = 'green.600';
+                    }
+                    else if (room.status === 'reserved') tenantName = 'จองแล้ว';
+                    else tenantName = `สถานะ: ${room.status}`;
+                }
 
                 // Find in histories
                 const currRecord = currentHistory?.find(h => h.room_id === roomId);
                 const prevRecord = prevHistory?.find(h => h.room_id === roomId);
 
-                // Determine Previous Values - Try history_meter first, then invoices
+                // Determine Previous Values
                 let waterPrev = 0;
                 let elecPrev = 0;
 
                 if (prevRecord) {
                     waterPrev = prevRecord.water_meter || 0;
                     elecPrev = prevRecord.electricity_meter || 0;
-                    console.log(`Room ${room.room_number}: Found prev history - water=${waterPrev}, elec=${elecPrev}`);
                 } else {
-                    // Fallback to invoice from previous month
+                    // Fallback to invoice (only works if room was occupied)
                     const prevInvoice = prevMonthInvoices?.find(inv => inv.room_id === roomId);
                     if (prevInvoice) {
                         waterPrev = prevInvoice.water_meter_current || 0;
                         elecPrev = prevInvoice.electricity_meter_current || 0;
-                        console.log(`Room ${room.room_number}: Using prev invoice - water=${waterPrev}, elec=${elecPrev}`);
                     } else {
-                        console.log(`Room ${room.room_number}: No prev data for ${prevMonthStr}`);
+                        // If no history and no invoice (e.g. new vacant room or no data yet),
+                        // maybe use room's initial meter?
+                        // For safety, let's start at 0 or maintain 0.
+                        // Or check room attributes if they have 'current_meter'.
+                        // Current schema has 'current_water_meter' on rooms table but it might be stale?
+                        // Let's use it as last resort if we want 'last known' state.
+                        waterPrev = room.current_water_meter || 0;
+                        elecPrev = room.current_electricity_meter || 0;
                     }
                 }
 
                 return {
                     roomId: roomId,
-                    roomNumber: room?.room_number || '',
-                    tenantName: tenant?.full_name || '-',
+                    roomNumber: room.room_number,
+                    tenantName: tenantName,
+                    statusColor: statusColor,
                     waterMeterPrev: waterPrev,
                     electricityMeterPrev: elecPrev,
-                    waterMeterCurr: currRecord ? currRecord.water_meter : 0,
+                    waterMeterCurr: currRecord ? currRecord.water_meter : 0, // Default to 0 if not entered? Or maybe waterPrev?
+                    // User usually wants to key in data. 0 is fine as visual cue or maybe empty string in UI?
+                    // But interface says number.
                     electricityMeterCurr: currRecord ? currRecord.electricity_meter : 0,
                     hasHistory: !!currRecord
                 };
@@ -156,7 +183,7 @@ export const MeterManagementPage: React.FC = () => {
 
             setRows(mappedRows);
 
-            // Create options for Select using createListCollection
+            // Create options for Select
             const options = mappedRows.map(r => ({ label: `ห้อง ${r.roomNumber}`, value: r.roomId }));
             setRoomOptions(createListCollection({ items: options }));
 
@@ -287,7 +314,9 @@ export const MeterManagementPage: React.FC = () => {
                                     return (
                                         <Table.Row key={row.roomId}>
                                             <Table.Cell fontWeight="bold">{row.roomNumber}</Table.Cell>
-                                            <Table.Cell>{row.tenantName}</Table.Cell>
+                                            <Table.Cell color={row.statusColor} fontWeight={row.statusColor ? 'bold' : 'normal'}>
+                                                {row.tenantName}
+                                            </Table.Cell>
 
                                             {/* Water */}
                                             <Table.Cell textAlign="right" color="gray.500">

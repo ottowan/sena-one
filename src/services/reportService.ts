@@ -102,25 +102,26 @@ export const reportService = {
 
     // Get utility usage report
     getUtilityReport: async (month: string): Promise<any[]> => {
-        // We can fetch from history_meter regarding the month
-        // Join with room and tenant (via active contract?)
-        // history_meter has room_id.
-        // We need tenant info. Tenant info is in contracts.
-        // Complex join. easier to fetch history_meter and then map rooms/tenants.
+        // 1. Fetch ALL Rooms (to include Vacant, Maintenance)
+        const { data: allRooms, error: roomError } = await supabase
+            .from('rooms')
+            .select('*')
+            .order('room_number');
 
-        // 1. Fetch history_meter for the month
+        if (roomError) throw roomError;
+
+        // 2. Fetch history_meter for SELECTED month
+        // We use month string query since column is TEXT YYYY-MM
         const { data: meters, error: meterError } = await supabase
             .from('history_meter')
-            .select(`
-                *,
-                room:rooms(room_number)
-            `)
+            .select('*')
             .eq('month', month);
 
         if (meterError) throw meterError;
 
-        // 2. Fetch active contracts to get tenant names for these rooms
-        // This might be imperfect if tenant moved out mid-month, but good enough for now.
+        const meterMap = new Map(meters?.map(m => [m.room_id, m]));
+
+        // 3. Fetch active contracts to get tenant names
         const { data: contracts } = await supabase
             .from('contracts')
             .select('room_id, tenant:tenants(full_name)')
@@ -128,42 +129,66 @@ export const reportService = {
 
         const contractMap = new Map(contracts?.map(c => [c.room_id, (c.tenant as any)?.full_name]));
 
-        const reportData = meters?.map(m => ({
-            ...m,
-            tenant_name: contractMap.get(m.room_id) || '-',
-            // Calculate usage? history_meter only stores current reading. 
-            // We need previous reading to calc usage.
-            // Or we just report the readings. 
-            // Usually report wants usage.
-            // We'd need to fetch PREVIOUS month's history too.
-        }));
-
-        // Fetch prev month
+        // 4. Fetch PREVIOUS month history (for calc)
         const [y, m] = month.split('-').map(Number);
-        const prevDate = new Date(y, m - 2, 1);
-        const prevMonthStr = prevDate.toISOString().slice(0, 7);
-
+        let prevY = y;
+        let prevM = m - 1;
+        if (prevM === 0) {
+            prevM = 12;
+            prevY -= 1;
+        }
+        const prevMonthStr = `${prevY}-${String(prevM).padStart(2, '0')}`;
+        // Flexible fetch for prev month
         const { data: prevMeters } = await supabase
             .from('history_meter')
             .select('room_id, water_meter, electricity_meter')
-            .eq('month', prevMonthStr);
+            .ilike('month', `${prevMonthStr}%`);
 
         const prevMap = new Map(prevMeters?.map(pm => [pm.room_id, pm]));
 
-        const finalData = reportData?.map(item => {
-            const prev = prevMap.get(item.room_id);
+        // 5. Combine Data
+        const reportData = allRooms.map(room => {
+            const meter = meterMap.get(room.id);
+            const prev = prevMap.get(room.id);
+
+            // Determine Tenant Name
+            let tenantName = '-';
+            const activeContractName = contractMap.get(room.id);
+            if (activeContractName) {
+                tenantName = activeContractName;
+            } else {
+                if (room.status === 'maintenance') tenantName = 'ห้องชำรุด/ซ่อมบำรุง';
+                else if (room.status === 'available') tenantName = 'ห้องว่าง';
+                else if (room.status === 'reserved') tenantName = 'จองแล้ว';
+                else tenantName = `สถานะ: ${room.status}`;
+            }
+
+            const waterCurr = meter?.water_meter || 0;
+            const elecCurr = meter?.electricity_meter || 0;
+            const waterPrev = prev?.water_meter || 0;
+            const elecPrev = prev?.electricity_meter || 0;
+
             return {
-                ...item,
-                water_prev: prev?.water_meter || 0,
-                elec_prev: prev?.electricity_meter || 0,
-                water_usage: Math.max(0, item.water_meter - (prev?.water_meter || 0)),
-                elec_usage: Math.max(0, item.electricity_meter - (prev?.electricity_meter || 0))
+                room_id: room.id,
+                room: { room_number: room.room_number },
+                tenant_name: tenantName,
+
+                water_meter: waterCurr,
+                electricity_meter: elecCurr,
+
+                water_prev: waterPrev,
+                elec_prev: elecPrev,
+
+                // If no current meter entered, usage is 0? 
+                // Or if we have ONLY prev meter, usage is ... 0?
+                water_usage: meter ? Math.max(0, waterCurr - waterPrev) : 0,
+                elec_usage: meter ? Math.max(0, elecCurr - elecPrev) : 0
             };
         });
 
-        return finalData?.sort((a, b) =>
-            (a.room?.room_number || '').localeCompare(b.room?.room_number || '', undefined, { numeric: true })
-        ) || [];
+        return reportData.sort((a, b) =>
+            a.room.room_number.localeCompare(b.room.room_number, undefined, { numeric: true })
+        );
     },
 
 

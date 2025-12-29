@@ -36,43 +36,58 @@ export const exportService = {
 
         if (invoiceError) throw invoiceError;
 
-        // 3. Prepare Header Data
+        // 3. Fetch history_meter for Current and Previous Month (for rooms without invoices)
+        // Current Month
+        const { data: currentMeters } = await supabase
+            .from('history_meter')
+            .select('room_id, water_meter, electricity_meter')
+            .eq('month', month); // month is YYYY-MM
+
+        // Previous Month
+        // Reuse year and m from above
+        let prevY = year;
+        let prevM = m - 1;
+        if (prevM === 0) {
+            prevM = 12;
+            prevY -= 1;
+        }
+        const prevMonthStr = `${prevY}-${String(prevM).padStart(2, '0')}`;
+
+        const { data: prevMeters } = await supabase
+            .from('history_meter')
+            .select('room_id, water_meter, electricity_meter')
+            .ilike('month', `${prevMonthStr}%`);
+
+        // Create Maps for fast lookup
+        const currentMeterMap = new Map(currentMeters?.map(m => [m.room_id, m]));
+        const prevMeterMap = new Map(prevMeters?.map(m => [m.room_id, m]));
+
+        // 4. Prepare Header Data... (existing code)
+        // ... (Skipping header setup lines 39-82 as they are unchanged) ...
+
         const dateObj = new Date(year, m - 1, 1);
         const thaiMonth = format(dateObj, 'MMMM', { locale: th });
         const thaiYear = year + 543;
         const monthYearStr = `ประจำเดือน  ${thaiMonth} พ.ศ. ${thaiYear}`;
 
-        // Header Rows (Matches sample.xlsx)
-        // Row 1-4: Titles
-        // Row 5: Group Headers (Water, Elec)
-        // Row 6: Sub Headers
-        // Row 7: Units (Sub-Sub) - Actually Row 6 in array index 5 contains newlines.
-        // Let's assume standard AOA structure.
-
         const headerRows = [
-            ["ตารางการจัดเก็บค่าบำรุงรายเดือน ค่าส่วนกลาง ค่าน้ำประปา และค่าไฟฟ้า"], // Row 1
-            ["ของอาคารบ้านพักศาลยุติธรรม  ซอยเสนานิคม 1 อาคาร 3 "], // Row 2
-            [monthYearStr], // Row 3
-            ["ผู้ดูแลอาคารชื่อ นายปริญญา บำรุงชู นักวิชาการคอมพิวเตอร์ชำนาญการ"], // Row 4
-            [ // Row 5 (Index 4)
+            ["ตารางการจัดเก็บค่าบำรุงรายเดือน ค่าส่วนกลาง ค่าน้ำประปา และค่าไฟฟ้า"],
+            ["ของอาคารบ้านพักศาลยุติธรรม  ซอยเสนานิคม 1 อาคาร 3 "],
+            [monthYearStr],
+            ["ผู้ดูแลอาคารชื่อ นายปริญญา บำรุงชู นักวิชาการคอมพิวเตอร์ชำนาญการ"],
+            [
                 "ห้อง", null, null, null, null, null, null,
                 "ค่าน้ำประปา", null, null, null, null, null,
                 "ค่าไฟฟ้า", null, null, null, null, null,
                 "รวม"
             ],
-            [ // Row 6 (Index 5)
+            [
                 "เลขที่", "รายชื่อผู้พักอาศัย", "ตำแหน่ง", "ระดับ", "สังกัด", "ค่าบำรุง\r\nรายเดือน", "ค่า\r\nส่วนกลาง",
                 "จดครั้งนี้", "จดครั้งก่อน", "จำนวน", "จำนวนเงิน \r\n(หน่วยละ \r\n16 บาท)", "ค่าบำรุง", "รวมเงินค่า",
                 "จดครั้งนี้", "จดครั้งก่อน", "จำนวน", "จำนวนเงิน\r\n (หน่วยละ \r\n5 บาท)", "ค่าบำรุง", "รวมค่า",
                 "(บาท)"
             ],
-            [ // Row 7 (Index 6) - Sub-headers for units/notes if needed.
-                // Sample showed Row 7 has: [null... null, 244255, 244224, "หน่วย", null, "มิเตอร์น้ำ", "น้ำประปา ", ... "มิเตอร์ไฟฟ้า", "ไฟฟ้า", "(บาท)"]
-                // Wait, looking at sample output, Row 6 (Index 5) is the Main Subheader. Row 7 (Index 6) seems to be "Initial Meter" or "Previous Totals" row in the sample?
-                // The sample output Row 6 (Index 6) has [null... 244255, 244224...]. This looks like a carry-forward row or initial meter reading row.
-                // I will OMIT this row for now as I generate new reports, OR keep it empty if it's structural.
-                // User said "Like Original", so I will include the structure but leave values empty or calculated?
-                // Let's assume it's a specific header row for "Unit Type" or similar.
+            [
                 null, null, null, null, null, null, null,
                 null, null, "หน่วย", null, "มิเตอร์น้ำ", "น้ำประปา",
                 null, null, "หน่วย", null, "มิเตอร์ไฟฟ้า", "ไฟฟ้า",
@@ -80,15 +95,15 @@ export const exportService = {
             ]
         ];
 
-        // 4. Map Data & Calculate Totals
+        // 5. Map Data & Calculate Totals
         let totalRent = 0;
         let totalCommon = 0;
-        let totalWaterLast = 0; // Sums might not make sense for meters, but summing costs does.
+        let totalWaterLast = 0;
         let totalWaterCurr = 0;
         let totalWaterUnit = 0;
         let totalWaterCost = 0;
         let totalWaterMaintain = 0;
-        let totalWaterTotal = 0; // Cost + Maintain
+        let totalWaterTotal = 0;
         let totalElecLast = 0;
         let totalElecCurr = 0;
         let totalElecUnit = 0;
@@ -110,80 +125,115 @@ export const exportService = {
             const workplace = invoice?.tenant?.workplace || '';
 
             // Rent & Common Fee
-            // In DB: invoice.rent_amount. Common fee is in additional_charges.
-            // Let's extract common fee.
             const rent = invoice ? (invoice.rent_amount || 0) : 0;
             const commonFeeItem = invoice?.additional_charges?.find((c: any) => c.name === 'ค่าส่วนกลาง');
             const commonFee = commonFeeItem ? Number(commonFeeItem.amount) : 0;
-            // Or use hardcoded furniture logic from request? Sample had columns: Rent, Common Fee.
-            // Previous code had "Furniture". Sample headers say "ค่าบำรุงรายเดือน" (Rent) and "ค่าส่วนกลาง" (Common).
-            // So: Column F = Rent, Column G = Common.
 
             // Water
-            const waterCurr = invoice?.water_meter_current || 0;
-            const waterLast = invoice?.water_meter_last || 0;
-            const waterUnit = invoice?.water_usage || 0;
-            const waterCost = invoice?.water_cost || 0;
-            const waterMaintainItem = invoice?.additional_charges?.find((c: any) => c.name === 'ค่าบำรุงมิเตอร์น้ำ');
-            const waterMaintain = waterMaintainItem ? Number(waterMaintainItem.amount) : 0; // Usually 20 in sample? Header says "มิเตอร์น้ำ"
+            let waterCurr = 0;
+            let waterLast = 0;
+            let waterUnit = 0;
+            let waterCost = 0;
+            let waterMaintain = 0;
+
+            if (invoice) {
+                waterCurr = invoice.water_meter_current || 0;
+                waterLast = invoice.water_meter_last || 0;
+                waterUnit = invoice.water_usage || 0;
+                waterCost = invoice.water_cost || 0;
+                const waterMaintainItem = invoice.additional_charges?.find((c: any) => c.name === 'ค่าบำรุงมิเตอร์น้ำ');
+                waterMaintain = waterMaintainItem ? Number(waterMaintainItem.amount) : 0;
+            } else {
+                // Fetch from History if no invoice
+                const currRecord = currentMeterMap.get(room.id);
+                const prevRecord = prevMeterMap.get(room.id);
+
+                waterCurr = currRecord?.water_meter || 0;
+                waterLast = prevRecord?.water_meter || 0;
+                // Calculate unit if we have readings
+                if (currRecord) {
+                    waterUnit = Math.max(0, waterCurr - waterLast);
+                }
+                // No cost for vacant rooms usually
+            }
             const waterTotal = waterCost + waterMaintain;
 
             // Elec
-            const elecCurr = invoice?.electricity_meter_current || 0;
-            const elecLast = invoice?.electricity_meter_last || 0;
-            const elecUnit = invoice?.electricity_usage || 0;
-            const elecCost = invoice?.electricity_cost || 0;
-            const elecService = 0; // Sample header 'ค่าบำรุง' under Elec? Or 'ค่าบริการ'? Sample had 0 service for elec usually.
-            // Wait, sample headers for Elec: "จดครั้งนี้", "จดครั้งก่อน", "จำนวน", "จำนวนเงิน", "ค่าบำรุง", "รวมค่า".
-            // So Elec DOES have a service/maintenance fee column.
+            let elecCurr = 0;
+            let elecLast = 0;
+            let elecUnit = 0;
+            let elecCost = 0;
+            let elecService = 0;
+
+            if (invoice) {
+                elecCurr = invoice.electricity_meter_current || 0;
+                elecLast = invoice.electricity_meter_last || 0;
+                elecUnit = invoice.electricity_usage || 0;
+                elecCost = invoice.electricity_cost || 0;
+                // Check for service fee if any
+            } else {
+                // Fetch from History if no invoice
+                const currRecord = currentMeterMap.get(room.id);
+                const prevRecord = prevMeterMap.get(room.id);
+
+                elecCurr = currRecord?.electricity_meter || 0;
+                elecLast = prevRecord?.electricity_meter || 0;
+                if (currRecord) {
+                    elecUnit = Math.max(0, elecCurr - elecLast);
+                }
+            }
             const elecTotal = elecCost + elecService;
 
-            const total = (invoice ? (rent + commonFee + waterTotal + elecTotal) : 0);
+            const total = rent + commonFee + waterTotal + elecTotal;
 
-            // Accumulate Totals
+            // Accumulate Totals (Include even if no invoice? Or only invoiced? 
+            // Usually totals are for Revenue. Vacant rooms don't pay.
+            // But Units might be interesting. Let's include units.)
+
             if (invoice) {
                 totalRent += rent;
                 totalCommon += commonFee;
-
-                totalWaterUnit += waterUnit;
                 totalWaterCost += waterCost;
                 totalWaterMaintain += waterMaintain;
                 totalWaterTotal += waterTotal;
-
-                totalElecUnit += elecUnit;
                 totalElecCost += elecCost;
                 totalElecService += elecService;
                 totalElecTotal += elecTotal;
-
                 grandTotalAll += total;
             }
+            // Always sum units?
+            totalWaterUnit += waterUnit;
+            totalElecUnit += elecUnit;
+            // If we sum units for vacant, it might skew "Sold" units vs "Consumed" units.
+            // But for meter management, Total Consumption is useful.
+            // Let's sum units for all.
 
             return [
-                room.room_number, // Col A: เลขที่
-                tenantName,       // Col B: รายชื่อ
-                position,         // Col C: ตำแหน่ง
-                level,            // Col D: ระดับ
-                workplace,        // Col E: สังกัด
-                invoice ? rent : '',       // Col F: ค่าบำรุง
-                invoice ? commonFee : '',  // Col G: ค่าส่วนกลาง
+                room.room_number, // Col A
+                tenantName,       // Col B
+                position,         // Col C
+                level,            // Col D
+                workplace,        // Col E
+                invoice ? rent : '',       // Col F
+                invoice ? commonFee : '',  // Col G
 
                 // Water Section
-                invoice ? waterCurr : '',   // Col H: จดครั้งนี้
-                invoice ? waterLast : '',   // Col I: จดครั้งก่อน
-                invoice ? waterUnit : '',   // Col J: จำนวน
-                invoice ? waterCost : '',   // Col K: จำนวนเงิน
-                invoice ? waterMaintain : '', // Col L: ค่าบำรุง
-                invoice ? waterTotal : '',    // Col M: รวมเงินค่า
+                waterCurr || '',   // Col H
+                waterLast || '',   // Col I
+                waterUnit || '',   // Col J
+                invoice ? waterCost : '',   // Col K
+                invoice ? waterMaintain : '', // Col L
+                invoice ? waterTotal : '',    // Col M
 
                 // Elec Section
-                invoice ? elecCurr : '',    // Col N: จดครั้งนี้
-                invoice ? elecLast : '',    // Col O: จดครั้งก่อน
-                invoice ? elecUnit : '',    // Col P: จำนวน
-                invoice ? elecCost : '',    // Col Q: จำนวนเงิน
-                invoice ? elecService : '',   // Col R: ค่าบำรุง
-                invoice ? elecTotal : '',     // Col S: รวมค่า
+                elecCurr || '',    // Col N
+                elecLast || '',    // Col O
+                elecUnit || '',    // Col P
+                invoice ? elecCost : '',    // Col Q
+                invoice ? elecService : '',   // Col R
+                invoice ? elecTotal : '',     // Col S
 
-                invoice ? total : ''        // Col T: รวม (บาท)
+                invoice ? total : ''        // Col T
             ];
         });
 
