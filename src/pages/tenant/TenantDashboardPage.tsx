@@ -294,6 +294,7 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
     const [selectedMonth, setSelectedMonth] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
+    const [invoiceIssued, setInvoiceIssued] = useState(false);
 
     const handleOpen = async () => {
         setIsOpen(true);
@@ -329,6 +330,9 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
     const loadMonthData = async (monthStr: string) => {
         if (!contract?.room_id) return;
 
+        // Reset state
+        setInvoiceIssued(false);
+
         // 1. Check if Selected Month already exists (Edit Mode)
         const { data: currentData } = await supabase.from('history_meter')
             .select('water_meter')
@@ -344,13 +348,37 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
             setIsEdit(false);
         }
 
-        // 2. Fetch "Previous" Meter Reading reliably
-        // Find the latest record BEFORE selected month, ignoring gaps
+        // 2. CHECK FOR INVOICE (New Logic)
+        // If an invoice exists for this month (and is not cancelled), block editing.
+        // Invoice billing_month is usually YYYY-MM-DD (first of month) or YYYY-MM.
+        // We compare using >= startOfMonth and < nextMonth to be safe.
+        const startDate = `${monthStr}-01`;
+        const [y, m] = monthStr.split('-').map(Number);
+        const nextMonthDate = new Date(y, m, 1); // Month is 0-indexed in Date ctor, so m is next month? No, Date(y, m, 1) where m is 1-12... wait.
+        // Date(year, monthIndex) -> monthIndex 0=Jan.
+        // monthStr '2024-01' -> y=2024, m=1.
+        // nextMonth needs to be index 1 (Feb). so m is correct index for next month.
+        const nextMonthStr = nextMonthDate.toISOString().slice(0, 10);
+
+        const { data: invoice } = await supabase.from('invoices')
+            .select('id')
+            .eq('room_id', contract.room_id)
+            .neq('status', 'cancelled')
+            .gte('billing_month', startDate)
+            .lt('billing_month', nextMonthStr)
+            .limit(1)
+            .maybeSingle();
+
+        if (invoice) {
+            setInvoiceIssued(true);
+        }
+
+        // 3. Fetch "Previous" Meter Reading reliably
         const { data: prevData } = await supabase.from('history_meter')
             .select('water_meter, month')
             .eq('room_id', contract.room_id)
-            .lt('month', monthStr) // Less than selected month
-            .order('month', { ascending: false }) // Get the closest one
+            .lt('month', monthStr)
+            .order('month', { ascending: false })
             .limit(1)
             .maybeSingle();
 
@@ -360,6 +388,8 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
 
     const handleSubmit = async () => {
         if (!waterMeter || !contract?.room_id || !selectedMonth) return;
+        if (invoiceIssued) return; // double check
+
         setIsLoading(true);
         try {
             const { data: existing } = await supabase.from('history_meter')
@@ -414,7 +444,21 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
                             </Heading>
                         </Box>
 
-                        {isEdit && (
+                        {invoiceIssued && (
+                            <Box p={3} bg="red.50" borderRadius="md" border="1px solid" borderColor="red.100">
+                                <HStack color="red.700">
+                                    <Icon><LuFileText /></Icon>
+                                    <Text fontSize="sm" fontWeight="medium">
+                                        มีการออกใบแจ้งหนี้แล้ว ไม่สามารถแก้ไขได้
+                                    </Text>
+                                </HStack>
+                                <Text fontSize="xs" color="red.600" mt={1} ml={6}>
+                                    กรุณาติดต่อเจ้าหน้าที่หากต้องการแก้ไขข้อมูล
+                                </Text>
+                            </Box>
+                        )}
+
+                        {!invoiceIssued && isEdit && (
                             <Box p={3} bg="orange.50" borderRadius="md">
                                 <Text fontSize="sm" color="orange.700">
                                     เดือนนี้คุณได้บันทึกไปแล้ว สามารถแก้ไขได้
@@ -438,6 +482,7 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
                                 onChange={(e) => setWaterMeter(e.target.value)}
                                 placeholder="กรอกเลขมิเตอร์"
                                 size="lg"
+                                disabled={invoiceIssued}
                             />
                         </Box>
 
@@ -447,10 +492,12 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
                     </VStack>
                 </DialogBody>
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsOpen(false)}>ยกเลิก</Button>
-                    <Button onClick={handleSubmit} disabled={isLoading || !waterMeter || !selectedMonth}>
-                        {isLoading ? 'กำลังบันทึก...' : (isEdit ? 'บันทึกการแก้ไข' : 'บันทึกข้อมูล')}
-                    </Button>
+                    <Button variant="outline" onClick={() => setIsOpen(false)}>ปิด</Button>
+                    {!invoiceIssued && (
+                        <Button onClick={handleSubmit} disabled={isLoading || !waterMeter || !selectedMonth}>
+                            {isLoading ? 'กำลังบันทึก...' : (isEdit ? 'บันทึกการแก้ไข' : 'บันทึกข้อมูล')}
+                        </Button>
+                    )}
                 </DialogFooter>
                 <DialogCloseTrigger />
             </DialogContent>

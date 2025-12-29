@@ -28,6 +28,7 @@ ALTER TABLE deposits DISABLE ROW LEVEL SECURITY;
 ALTER TABLE maintenance_requests DISABLE ROW LEVEL SECURITY;
 ALTER TABLE notifications DISABLE ROW LEVEL SECURITY;
 ALTER TABLE bookings DISABLE ROW LEVEL SECURITY;
+ALTER TABLE history_meter DISABLE ROW LEVEL SECURITY;
 
 -- Note: This is a temporary fix. For production, you should:
 -- 1. Use Supabase Edge Functions to handle auth

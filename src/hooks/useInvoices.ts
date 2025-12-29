@@ -100,3 +100,12 @@ export const useLastMeterReading = (roomId: string) => {
         enabled: !!roomId,
     });
 };
+
+export const useMeterReadingByMonth = (roomId: string, month: string) => {
+    return useQuery({
+        queryKey: ['meter-reading-month', roomId, month],
+        queryFn: () => invoiceService.getMeterReadingByMonth(roomId, month),
+        enabled: !!roomId && !!month,
+        retry: false,
+    });
+};

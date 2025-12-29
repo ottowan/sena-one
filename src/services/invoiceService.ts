@@ -287,5 +287,35 @@ export const invoiceService = {
             water: roomData?.current_water_meter || 0,
             electricity: roomData?.current_electricity_meter || 0
         };
+    },
+
+    // Get meter reading for a specific month
+    getMeterReadingByMonth: async (roomId: string, monthStr: string): Promise<{ water: number; electricity: number } | null> => {
+        // history_meter.month is TEXT 'YYYY-MM' (based on CREATE TABLE)
+        // So we should just search by equality.
+        // However, if some records were inserted as YYYY-MM-DD, we should clearer handle that.
+        // But the insert logic in createInvoice uses usage YYYY-MM.
+        // Let's try flexible search: column like 'YYYY-MM%'
+
+        const { data, error } = await supabase
+            .from('history_meter')
+            .select('water_meter, electricity_meter')
+            .eq('room_id', roomId)
+            .ilike('month', `${monthStr}%`) // Matches '2025-12' or '2025-12-01'
+            .limit(1)
+            .maybeSingle();
+
+        if (error) {
+            console.error('Error fetching history_meter by month:', error);
+            return null;
+        }
+
+        if (data) {
+            return {
+                water: data.water_meter,
+                electricity: data.electricity_meter
+            };
+        }
+        return null;
     }
 };

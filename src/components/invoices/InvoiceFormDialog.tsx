@@ -33,7 +33,7 @@ import { toaster } from '../../components/ui/toaster';
 import { useContracts } from '../../hooks/useContracts';
 import { useAppSettings, useRentRates } from '../../hooks/useSettings';
 import { LuPlus, LuTrash2 } from 'react-icons/lu';
-import { useLastMeterReading } from '../../hooks/useInvoices'; // Assume this hook exists or we import standard query
+import { useLastMeterReading, useMeterReadingByMonth } from '../../hooks/useInvoices'; // Assume this hook exists or we import standard query
 
 interface InvoiceFormDialogProps {
     open: boolean;
@@ -82,19 +82,84 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
     const selectedContract = contracts?.find(c => c.id === formData.contract_id);
     const roomId = selectedContract?.room_id || '';
 
-    // Fetch last meter reading
+    // Fetch last meter reading (Fallback)
     const { data: lastReading } = useLastMeterReading(roomId);
 
-    // Update form when last reading fetched
+    // Fetch Meter Reading for the Billing Month (Target Current)
+    const { data: currentMonthReading } = useMeterReadingByMonth(roomId, formData.billing_month);
+
+    // Fetch Meter Reading for Previous Month (Target Last)
+    // Calculate previous month string safely regardless of timezone
+    const [y, m] = formData.billing_month.split('-').map(Number);
+    let prevY = y;
+    let prevM = m - 1;
+    if (prevM === 0) {
+        prevM = 12;
+        prevY -= 1;
+    }
+    const prevMonthStr = `${prevY}-${prevM.toString().padStart(2, '0')}`;
+
+    // Fetch Meter Reading for Previous Month
+    const { data: prevMonthReading } = useMeterReadingByMonth(roomId, prevMonthStr);
+
+
+    // Update form when readings fetched
     useEffect(() => {
-        if (lastReading && open) {
-            setFormData(prev => ({
-                ...prev,
-                water_meter_last: lastReading.water.toString(),
-                electricity_meter_last: lastReading.electricity.toString(),
-            }));
+        if (!open) return;
+
+        // Default: Use what we found
+        let newWaterCurrent = formData.water_meter_current;
+        let newElecCurrent = formData.electricity_meter_current;
+        let newWaterLast = formData.water_meter_last;
+        let newElecLast = formData.electricity_meter_last;
+
+        // 1. Current Month Reading (if tenant submitted) -> Set as Current
+        if (currentMonthReading) {
+            newWaterCurrent = currentMonthReading.water.toString();
+            newElecCurrent = currentMonthReading.electricity.toString();
         }
-    }, [lastReading, open, roomId]);
+
+        // 2. Previous Month Reading -> Set as Last
+        if (prevMonthReading) {
+            newWaterLast = prevMonthReading.water.toString();
+            newElecLast = prevMonthReading.electricity.toString();
+        } else if (lastReading && !currentMonthReading) {
+            // Fallback: If no specific prev month data, and no current month data,
+            // maybe use the absolute 'lastReading' as 'Last'.
+            // But be careful not to use 'current' as 'last'.
+            // logical check: is lastReading.month < current billing month? 
+            // (We don't have lastReading date here, but assuming it's historic)
+            newWaterLast = lastReading.water.toString();
+            newElecLast = lastReading.electricity.toString();
+        }
+
+        setFormData(prev => {
+            // Only update if changed to avoid loops (though basic equality check helps)
+            if (
+                prev.water_meter_current === newWaterCurrent &&
+                prev.electricity_meter_current === newElecCurrent &&
+                prev.water_meter_last === newWaterLast &&
+                prev.electricity_meter_last === newElecLast
+            ) {
+                return prev;
+            }
+
+            // Calculate usage immediately
+            const wUsage = Math.max(0, (parseFloat(newWaterCurrent) || 0) - (parseFloat(newWaterLast) || 0)).toFixed(2);
+            const eUsage = Math.max(0, (parseFloat(newElecCurrent) || 0) - (parseFloat(newElecLast) || 0)).toFixed(2);
+
+            return {
+                ...prev,
+                water_meter_current: newWaterCurrent,
+                electricity_meter_current: newElecCurrent,
+                water_meter_last: newWaterLast,
+                electricity_meter_last: newElecLast,
+                water_usage: wUsage,
+                electricity_usage: eUsage
+            };
+        });
+
+    }, [currentMonthReading, prevMonthReading, lastReading, open, roomId, formData.billing_month]);
 
     useEffect(() => {
         if (open) {

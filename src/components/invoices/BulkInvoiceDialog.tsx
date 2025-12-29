@@ -55,7 +55,7 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
             nextMonth.setDate(5);
             setDueDate(nextMonth.toISOString().slice(0, 10));
         }
-    }, [open]);
+    }, [open, billingMonth]);
 
     const fetchActiveContracts = async () => {
         setIsLoading(true);
@@ -64,13 +64,49 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
 
             // Fetch last meter readings for each room in parallel
             const rowsData = await Promise.all(contracts.map(async (c) => {
-                const lastMeter = await invoiceService.getLastMeterReading(c.room_id);
+                // Determine Previous Month String
+                // billingMonth is YYYY-MM
+                const [y, m] = billingMonth.split('-').map(Number);
+                let prevY = y;
+                let prevM = m - 1;
+                if (prevM === 0) {
+                    prevM = 12;
+                    prevY -= 1;
+                }
+                const prevMonthStr = `${prevY}-${prevM.toString().padStart(2, '0')}`;
+
+                // Fetch Previous Reading (for 'Last Meter')
+                const prevMeter = await invoiceService.getMeterReadingByMonth(c.room_id, prevMonthStr);
+
+                // Fetch Current Reading (for 'Current Meter' - if already entered)
+                const currentMeter = await invoiceService.getMeterReadingByMonth(c.room_id, billingMonth);
+
+                // Fallback for Last Meter if specifically prev month not found?
+                // logic: if prev month empty, maybe try get absolute last? 
+                // But user wants strict month logic. Let's keep strict or maybe fallback to 0.
+                // Or maybe if prev not found, use lastReading?
+                // Let's stick to strict logic first as per user request (Prev Month = Month-1).
+                // If not found, it's 0 or maybe last available? 
+                // For now, let's trust the strict logic.
+
+                const lastWater = prevMeter?.water || 0;
+                const lastElec = prevMeter?.electricity || 0;
+
+                const currentWater = currentMeter?.water || 0;
+                const currentElec = currentMeter?.electricity || 0;
+
                 return {
                     contract: c,
-                    waterMeterLast: lastMeter.water,
-                    electricityMeterLast: lastMeter.electricity,
-                    waterMeterCurrent: lastMeter.water, // Default to last
-                    electricityMeterCurrent: lastMeter.electricity, // Default to last
+                    waterMeterLast: lastWater,
+                    electricityMeterLast: lastElec,
+                    // If current meter found, use it. usage = current - last.
+                    // If not found, default to last (so usage is 0 initially) OR keep empty?
+                    // Input is number type, so 0.
+                    // Wait, if current is 0 (not found), setting it to 0 might look like valid reading.
+                    // But our input is number.
+                    // Let's default to last reading so usage starts at 0, UNLESS current reading exists.
+                    waterMeterCurrent: currentMeter ? currentWater : lastWater,
+                    electricityMeterCurrent: currentMeter ? currentElec : lastElec,
                     isSelected: true // Default to selected
                 };
             }));

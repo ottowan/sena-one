@@ -268,15 +268,15 @@ export const roomService = {
 
     // Get Meter History for a specific year
     async getMeterHistory(roomId: string, year: number) {
-        const startMonth = `${year}-01`;
-        const endMonth = `${year}-12`;
+        const startMonth = `${year}-01-01`;
+        const endMonth = `${year + 1}-01-01`;
 
         const { data, error } = await supabase
             .from('history_meter')
             .select('*')
             .eq('room_id', roomId)
             .gte('month', startMonth)
-            .lte('month', endMonth)
+            .lt('month', endMonth)
             .order('month', { ascending: true });
 
         if (error) {

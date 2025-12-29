@@ -81,7 +81,7 @@ export const MeterHistoryDialog: React.FC<MeterHistoryDialogProps> = ({
             const months = Array.from({ length: 12 }, (_, i) => {
                 const m = i + 1;
                 const monthStr = `${selectedYear}-${String(m).padStart(2, '0')}`;
-                const existing = data.find((d: any) => d.month === monthStr);
+                const existing = data.find((d: any) => d.month.startsWith(monthStr));
                 return {
                     month: monthStr,
                     water: existing ? existing.water_meter : '',
@@ -130,7 +130,6 @@ export const MeterHistoryDialog: React.FC<MeterHistoryDialogProps> = ({
 
             toaster.create({
                 title: 'บันทึกสำเร็จ',
-                display: 'block',
                 type: 'success',
             });
         } catch (error) {

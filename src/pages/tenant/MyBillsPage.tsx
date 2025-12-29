@@ -1,9 +1,110 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Card, Heading, VStack, Badge, Text, HStack, Button, Table } from '@chakra-ui/react';
+import { Box, Card, Heading, VStack, Badge, Text, HStack, Button, Table, Separator } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { formatCurrency } from '../../lib/utils';
-import { LuDownload } from 'react-icons/lu';
+import { LuFileText } from 'react-icons/lu';
+import {
+    DialogRoot,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogBody,
+    DialogFooter,
+    DialogCloseTrigger,
+    DialogBackdrop,
+    DialogActionTrigger,
+} from '../../components/ui/dialog';
+
+// Sub-component for Invoice Details
+const InvoiceDetailDialog = ({ invoice }: { invoice: any }) => {
+    // Calculate effective rates (handling division by zero)
+    const waterRate = invoice.water_usage > 0 ? (invoice.water_cost / invoice.water_usage).toFixed(2) : 0;
+    const electricityRate = invoice.electricity_usage > 0 ? (invoice.electricity_cost / invoice.electricity_usage).toFixed(2) : 0;
+
+    return (
+        <DialogRoot size="lg">
+            <DialogBackdrop />
+            <DialogTrigger asChild>
+                <Button size="xs" variant="ghost" colorPalette="blue">
+                    <LuFileText /> รายละเอียด
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>รายละเอียดใบแจ้งหนี้ - {invoice.billing_month}</DialogTitle>
+                    <DialogCloseTrigger />
+                </DialogHeader>
+                <DialogBody>
+                    <VStack align="stretch" gap={3}>
+                        <HStack justify="space-between">
+                            <Text color="gray.600">ค่าเช่าห้อง:</Text>
+                            <Text fontWeight="medium">{formatCurrency(invoice.rent_amount)}</Text>
+                        </HStack>
+
+                        {/* Water Details */}
+                        <Box p={3} bg="blue.50" borderRadius="md">
+                            <Text fontWeight="bold" color="blue.700" mb={1}>ค่าน้ำประปา</Text>
+                            <HStack justify="space-between" fontSize="sm">
+                                <Text color="gray.600">
+                                    มิเตอร์: {invoice.water_meter_last} {'->'} {invoice.water_meter_current}
+                                </Text>
+                            </HStack>
+                            <HStack justify="space-between" fontSize="sm" mt={1}>
+                                <Text color="gray.600">
+                                    การคำนวณ: {invoice.water_usage} หน่วย x {waterRate} บ.
+                                </Text>
+                                <Text fontWeight="medium" color="blue.700">{formatCurrency(invoice.water_cost)}</Text>
+                            </HStack>
+                        </Box>
+
+                        {/* Electricity Details */}
+                        <Box p={3} bg="orange.50" borderRadius="md">
+                            <Text fontWeight="bold" color="orange.700" mb={1}>ค่าไฟฟ้า</Text>
+                            <HStack justify="space-between" fontSize="sm">
+                                <Text color="gray.600">
+                                    มิเตอร์: {invoice.electricity_meter_last} {'->'} {invoice.electricity_meter_current}
+                                </Text>
+                            </HStack>
+                            <HStack justify="space-between" fontSize="sm" mt={1}>
+                                <Text color="gray.600">
+                                    การคำนวณ: {invoice.electricity_usage} หน่วย x {electricityRate} บ.
+                                </Text>
+                                <Text fontWeight="medium" color="orange.700">{formatCurrency(invoice.electricity_cost)}</Text>
+                            </HStack>
+                        </Box>
+
+                        {/* Additional Charges */}
+                        {invoice.additional_charges && invoice.additional_charges.length > 0 && (
+                            <Box>
+                                <Text fontWeight="medium" mb={1}>ค่าใช้จ่ายอื่นๆ</Text>
+                                {invoice.additional_charges.map((charge: any, idx: number) => (
+                                    <HStack key={idx} justify="space-between" pl={2} fontSize="sm" color="gray.600">
+                                        <Text>- {charge.name}</Text>
+                                        <Text>{formatCurrency(charge.amount)}</Text>
+                                    </HStack>
+                                ))}
+                            </Box>
+                        )}
+
+                        <Separator />
+
+                        <HStack justify="space-between" pt={2}>
+                            <Text fontWeight="bold" fontSize="lg">ยอดรวมสุทธิ</Text>
+                            <Text fontWeight="bold" fontSize="xl" color="blue.600">{formatCurrency(invoice.total_amount)}</Text>
+                        </HStack>
+                    </VStack>
+                </DialogBody>
+                <DialogFooter>
+                    <DialogActionTrigger asChild>
+                        <Button variant="outline">ปิด</Button>
+                    </DialogActionTrigger>
+                </DialogFooter>
+            </DialogContent>
+        </DialogRoot>
+    );
+};
 
 export const MyBillsPage: React.FC = () => {
     const { profile } = useAuth();
@@ -78,10 +179,7 @@ export const MyBillsPage: React.FC = () => {
                                         </Badge>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {/* Placeholder for Download/Pay action */}
-                                        <Button size="xs" variant="ghost">
-                                            <LuDownload /> รายละเอียด
-                                        </Button>
+                                        <InvoiceDetailDialog invoice={invoice} />
                                     </Table.Cell>
                                 </Table.Row>
                             ))}
