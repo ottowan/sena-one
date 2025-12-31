@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Card, Heading, VStack, Text, Grid, Badge } from '@chakra-ui/react';
+import { Box, Card, Heading, VStack, Text, Grid, Badge, Spinner } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { formatCurrency } from '../../lib/utils';
@@ -7,6 +7,7 @@ import { formatCurrency } from '../../lib/utils';
 export const MyContractPage: React.FC = () => {
     const { profile } = useAuth();
     const [contract, setContract] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchContract = async () => {
@@ -14,23 +15,56 @@ export const MyContractPage: React.FC = () => {
 
             const { data: tenant } = await supabase
                 .from('tenants')
-                .select('id')
+                .select('id, position_level')
                 .eq('user_id', profile.id)
                 .maybeSingle();
 
-            if (!tenant) return;
+            if (!tenant) {
+                setIsLoading(false);
+                return;
+            }
 
-            const { data } = await supabase
+            const { data: contractData } = await supabase
                 .from('contracts')
                 .select('*, room:rooms(*)')
                 .eq('tenant_id', tenant.id)
                 .order('created_at', { ascending: false })
                 .limit(1)
                 .maybeSingle();
-            setContract(data);
+
+            // Fetch rent rates to calculate dynamic rent
+            const { data: rentRates } = await supabase
+                .from('position_rent_rates')
+                .select('*');
+
+            if (contractData) {
+                let displayRent = contractData.monthly_rent;
+
+                // Apply dynamic rent logic if position level exists
+                if (tenant.position_level && rentRates) {
+                    const rate = rentRates.find((r: any) => r.position_level === tenant.position_level);
+                    if (rate && rate.rent_amount > 0) {
+                        displayRent = rate.rent_amount;
+                    }
+                }
+
+                setContract({ ...contractData, displayRent });
+            } else {
+                setContract(null);
+            }
+            setIsLoading(false);
         };
         fetchContract();
     }, [profile]);
+
+    if (isLoading) {
+        return (
+            <VStack h="50vh" justify="center" align="center">
+                <Spinner size="xl" color="brand.500" />
+                <Text color="gray.500">กำลังโหลด...</Text>
+            </VStack>
+        );
+    }
 
     if (!contract) return <Box p={4}>ไม่พบข้อมูลสัญญาเช่า</Box>;
 
@@ -99,7 +133,7 @@ export const MyContractPage: React.FC = () => {
                             </Box>
                             <Box>
                                 <Text color="gray.500" fontSize="sm">ค่าเช่า</Text>
-                                <Text fontWeight="bold">{formatCurrency(contract.monthly_rent)}</Text>
+                                <Text fontWeight="bold">{formatCurrency(contract.displayRent || contract.monthly_rent)}</Text>
                             </Box>
                             <Box>
                                 <Text color="gray.500" fontSize="sm">เงินประกัน</Text>
