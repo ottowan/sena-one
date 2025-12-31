@@ -106,6 +106,47 @@ const InvoiceDetailDialog = ({ invoice }: { invoice: any }) => {
     );
 };
 
+// Mobile Card Component
+const MobileInvoiceCard = ({ invoice }: { invoice: any }) => {
+    return (
+        <Card.Root mb={4} variant="subtle">
+            <Card.Body p={4}>
+                <VStack align="stretch" gap={3}>
+                    <HStack justify="space-between">
+                        <Text fontWeight="bold" fontSize="lg">{invoice.billing_month}</Text>
+                        <Badge colorPalette={invoice.status === 'paid' ? 'green' : invoice.status === 'pending' ? 'yellow' : 'red'}>
+                            {invoice.status === 'paid' ? 'ชำระแล้ว' : invoice.status === 'pending' ? 'รอชำระ' : 'ยกเลิก'}
+                        </Badge>
+                    </HStack>
+
+                    <HStack justify="space-between" color="gray.600" fontSize="sm">
+                        <Text>ห้อง:</Text>
+                        <Text>
+                            {Array.isArray(invoice.contract?.room)
+                                ? invoice.contract.room[0]?.room_number
+                                : invoice.contract?.room?.room_number}
+                        </Text>
+                    </HStack>
+
+                    <HStack justify="space-between" color="gray.600" fontSize="sm">
+                        <Text>วันครบกำหนด:</Text>
+                        <Text>{invoice.due_date}</Text>
+                    </HStack>
+
+                    <Separator />
+
+                    <HStack justify="space-between">
+                        <Text fontWeight="medium">ยอดชำระ</Text>
+                        <Text fontWeight="bold" fontSize="xl" color="brand.600">{formatCurrency(invoice.total_amount)}</Text>
+                    </HStack>
+
+                    <InvoiceDetailDialog invoice={invoice} />
+                </VStack>
+            </Card.Body>
+        </Card.Root>
+    );
+};
+
 export const MyBillsPage: React.FC = () => {
     const { profile } = useAuth();
     const [invoices, setInvoices] = useState<any[]>([]);
@@ -113,6 +154,7 @@ export const MyBillsPage: React.FC = () => {
 
     useEffect(() => {
         const fetchInvoices = async () => {
+            // ... (Keep existing fetch logic)
             if (!profile?.id) return;
 
             // 1. Get Tenant ID
@@ -145,7 +187,21 @@ export const MyBillsPage: React.FC = () => {
         <VStack align="stretch" gap={6} py={4}>
             <Heading size="lg">บิลและการชำระเงิน</Heading>
 
-            <Card.Root>
+            {/* Mobile View: Cards */}
+            <Box display={{ base: 'block', md: 'none' }}>
+                {isLoading ? (
+                    <Text textAlign="center">กำลังโหลด...</Text>
+                ) : invoices.length === 0 ? (
+                    <Text textAlign="center" color="gray.500">ไม่พบประวัติการชำระเงิน</Text>
+                ) : (
+                    invoices.map((invoice) => (
+                        <MobileInvoiceCard key={invoice.id} invoice={invoice} />
+                    ))
+                )}
+            </Box>
+
+            {/* Desktop View: Table */}
+            <Card.Root display={{ base: 'none', md: 'block' }}>
                 <Card.Body overflowX="auto">
                     <Table.Root interactive>
                         <Table.Header>

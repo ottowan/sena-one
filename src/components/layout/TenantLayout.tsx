@@ -1,16 +1,25 @@
 import React from 'react';
-import { Box, Flex, VStack, Text, Button, Container, Icon, HStack } from '@chakra-ui/react';
+import { Box, Flex, VStack, Text, Button, Container, Icon, HStack, IconButton } from '@chakra-ui/react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
     LuLayoutDashboard,
     LuFileText,
     LuWrench,
     LuUser,
-    LuLogOut
+    LuLogOut,
+    LuMenu
 } from 'react-icons/lu';
 import { useAuth } from '../../contexts/AuthContext';
 import { Toaster, toaster } from '../ui/toaster';
 import { ColorModeButton } from '../ui/color-mode';
+import {
+    DrawerBackdrop,
+    DrawerBody,
+    DrawerCloseTrigger,
+    DrawerContent,
+    DrawerRoot,
+    DrawerTrigger,
+} from '../../components/ui/drawer';
 
 const SidebarItem = ({ icon, label, to }: { icon: any; label: string; to: string }) => {
     return (
@@ -31,7 +40,7 @@ const SidebarItem = ({ icon, label, to }: { icon: any; label: string; to: string
     );
 };
 
-export const TenantLayout: React.FC = () => {
+const TenantSidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
     const { signOut, profile } = useAuth();
     const navigate = useNavigate();
 
@@ -46,8 +55,86 @@ export const TenantLayout: React.FC = () => {
     };
 
     return (
+        <VStack h="full" justify="space-between" align="stretch" bg="bg.canvas">
+            <Box>
+                <HStack justify="space-between" mb={8} px={6} pt={6}>
+                    <Flex align="center" gap={3}>
+                        <Box w={8} h={8} bg="brand.500" borderRadius="md" />
+                        <Text fontSize="xl" fontWeight="bold">Sena-One</Text>
+                    </Flex>
+                    <ColorModeButton />
+                </HStack>
+
+                <VStack align="stretch" gap={1} px={4}>
+                    <Text fontSize="xs" color="gray.500" px={2} mb={2} fontWeight="bold">MENU</Text>
+                    <SidebarItem icon={<LuLayoutDashboard />} label="หน้าหลัก" to="/tenant" />
+                    <SidebarItem icon={<LuFileText />} label="บิลและการชำระเงิน" to="/tenant/bills" />
+                    <SidebarItem icon={<LuWrench />} label="แจ้งซ่อม" to="/tenant/maintenance" />
+                    <SidebarItem icon={<LuUser />} label="ข้อมูลสัญญา" to="/tenant/contract" />
+                </VStack>
+            </Box>
+
+            <Box p={4}>
+                <Box p={4} bg="gray.50" borderRadius="md" mb={4}>
+                    <Text fontSize="sm" fontWeight="bold" truncate>{profile?.full_name || 'Tenant'}</Text>
+                    <Text fontSize="xs" color="gray.500">ผู้เช่า</Text>
+                </Box>
+                <Button
+                    variant="outline"
+                    colorPalette="red"
+                    width="full"
+                    onClick={handleSignOut}
+                >
+                    <Icon mr={2}><LuLogOut /></Icon>
+                    ออกจากระบบ
+                </Button>
+            </Box>
+        </VStack>
+    );
+};
+
+export const TenantLayout: React.FC = () => {
+    const [open, setOpen] = React.useState(false);
+
+    return (
         <Flex minH="100vh" bg="bg.subtle">
-            {/* Sidebar */}
+            {/* Mobile Header */}
+            <Box
+                display={{ base: 'block', md: 'none' }}
+                position="fixed"
+                top={0}
+                left={0}
+                right={0}
+                zIndex={100}
+                bg="bg.canvas"
+                borderBottom="1px"
+                borderColor="border.default"
+                px={4}
+                py={3}
+            >
+                <HStack justify="space-between">
+                    <HStack>
+                        <DrawerRoot open={open} onOpenChange={(e) => setOpen(e.open)} placement="start">
+                            <DrawerBackdrop />
+                            <DrawerTrigger asChild>
+                                <IconButton variant="ghost" aria-label="Open menu">
+                                    <Icon><LuMenu /></Icon>
+                                </IconButton>
+                            </DrawerTrigger>
+                            <DrawerContent>
+                                <DrawerCloseTrigger />
+                                <DrawerBody p={0}>
+                                    <TenantSidebarContent onNavigate={() => setOpen(false)} />
+                                </DrawerBody>
+                            </DrawerContent>
+                        </DrawerRoot>
+                        <Text fontWeight="bold" fontSize="lg" color="brand.600">Sena-One</Text>
+                    </HStack>
+                    <ColorModeButton />
+                </HStack>
+            </Box>
+
+            {/* Desktop Sidebar */}
             <Box
                 w="250px"
                 bg="bg.canvas"
@@ -57,45 +144,16 @@ export const TenantLayout: React.FC = () => {
                 position="fixed"
                 h="100vh"
             >
-                <VStack h="full" p={4} justify="space-between" align="stretch">
-                    <Box>
-                        <HStack justify="space-between" mb={8} px={2}>
-                            <Flex align="center" gap={3}>
-                                <Box w={8} h={8} bg="brand.500" borderRadius="md" />
-                                <Text fontSize="xl" fontWeight="bold">Sena-One</Text>
-                            </Flex>
-                            <ColorModeButton />
-                        </HStack>
-
-                        <VStack align="stretch" gap={1}>
-                            <Text fontSize="xs" color="gray.500" px={2} mb={2} fontWeight="bold">MENU</Text>
-                            <SidebarItem icon={<LuLayoutDashboard />} label="หน้าหลัก" to="/tenant" />
-                            <SidebarItem icon={<LuFileText />} label="บิลและการชำระเงิน" to="/tenant/bills" />
-                            <SidebarItem icon={<LuWrench />} label="แจ้งซ่อม" to="/tenant/maintenance" />
-                            <SidebarItem icon={<LuUser />} label="ข้อมูลสัญญา" to="/tenant/contract" />
-                        </VStack>
-                    </Box>
-
-                    <Box>
-                        <Box p={4} bg="gray.50" borderRadius="md" mb={4}>
-                            <Text fontSize="sm" fontWeight="bold" truncate>{profile?.full_name || 'Tenant'}</Text>
-                            <Text fontSize="xs" color="gray.500">ผู้เช่า</Text>
-                        </Box>
-                        <Button
-                            variant="outline"
-                            colorPalette="red"
-                            width="full"
-                            onClick={handleSignOut}
-                        >
-                            <Icon mr={2}><LuLogOut /></Icon>
-                            ออกจากระบบ
-                        </Button>
-                    </Box>
-                </VStack>
+                <TenantSidebarContent />
             </Box>
 
             {/* Main Content */}
-            <Box ml={{ base: 0, md: '250px' }} flex="1" p={8}>
+            <Box
+                ml={{ base: 0, md: '250px' }}
+                mt={{ base: '60px', md: 0 }}
+                flex="1"
+                p={{ base: 4, md: 8 }}
+            >
                 <Container maxW="container.xl">
                     <Outlet />
                 </Container>
