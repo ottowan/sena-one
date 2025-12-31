@@ -24,7 +24,8 @@ export const MyContractPage: React.FC = () => {
                 .from('contracts')
                 .select('*, room:rooms(*)')
                 .eq('tenant_id', tenant.id)
-                .eq('status', 'active')
+                .order('created_at', { ascending: false })
+                .limit(1)
                 .maybeSingle();
             setContract(data);
         };
@@ -32,6 +33,26 @@ export const MyContractPage: React.FC = () => {
     }, [profile]);
 
     if (!contract) return <Box p={4}>ไม่พบข้อมูลสัญญาเช่า</Box>;
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'active': return 'green';
+            case 'expired': return 'red';
+            case 'terminated': return 'gray';
+            case 'renewed': return 'blue';
+            default: return 'gray';
+        }
+    };
+
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'active': return 'ใช้งานอยู่';
+            case 'expired': return 'หมดอายุ';
+            case 'terminated': return 'ยกเลิก';
+            case 'renewed': return 'ต่อสัญญาแล้ว';
+            default: return status;
+        }
+    };
 
     return (
         <VStack align="stretch" gap={6} py={4}>
@@ -56,7 +77,9 @@ export const MyContractPage: React.FC = () => {
                             </Box>
                             <Box>
                                 <Text color="gray.500" fontSize="sm">สถานะสัญญา</Text>
-                                <Badge colorPalette="green">Active</Badge>
+                                <Badge colorPalette={getStatusColor(contract.status)}>
+                                    {getStatusLabel(contract.status)}
+                                </Badge>
                             </Box>
                         </VStack>
                     </Card.Body>

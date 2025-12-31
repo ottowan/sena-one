@@ -21,9 +21,9 @@ import {
     DrawerTrigger,
 } from '../../components/ui/drawer';
 
-const SidebarItem = ({ icon, label, to }: { icon: any; label: string; to: string }) => {
+const SidebarItem = ({ icon, label, to, onClick }: { icon: any; label: string; to: string; onClick?: () => void }) => {
     return (
-        <NavLink to={to} style={{ width: '100%' }}>
+        <NavLink to={to} style={{ width: '100%' }} onClick={onClick}>
             {({ isActive }) => (
                 <Button
                     variant={isActive ? 'subtle' : 'ghost'}
@@ -67,10 +67,10 @@ const TenantSidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
 
                 <VStack align="stretch" gap={1} px={4}>
                     <Text fontSize="xs" color="gray.500" px={2} mb={2} fontWeight="bold">MENU</Text>
-                    <SidebarItem icon={<LuLayoutDashboard />} label="หน้าหลัก" to="/tenant" />
-                    <SidebarItem icon={<LuFileText />} label="บิลและการชำระเงิน" to="/tenant/bills" />
-                    <SidebarItem icon={<LuWrench />} label="แจ้งซ่อม" to="/tenant/maintenance" />
-                    <SidebarItem icon={<LuUser />} label="ข้อมูลสัญญา" to="/tenant/contract" />
+                    <SidebarItem icon={<LuLayoutDashboard />} label="หน้าหลัก" to="/tenant" onClick={onNavigate} />
+                    <SidebarItem icon={<LuFileText />} label="บิลและการชำระเงิน" to="/tenant/bills" onClick={onNavigate} />
+                    <SidebarItem icon={<LuWrench />} label="แจ้งซ่อม" to="/tenant/maintenance" onClick={onNavigate} />
+                    <SidebarItem icon={<LuUser />} label="ข้อมูลสัญญา" to="/tenant/contract" onClick={onNavigate} />
                 </VStack>
             </Box>
 
