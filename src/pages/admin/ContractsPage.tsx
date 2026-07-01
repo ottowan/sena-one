@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
     Box,
     Grid,
@@ -28,6 +28,9 @@ import {
     NativeSelectRoot,
 } from '../../components/ui/native-select';
 
+type ContractSortKey = 'room_number' | 'start_date' | 'end_date';
+type SortDirection = 'asc' | 'desc';
+
 export const ContractsPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<ContractStatus | ''>('');
@@ -37,7 +40,9 @@ export const ContractsPage: React.FC = () => {
     const [transferDialogOpen, setTransferDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
-    const [viewMode, setViewMode] = useState<ViewMode>('grid');
+    const [viewMode, setViewMode] = useState<ViewMode>('table');
+    const [sortKey, setSortKey] = useState<ContractSortKey>('end_date');
+    const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
     const { data: contracts, isLoading } = useContracts({
         searchTerm: searchTerm || undefined,
@@ -47,6 +52,42 @@ export const ContractsPage: React.FC = () => {
     const { data: rentRates } = useRentRates();
 
     const { data: stats } = useContractStats();
+
+    const sortedContracts = useMemo(() => {
+        return [...(contracts || [])].sort((a, b) => {
+            let comparison = 0;
+
+            if (sortKey === 'room_number') {
+                comparison = (a.room?.room_number || '').localeCompare(
+                    b.room?.room_number || '',
+                    undefined,
+                    { numeric: true, sensitivity: 'base' }
+                );
+            } else {
+                comparison = new Date(a[sortKey]).getTime() - new Date(b[sortKey]).getTime();
+            }
+
+            if (comparison === 0) {
+                comparison = (a.room?.room_number || '').localeCompare(
+                    b.room?.room_number || '',
+                    undefined,
+                    { numeric: true, sensitivity: 'base' }
+                );
+            }
+
+            return sortDirection === 'asc' ? comparison : -comparison;
+        });
+    }, [contracts, sortDirection, sortKey]);
+
+    const handleSortChange = (nextSortKey: ContractSortKey) => {
+        if (nextSortKey === sortKey) {
+            setSortDirection((current) => current === 'asc' ? 'desc' : 'asc');
+            return;
+        }
+
+        setSortKey(nextSortKey);
+        setSortDirection('asc');
+    };
 
     const handleView = (contract: Contract) => {
         setSelectedContract(contract);
@@ -86,7 +127,6 @@ export const ContractsPage: React.FC = () => {
     return (
         <>
             <VStack align="stretch" gap={8}>
-                {/* Header */}
                 <HStack justify="space-between">
                     <Box>
                         <Heading size="2xl" mb={2}>
@@ -104,7 +144,6 @@ export const ContractsPage: React.FC = () => {
                     </Button>
                 </HStack>
 
-                {/* Stats */}
                 {stats && (
                     <Grid
                         templateColumns={{
@@ -129,10 +168,10 @@ export const ContractsPage: React.FC = () => {
                             <Card.Body>
                                 <VStack align="start" gap={1}>
                                     <Text color="gray.600" fontSize="sm">
-                                        กำลังใช้งาน
+                                        สัญญาเหลือ 4 เดือน
                                     </Text>
-                                    <Heading size="xl" color="success.600">
-                                        {stats.active}
+                                    <Heading size="xl" color="blue.600">
+                                        {stats.remainingFourMonths}
                                     </Heading>
                                 </VStack>
                             </Card.Body>
@@ -142,23 +181,10 @@ export const ContractsPage: React.FC = () => {
                             <Card.Body>
                                 <VStack align="start" gap={1}>
                                     <Text color="gray.600" fontSize="sm">
-                                        หมดอายุ
+                                        สัญญาเหลือ 2 เดือน
                                     </Text>
-                                    <Heading size="xl" color="gray.600">
-                                        {stats.expired}
-                                    </Heading>
-                                </VStack>
-                            </Card.Body>
-                        </Card.Root>
-
-                        <Card.Root>
-                            <Card.Body>
-                                <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
-                                        ยกเลิก
-                                    </Text>
-                                    <Heading size="xl" color="danger.600">
-                                        {stats.terminated}
+                                    <Heading size="xl" color="orange.600">
+                                        {stats.remainingTwoMonths}
                                     </Heading>
                                 </VStack>
                             </Card.Body>
@@ -176,10 +202,22 @@ export const ContractsPage: React.FC = () => {
                                 </VStack>
                             </Card.Body>
                         </Card.Root>
+
+                        <Card.Root>
+                            <Card.Body>
+                                <VStack align="start" gap={1}>
+                                    <Text color="gray.600" fontSize="sm">
+                                        หมดอายุ
+                                    </Text>
+                                    <Heading size="xl" color="red.600">
+                                        {stats.expiredByDate}
+                                    </Heading>
+                                </VStack>
+                            </Card.Body>
+                        </Card.Root>
                     </Grid>
                 )}
 
-                {/* Filters */}
                 <Card.Root>
                     <Card.Body>
                         <VStack gap={4} align="stretch">
@@ -223,7 +261,6 @@ export const ContractsPage: React.FC = () => {
                                 </NativeSelectRoot>
                             </Grid>
 
-                            {/* View Mode Toggle */}
                             <HStack gap={2} justify="flex-end">
                                 <Text fontSize="sm" color="gray.600">
                                     รูปแบบการแสดงผล:
@@ -234,17 +271,19 @@ export const ContractsPage: React.FC = () => {
                     </Card.Body>
                 </Card.Root>
 
-                {/* Contract List */}
                 {isLoading ? (
                     <Box p={8} textAlign="center">
                         <Text color="gray.500">กำลังโหลด...</Text>
                     </Box>
-                ) : contracts && contracts.length > 0 ? (
+                ) : sortedContracts.length > 0 ? (
                     <>
                         {viewMode === 'table' ? (
                             <ContractTable
-                                contracts={contracts}
+                                contracts={sortedContracts}
                                 rentRates={rentRates}
+                                sortKey={sortKey}
+                                sortDirection={sortDirection}
+                                onSortChange={handleSortChange}
                                 onView={handleView}
                                 onEdit={handleEdit}
                                 onRenew={handleRenew}
@@ -260,7 +299,7 @@ export const ContractsPage: React.FC = () => {
                                 }}
                                 gap={6}
                             >
-                                {contracts.map((contract) => (
+                                {sortedContracts.map((contract) => (
                                     <ContractCard
                                         key={contract.id}
                                         contract={contract}
@@ -302,35 +341,30 @@ export const ContractsPage: React.FC = () => {
                 )}
             </VStack>
 
-            {/* Contract Form Dialog */}
             <ContractFormDialog
                 open={dialogOpen}
                 onClose={handleCloseDialog}
                 contract={selectedContract}
             />
 
-            {/* Contract Details Dialog */}
             <ContractDetailsDialog
                 open={detailsDialogOpen}
                 onClose={() => setDetailsDialogOpen(false)}
                 contract={selectedContract}
             />
 
-            {/* Renew Contract Dialog */}
             <RenewContractDialog
                 open={renewDialogOpen}
                 onClose={() => setRenewDialogOpen(false)}
                 contract={selectedContract}
             />
 
-            {/* Transfer Contract Dialog */}
             <TransferContractDialog
                 open={transferDialogOpen}
                 onClose={() => setTransferDialogOpen(false)}
                 contract={selectedContract}
             />
 
-            {/* Cancel Contract Dialog */}
             <CancelContractDialog
                 open={cancelDialogOpen}
                 onClose={() => setCancelDialogOpen(false)}

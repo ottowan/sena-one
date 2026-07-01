@@ -21,6 +21,7 @@ import {
     LuClock,
 } from 'react-icons/lu';
 import type { Contract, ContractStatus } from '../../types';
+import { formatThaiShortDate } from '../../lib/utils';
 
 interface ContractDetailsDialogProps {
     open: boolean;
@@ -79,7 +80,6 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
 
                 <DialogBody>
                     <VStack align="stretch" gap={6}>
-                        {/* Status Badge */}
                         <HStack justify="space-between">
                             <Heading size="md">สถานะสัญญา</Heading>
                             <Badge colorPalette={statusColor} size="lg">
@@ -87,7 +87,6 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                             </Badge>
                         </HStack>
 
-                        {/* Tenant Information */}
                         <VStack align="stretch" gap={3}>
                             <Heading size="md">ข้อมูลผู้เช่า</Heading>
 
@@ -134,7 +133,6 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                             )}
                         </VStack>
 
-                        {/* Room Information */}
                         <VStack align="stretch" gap={3}>
                             <Heading size="md">ข้อมูลห้อง</Heading>
 
@@ -167,7 +165,6 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                             )}
                         </VStack>
 
-                        {/* Contract Details */}
                         <VStack align="stretch" gap={3}>
                             <Heading size="md">รายละเอียดสัญญา</Heading>
 
@@ -182,11 +179,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                         </Text>
                                     </HStack>
                                     <Text fontSize="sm" color="gray.600" pl={6}>
-                                        {new Date(contract.start_date).toLocaleDateString('th-TH', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric',
-                                        })}
+                                        {formatThaiShortDate(contract.start_date)}
                                     </Text>
                                 </VStack>
 
@@ -200,11 +193,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                         </Text>
                                     </HStack>
                                     <Text fontSize="sm" color="gray.600" pl={6}>
-                                        {new Date(contract.end_date).toLocaleDateString('th-TH', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric',
-                                        })}
+                                        {formatThaiShortDate(contract.end_date)}
                                     </Text>
                                 </VStack>
 
@@ -238,7 +227,6 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                             </Grid>
                         </VStack>
 
-                        {/* Metadata */}
                         <VStack align="stretch" gap={3}>
                             <Heading size="md">ข้อมูลเพิ่มเติม</Heading>
 

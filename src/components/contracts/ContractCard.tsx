@@ -22,6 +22,7 @@ import {
 } from 'react-icons/lu';
 import type { Contract, ContractStatus, RentRate } from '../../types';
 import { Button } from '../ui/button';
+import { formatThaiShortDate } from '../../lib/utils';
 
 interface ContractCardProps {
     contract: Contract;
@@ -66,9 +67,33 @@ const getStatusLabel = (status: ContractStatus): string => {
 const getDaysUntilExpiry = (endDate: string): number => {
     const end = new Date(endDate);
     const now = new Date();
-    const diffTime = end.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
+    end.setHours(0, 0, 0, 0);
+    now.setHours(0, 0, 0, 0);
+    return Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+};
+
+const addMonths = (date: Date, months: number): Date => {
+    const result = new Date(date);
+    const day = result.getDate();
+    result.setDate(1);
+    result.setMonth(result.getMonth() + months);
+    const lastDayOfMonth = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
+    result.setDate(Math.min(day, lastDayOfMonth));
+    return result;
+};
+
+const getExpiryHighlight = (contract: Contract) => {
+    if (contract.status !== 'active') return undefined;
+
+    const end = new Date(contract.end_date);
+    const today = new Date();
+    end.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (end.getTime() <= addMonths(today, 1).getTime()) return { bg: 'red.50', border: 'red.400' };
+    if (end.getTime() <= addMonths(today, 2).getTime()) return { bg: 'orange.50', border: 'orange.400' };
+    if (end.getTime() <= addMonths(today, 4).getTime()) return { bg: 'yellow.50', border: 'yellow.400' };
+    return undefined;
 };
 
 export const ContractCard: React.FC<ContractCardProps> = ({
@@ -85,15 +110,20 @@ export const ContractCard: React.FC<ContractCardProps> = ({
     const daysUntilExpiry = getDaysUntilExpiry(contract.end_date);
     const isExpiringSoon = contract.status === 'active' && daysUntilExpiry <= 30 && daysUntilExpiry > 0;
     const isExpired = daysUntilExpiry <= 0;
+    const expiryHighlight = getExpiryHighlight(contract);
 
     return (
-        <Card.Root>
+        <Card.Root
+            minW={0}
+            bg={expiryHighlight?.bg}
+            borderLeftWidth={expiryHighlight ? '4px' : undefined}
+            borderLeftColor={expiryHighlight?.border}
+        >
             <Card.Body>
                 <VStack align="stretch" gap={4}>
-                    {/* Header */}
-                    <HStack justify="space-between" align="start">
-                        <VStack align="start" gap={1}>
-                            <Heading size="lg">
+                    <HStack justify="space-between" align="start" gap={3} wrap="wrap">
+                        <VStack align="start" gap={1} minW={0} flex={1}>
+                            <Heading size="lg" wordBreak="break-word">
                                 {contract.tenant?.full_name || 'ไม่ระบุผู้เช่า'}
                             </Heading>
                             <HStack gap={2}>
@@ -105,7 +135,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                 </Text>
                             </HStack>
                         </VStack>
-                        <VStack align="end" gap={1}>
+                        <VStack align="end" gap={1} flexShrink={0}>
                             <Badge colorPalette={statusColor} size="lg">
                                 {statusLabel}
                             </Badge>
@@ -122,8 +152,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                         </VStack>
                     </HStack>
 
-                    {/* Details */}
-                    <Grid templateColumns="repeat(2, 1fr)" gap={3}>
+                    <Grid templateColumns={{ base: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }} gap={3}>
                         <VStack align="start" gap={1}>
                             <HStack gap={2}>
                                 <Icon color="blue.500" fontSize="sm">
@@ -149,7 +178,6 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                             </HStack>
                             <Text fontSize="sm" color="gray.600" pl={6}>
                                 {(() => {
-                                    // Priority 1: Dynamic Rent from Position Setting
                                     if (contract.tenant?.position_level && rentRates) {
                                         const rate = rentRates.find(r => r.position_level === contract.tenant?.position_level);
                                         if (rate && rate.rent_amount > 0) return `฿${rate.rent_amount.toLocaleString()}`;
@@ -169,7 +197,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                 </Text>
                             </HStack>
                             <Text fontSize="sm" color="gray.600" pl={6}>
-                                {new Date(contract.start_date).toLocaleDateString('th-TH')}
+                                {formatThaiShortDate(contract.start_date)}
                             </Text>
                         </VStack>
 
@@ -183,7 +211,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                 </Text>
                             </HStack>
                             <Text fontSize="sm" color="gray.600" pl={6}>
-                                {new Date(contract.end_date).toLocaleDateString('th-TH')}
+                                {formatThaiShortDate(contract.end_date)}
                             </Text>
                         </VStack>
                     </Grid>
@@ -197,9 +225,14 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                         </Text>
                     </VStack>
 
-                    {/* Actions */}
-                    <HStack gap={2} pt={2} borderTop="1px" borderColor="gray.200">
-                        <Button variant="outline" size="sm" flex={1} onClick={() => onView(contract)}>
+                    <Grid
+                        templateColumns="repeat(auto-fit, minmax(112px, 1fr))"
+                        gap={2}
+                        pt={2}
+                        borderTop="1px"
+                        borderColor="gray.200"
+                    >
+                        <Button variant="outline" size="sm" w="full" minW={0} onClick={() => onView(contract)}>
                             <Icon mr={2}>
                                 <LuEye />
                             </Icon>
@@ -209,6 +242,8 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                             variant="outline"
                             colorPalette="blue"
                             size="sm"
+                            w="full"
+                            minW={0}
                             onClick={() => onEdit(contract)}
                         >
                             <Icon mr={1}>
@@ -222,6 +257,8 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                     variant="outline"
                                     colorPalette="blue"
                                     size="sm"
+                                    w="full"
+                                    minW={0}
                                     onClick={() => onRenew(contract)}
                                 >
                                     <Icon mr={1}>
@@ -233,6 +270,8 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                     variant="outline"
                                     colorPalette="purple"
                                     size="sm"
+                                    w="full"
+                                    minW={0}
                                     onClick={() => onTransfer(contract)}
                                 >
                                     <Icon mr={1}>
@@ -244,6 +283,9 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                     variant="outline"
                                     colorPalette="red"
                                     size="sm"
+                                    w="full"
+                                    minW={0}
+                                    aria-label="ยกเลิกสัญญา"
                                     onClick={() => onCancel(contract)}
                                 >
                                     <Icon>
@@ -252,7 +294,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                 </Button>
                             </>
                         )}
-                    </HStack>
+                    </Grid>
                 </VStack>
             </Card.Body>
         </Card.Root>

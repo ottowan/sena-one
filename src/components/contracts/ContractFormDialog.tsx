@@ -10,7 +10,7 @@ import {
     DialogCloseTrigger,
 } from '../ui/dialog';
 import { Button } from '../ui/button';
-import { Input, VStack, Grid, Text } from '@chakra-ui/react';
+import { Box, Input, VStack, Grid, Text } from '@chakra-ui/react';
 import { Field } from '../ui/field';
 import { NativeSelectField, NativeSelectRoot } from '../ui/native-select';
 import { useCreateContract, useUpdateContract, useContracts } from '../../hooks/useContracts';
@@ -18,12 +18,93 @@ import { useTenants } from '../../hooks/useTenants';
 import { useRooms } from '../../hooks/useRooms';
 import { useRentRates } from '../../hooks/useSettings';
 import type { Contract, ContractStatus } from '../../types';
+import { formatThaiShortDate } from '../../lib/utils';
 
 interface ContractFormDialogProps {
     open: boolean;
     onClose: () => void;
     contract?: Contract | null;
 }
+
+const addYearsAndDaysToDateInput = (dateValue: string, years: number, days: number): string => {
+    if (!dateValue) return '';
+
+    const [year, month, day] = dateValue.split('-').map(Number);
+    const result = new Date(year, month - 1, day);
+    result.setFullYear(result.getFullYear() + years);
+
+    const targetYear = year + years;
+    if (result.getFullYear() !== targetYear || result.getMonth() !== month - 1) {
+        result.setFullYear(targetYear, month, 0);
+    }
+
+    result.setDate(result.getDate() + days);
+
+    const formattedYear = result.getFullYear().toString().padStart(4, '0');
+    const formattedMonth = (result.getMonth() + 1).toString().padStart(2, '0');
+    const formattedDay = result.getDate().toString().padStart(2, '0');
+    return `${formattedYear}-${formattedMonth}-${formattedDay}`;
+};
+
+const formatDateInputForDisplay = (dateValue: string): string => {
+    if (!dateValue) return '';
+
+    return formatThaiShortDate(dateValue);
+};
+
+interface DatePickerInputProps {
+    value: string;
+    onChange: (value: string) => void;
+}
+
+const DatePickerInput: React.FC<DatePickerInputProps> = ({ value, onChange }) => {
+    const pickerRef = React.useRef<HTMLInputElement>(null);
+
+    const openPicker = () => {
+        const picker = pickerRef.current as (HTMLInputElement & { showPicker?: () => void }) | null;
+        if (!picker) return;
+
+        if (picker.showPicker) {
+            picker.showPicker();
+            return;
+        }
+
+        picker.click();
+    };
+
+    return (
+        <Box position="relative">
+            <Input
+                value={formatDateInputForDisplay(value)}
+                placeholder="วัน/เดือน/ปี"
+                readOnly
+                cursor="pointer"
+                onClick={openPicker}
+                onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openPicker();
+                    }
+                }}
+            />
+            <Input
+                ref={pickerRef}
+                type="date"
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
+                position="absolute"
+                top={0}
+                left={0}
+                w="1px"
+                h="1px"
+                opacity={0}
+                pointerEvents="none"
+                tabIndex={-1}
+                aria-hidden="true"
+            />
+        </Box>
+    );
+};
 
 export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
     open,
@@ -34,37 +115,27 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
     const createContract = useCreateContract();
     const updateContract = useUpdateContract();
 
-    // Fetch tenants and available rooms
     const { data: tenants } = useTenants();
     const { data: allRooms } = useRooms();
     const { data: allContracts } = useContracts();
 
-    // Filter available rooms (exclude rooms with active contracts or maintenance)
     const availableRooms = allRooms?.filter((room) => {
-        // If editing, allow the current room
         if (isEdit && contract && room.id === contract.room_id) {
             return true;
         }
-        // Exclude rooms in maintenance status
-        if (room.status === 'maintenance') {
+        if (room.status !== 'available') {
             return false;
         }
-        // Check if room has an active contract
         const hasActiveContract = allContracts?.some(
             (c) => c.room_id === room.id && c.status === 'active'
         );
         return !hasActiveContract;
     }) || [];
-    
-    const rooms = isEdit ? allRooms : availableRooms;
 
-    // Filter available tenants (exclude tenants with active contracts)
     const availableTenants = tenants?.filter((tenant) => {
-        // If editing, allow the current tenant
         if (isEdit && contract && tenant.id === contract.tenant_id) {
             return true;
         }
-        // Check if tenant has an active contract
         const hasActiveContract = allContracts?.some(
             (c) => c.tenant_id === tenant.id && c.status === 'active'
         );
@@ -83,7 +154,6 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
 
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    // Initialize form data when contract changes
     useEffect(() => {
         if (contract) {
             setFormData({
@@ -109,10 +179,8 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
         setErrors({});
     }, [contract, open]);
 
-    // Fetch rent rates
     const { data: rentRates } = useRentRates();
 
-    // Auto-calculate rent based on tenant position
     useEffect(() => {
         if (!isEdit && formData.tenant_id && tenants && rentRates) {
             const selectedTenant = tenants.find(t => t.id === formData.tenant_id);
@@ -129,6 +197,22 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
         }
     }, [formData.tenant_id, tenants, rentRates, isEdit]);
 
+    const handleStartDateChange = (startDate: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            start_date: startDate,
+            end_date: startDate ? addYearsAndDaysToDateInput(startDate, 4, -1) : '',
+        }));
+    };
+
+    const handleEndDateChange = (endDate: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            start_date: endDate ? addYearsAndDaysToDateInput(endDate, -4, 1) : '',
+            end_date: endDate,
+        }));
+    };
+
     const validateForm = (): boolean => {
         const newErrors: Record<string, string> = {};
 
@@ -139,7 +223,6 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
         if (!formData.monthly_rent) newErrors.monthly_rent = 'กรุณาระบุค่าเช่า';
         if (!formData.deposit_amount) newErrors.deposit_amount = 'กรุณาระบุค่ามัดจำ';
 
-        // Validate dates
         if (formData.start_date && formData.end_date) {
             const start = new Date(formData.start_date);
             const end = new Date(formData.end_date);
@@ -148,7 +231,6 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
             }
         }
 
-        // Validate numbers
         if (formData.monthly_rent && parseFloat(formData.monthly_rent) <= 0) {
             newErrors.monthly_rent = 'ค่าเช่าต้องมากกว่า 0';
         }
@@ -205,7 +287,6 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
                 <DialogBody>
                     <form onSubmit={handleSubmit} id="contract-form">
                         <VStack align="stretch" gap={4}>
-                            {/* Tenant Selection */}
                             <Field
                                 label="ผู้เช่า"
                                 required
@@ -234,14 +315,13 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
                                 )}
                             </Field>
 
-                            {/* Room Selection */}
                             <Field
                                 label="ห้อง"
                                 required
                                 invalid={!!errors.room_id}
                                 errorText={errors.room_id}
                             >
-                                <NativeSelectRoot disabled={isEdit}>
+                                <NativeSelectRoot>
                                     <NativeSelectField
                                         value={formData.room_id}
                                         onChange={(e) =>
@@ -262,9 +342,13 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
                                         ไม่มีห้องว่างในขณะนี้
                                     </Text>
                                 )}
+                                {isEdit && (
+                                    <Text fontSize="sm" color="gray.500" mt={1}>
+                                        แสดงเฉพาะห้องเดิม และห้องว่างที่ไม่มีสัญญาใช้งานอยู่
+                                    </Text>
+                                )}
                             </Field>
 
-                            {/* Dates */}
                             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                 <Field
                                     label="วันที่เริ่มสัญญา"
@@ -272,12 +356,9 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
                                     invalid={!!errors.start_date}
                                     errorText={errors.start_date}
                                 >
-                                    <Input
-                                        type="date"
+                                    <DatePickerInput
                                         value={formData.start_date}
-                                        onChange={(e) =>
-                                            setFormData({ ...formData, start_date: e.target.value })
-                                        }
+                                        onChange={handleStartDateChange}
                                     />
                                 </Field>
 
@@ -287,17 +368,13 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
                                     invalid={!!errors.end_date}
                                     errorText={errors.end_date}
                                 >
-                                    <Input
-                                        type="date"
+                                    <DatePickerInput
                                         value={formData.end_date}
-                                        onChange={(e) =>
-                                            setFormData({ ...formData, end_date: e.target.value })
-                                        }
+                                        onChange={handleEndDateChange}
                                     />
                                 </Field>
                             </Grid>
 
-                            {/* Financial */}
                             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                 <Field
                                     label="ค่าเช่า/เดือน (บาท)"
@@ -332,7 +409,6 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
                                 </Field>
                             </Grid>
 
-                            {/* Status */}
                             {isEdit && (
                                 <Field label="สถานะ" required>
                                     <NativeSelectRoot>

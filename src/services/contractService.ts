@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { pgliteClient } from '../lib/pgliteClient';
 import type { Contract, ContractStatus } from '../types';
 
 export interface ContractFilters {
@@ -15,6 +15,9 @@ export interface ContractStats {
     terminated: number;
     renewed: number;
     expiringSoon: number;
+    remainingFourMonths: number;
+    remainingTwoMonths: number;
+    expiredByDate: number;
 }
 
 export interface RenewalData {
@@ -24,9 +27,9 @@ export interface RenewalData {
 }
 
 export interface TransferData {
-    new_tenant_id: string;
+    new_room_id: string;
     transfer_date: string;
-    notes?: string;
+    reason?: string;
 }
 
 export interface CancellationData {
@@ -35,25 +38,47 @@ export interface CancellationData {
     refund_deposit: boolean;
 }
 
+async function assertRoomCanBeAssigned(roomId: string, currentContractId?: string) {
+    const { data: room, error: roomError } = await pgliteClient
+        .from('rooms')
+        .select('id, status, current_tenant_id')
+        .eq('id', roomId)
+        .maybeSingle();
+
+    if (roomError) throw roomError;
+    if (!room) throw new Error('ไม่พบห้องพักที่เลือก');
+    if (room.status !== 'available') {
+        throw new Error('ห้องพักที่เลือกไม่ว่าง กรุณาเลือกห้องว่างเท่านั้น');
+    }
+
+    let contractQuery = pgliteClient
+        .from('contracts')
+        .select('id')
+        .eq('room_id', roomId)
+        .eq('status', 'active');
+
+    if (currentContractId) {
+        contractQuery = contractQuery.neq('id', currentContractId);
+    }
+
+    const { data: activeContracts, error: contractError } = await contractQuery;
+    if (contractError) throw contractError;
+    if ((activeContracts?.length || 0) > 0) {
+        throw new Error('ห้องพักที่เลือกมีสัญญาใช้งานอยู่แล้ว');
+    }
+}
+
 export const contractService = {
     // ดึงรายการสัญญาทั้งหมด
     async getContracts(filters?: ContractFilters): Promise<Contract[]> {
-        let query = supabase
+        let query = pgliteClient
             .from('contracts')
             .select(`
         *,
         tenant:tenants(*),
         room:rooms(*)
       `)
-            .order('created_at', { ascending: false });
-
-        // Apply filters
-        if (filters?.searchTerm) {
-            // Search in tenant name or room number via joins
-            query = query.or(
-                `tenant.full_name.ilike.%${filters.searchTerm}%,room.room_number.ilike.%${filters.searchTerm}%`
-            );
-        }
+            .order('end_date', { ascending: true });
 
         if (filters?.status) {
             query = query.eq('status', filters.status);
@@ -74,12 +99,21 @@ export const contractService = {
             throw error;
         }
 
-        return data || [];
+        let contracts = data || [];
+        if (filters?.searchTerm) {
+            const lowerTerm = filters.searchTerm.toLowerCase();
+            contracts = contracts.filter((contract) =>
+                contract.tenant?.full_name?.toLowerCase().includes(lowerTerm) ||
+                contract.room?.room_number?.toLowerCase().includes(lowerTerm)
+            );
+        }
+
+        return contracts;
     },
 
     // ดึงสัญญาเดียว
     async getContract(id: string): Promise<Contract | null> {
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .from('contracts')
             .select(`
         *,
@@ -101,8 +135,12 @@ export const contractService = {
     async createContract(
         contract: Omit<Contract, 'id' | 'created_at' | 'tenant' | 'room'>
     ): Promise<Contract> {
+        if (contract.status === 'active') {
+            await assertRoomCanBeAssigned(contract.room_id);
+        }
+
         // Start transaction-like operations
-        const { data: newContract, error: contractError } = await supabase
+        const { data: newContract, error: contractError } = await pgliteClient
             .from('contracts')
             .insert([contract])
             .select()
@@ -114,21 +152,35 @@ export const contractService = {
         }
 
         // Update room status to occupied
-        await supabase
+        const roomUpdate = await pgliteClient
             .from('rooms')
             .update({
                 status: 'occupied',
+                current_tenant_id: contract.tenant_id,
+                updated_at: new Date().toISOString(),
             })
             .eq('id', contract.room_id);
 
+        if (roomUpdate.error) {
+            console.error('Error updating room for contract:', roomUpdate.error);
+            throw roomUpdate.error;
+        }
+
         // Update tenant status to active
-        await supabase
+        const tenantUpdate = await pgliteClient
             .from('tenants')
             .update({
                 status: 'active',
                 move_in_date: contract.start_date,
+                current_room_id: contract.room_id,
+                updated_at: new Date().toISOString(),
             })
             .eq('id', contract.tenant_id);
+
+        if (tenantUpdate.error) {
+            console.error('Error updating tenant for contract:', tenantUpdate.error);
+            throw tenantUpdate.error;
+        }
 
         return newContract;
     },
@@ -142,7 +194,16 @@ export const contractService = {
         const original = await this.getContract(id);
         if (!original) throw new Error('Contract not found');
 
-        const { data, error } = await supabase
+        const nextRoomId = updates.room_id || original.room_id;
+        const nextTenantId = updates.tenant_id || original.tenant_id;
+        const nextStatus = updates.status || original.status;
+        const roomChanged = !!updates.room_id && updates.room_id !== original.room_id;
+
+        if (nextStatus === 'active' && (roomChanged || original.status !== 'active')) {
+            await assertRoomCanBeAssigned(nextRoomId, id);
+        }
+
+        const { data, error } = await pgliteClient
             .from('contracts')
             .update(updates)
             .eq('id', id)
@@ -154,38 +215,63 @@ export const contractService = {
             throw error;
         }
 
+        if (roomChanged) {
+            await pgliteClient
+                .from('rooms')
+                .update({
+                    status: 'available',
+                    current_tenant_id: null,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('id', original.room_id);
+        }
+
+        if (nextStatus === 'active') {
+            await pgliteClient
+                .from('rooms')
+                .update({
+                    status: 'occupied',
+                    current_tenant_id: nextTenantId,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('id', nextRoomId);
+
+            await pgliteClient
+                .from('tenants')
+                .update({
+                    status: 'active',
+                    move_in_date: updates.start_date || original.start_date,
+                    current_room_id: nextRoomId,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('id', nextTenantId);
+        }
+
         // Update room and tenant status based on contract status changes
         if (updates.status) {
-            if (updates.status === 'active') {
-                // Set room to occupied
-                await supabase
-                    .from('rooms')
-                    .update({ status: 'occupied' })
-                    .eq('id', original.room_id);
-
-                // Set tenant to active
-                await supabase
-                    .from('tenants')
-                    .update({ 
-                        status: 'active',
-                        move_in_date: updates.start_date || original.start_date
-                    })
-                    .eq('id', original.tenant_id);
-            } else if (updates.status === 'terminated' || updates.status === 'expired') {
+            if (updates.status === 'terminated' || updates.status === 'expired' || updates.status === 'renewed') {
                 // Set room to available
-                await supabase
+                await pgliteClient
                     .from('rooms')
-                    .update({ status: 'available' })
-                    .eq('id', original.room_id);
-
-                // Set tenant to inactive
-                await supabase
-                    .from('tenants')
-                    .update({ 
-                        status: 'inactive',
-                        move_out_date: new Date().toISOString()
+                    .update({
+                        status: 'available',
+                        current_tenant_id: null,
+                        updated_at: new Date().toISOString(),
                     })
-                    .eq('id', original.tenant_id);
+                    .eq('id', nextRoomId);
+
+                if (updates.status === 'terminated' || updates.status === 'expired') {
+                    // Set tenant to inactive
+                    await pgliteClient
+                        .from('tenants')
+                        .update({
+                            status: 'inactive',
+                            current_room_id: null,
+                            move_out_date: new Date().toISOString(),
+                            updated_at: new Date().toISOString(),
+                        })
+                        .eq('id', nextTenantId);
+                }
             }
         }
 
@@ -220,28 +306,21 @@ export const contractService = {
         const contract = await this.getContract(id);
         if (!contract) throw new Error('Contract not found');
 
-        // Update old tenant
-        await supabase
-            .from('tenants')
-            .update({
-                status: 'inactive',
-                move_out_date: transferData.transfer_date,
-            })
-            .eq('id', contract.tenant_id);
+        await assertRoomCanBeAssigned(transferData.new_room_id, id);
 
-        // Update contract
         const updated = await this.updateContract(id, {
-            tenant_id: transferData.new_tenant_id,
+            room_id: transferData.new_room_id,
         });
 
-        // Update new tenant
-        await supabase
+        await pgliteClient
             .from('tenants')
             .update({
                 status: 'active',
                 move_in_date: transferData.transfer_date,
+                current_room_id: transferData.new_room_id,
+                updated_at: new Date().toISOString(),
             })
-            .eq('id', transferData.new_tenant_id);
+            .eq('id', contract.tenant_id);
 
         return updated;
     },
@@ -257,7 +336,7 @@ export const contractService = {
         });
 
         // Update room to available
-        await supabase
+        await pgliteClient
             .from('rooms')
             .update({
                 status: 'available',
@@ -265,7 +344,7 @@ export const contractService = {
             .eq('id', contract.room_id);
 
         // Update tenant to inactive
-        await supabase
+        await pgliteClient
             .from('tenants')
             .update({
                 status: 'inactive',
@@ -283,7 +362,7 @@ export const contractService = {
 
     // ดึงสถิติสัญญา
     async getContractStats(): Promise<ContractStats> {
-        const { data: contracts, error } = await supabase
+        const { data: contracts, error } = await pgliteClient
             .from('contracts')
             .select('status, end_date');
 
@@ -292,23 +371,60 @@ export const contractService = {
             throw error;
         }
 
-        const now = new Date();
-        const thirtyDaysFromNow = new Date();
-        thirtyDaysFromNow.setDate(now.getDate() + 30);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const daysUntilEndDate = (endDate: string) => {
+            const datePart = endDate.split('T')[0];
+            const [year, month, day] = datePart.split('-').map(Number);
+            const end = year && month && day
+                ? new Date(year, month - 1, day)
+                : new Date(endDate);
+            end.setHours(0, 0, 0, 0);
+
+            return Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        };
+
+        const endDateValue = (endDate: string) => {
+            const datePart = endDate.split('T')[0];
+            const [year, month, day] = datePart.split('-').map(Number);
+            const end = year && month && day
+                ? new Date(year, month - 1, day)
+                : new Date(endDate);
+            end.setHours(0, 0, 0, 0);
+            return end;
+        };
+
+        const addMonths = (date: Date, months: number): Date => {
+            const result = new Date(date);
+            const day = result.getDate();
+            result.setDate(1);
+            result.setMonth(result.getMonth() + months);
+            const lastDayOfMonth = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
+            result.setDate(Math.min(day, lastDayOfMonth));
+            return result;
+        };
+
+        const isDueWithinMonths = (endDate: string, months: number) => {
+            const end = endDateValue(endDate);
+            return end.getTime() > today.getTime() && end.getTime() <= addMonths(today, months).getTime();
+        };
+
+        const activeContracts = contracts?.filter((c) => c.status === 'active') || [];
 
         const stats: ContractStats = {
             total: contracts?.length || 0,
-            active: contracts?.filter((c) => c.status === 'active').length || 0,
+            active: activeContracts.length,
             expired: contracts?.filter((c) => c.status === 'expired').length || 0,
             terminated: contracts?.filter((c) => c.status === 'terminated').length || 0,
             renewed: contracts?.filter((c) => c.status === 'renewed').length || 0,
-            expiringSoon:
-                contracts?.filter(
-                    (c) =>
-                        c.status === 'active' &&
-                        new Date(c.end_date) <= thirtyDaysFromNow &&
-                        new Date(c.end_date) > now
-                ).length || 0,
+            remainingFourMonths: activeContracts.filter((c) => isDueWithinMonths(c.end_date, 4)).length,
+            remainingTwoMonths: activeContracts.filter((c) => isDueWithinMonths(c.end_date, 2)).length,
+            expiringSoon: activeContracts.filter((c) => {
+                const days = daysUntilEndDate(c.end_date);
+                return days > 0 && days <= 30;
+            }).length,
+            expiredByDate: activeContracts.filter((c) => daysUntilEndDate(c.end_date) <= 0).length,
         };
 
         return stats;
@@ -319,7 +435,7 @@ export const contractService = {
         const futureDate = new Date();
         futureDate.setDate(futureDate.getDate() + days);
 
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .from('contracts')
             .select(`
         *,
