@@ -1,5 +1,91 @@
-import { supabase } from '../lib/supabase';
-import type { Invoice, InvoiceFormData } from '../types';
+import { pgliteClient } from '../lib/pgliteClient';
+import type { AppSettings, Contract, Invoice, InvoiceFormData, RentRate } from '../types';
+
+type BulkInvoiceInput = InvoiceFormData & {
+    contract: Contract;
+};
+
+function billingMonthDate(month: string) {
+    return month.length === 7 ? `${month}-01` : month;
+}
+
+function monthKey(roomId: string, month: string) {
+    return `${roomId}:${month.substring(0, 7)}`;
+}
+
+function buildInvoicePayload(
+    invoice: InvoiceFormData,
+    contract: Contract,
+    appSettings: AppSettings | null,
+    rentRateByPosition: Map<string, RentRate>
+) {
+    const rentConfig = contract.tenant?.position_level
+        ? rentRateByPosition.get(contract.tenant.position_level)
+        : null;
+
+    let rentAmount = contract.monthly_rent || 0;
+    if (rentConfig && rentConfig.rent_amount > 0) {
+        rentAmount = Number(rentConfig.rent_amount);
+    } else if (rentAmount === 0 && contract.room?.monthly_rent) {
+        rentAmount = contract.room.monthly_rent;
+    }
+
+    const waterRate = appSettings?.water_rate || 18;
+    const electricityRate = contract.room?.electricity_rate || appSettings?.electricity_rate || 8;
+    const commonFee = rentConfig?.common_fee ?? appSettings?.common_fee ?? 0;
+    const maintenanceFee = appSettings?.water_maintenance_fee || 0;
+    const waterCost = invoice.water_usage * waterRate;
+    const electricityCost = invoice.electricity_usage * electricityRate;
+    const finalAdditionalCharges = [...(invoice.additional_charges || [])];
+
+    if (commonFee > 0) {
+        finalAdditionalCharges.push({ name: 'เธเนเธฒเธชเนเธงเธเธเธฅเธฒเธ', amount: commonFee });
+    }
+    if (maintenanceFee > 0) {
+        finalAdditionalCharges.push({ name: 'เธเนเธฒเธเธณเธฃเธธเธเธกเธดเน€เธ•เธญเธฃเนเธเนเธณ', amount: maintenanceFee });
+    }
+
+    const additionalTotal = finalAdditionalCharges.reduce((sum, item) => sum + (Number(item.amount) || 0), 0) || 0;
+
+    return {
+        contract_id: invoice.contract_id,
+        tenant_id: contract.tenant_id,
+        room_id: contract.room_id,
+        billing_month: billingMonthDate(invoice.billing_month),
+        rent_amount: rentAmount,
+        water_usage: invoice.water_usage,
+        water_cost: waterCost,
+        water_meter_last: invoice.water_meter_last,
+        water_meter_current: invoice.water_meter_current,
+        electricity_usage: invoice.electricity_usage,
+        electricity_cost: electricityCost,
+        electricity_meter_last: invoice.electricity_meter_last,
+        electricity_meter_current: invoice.electricity_meter_current,
+        additional_charges: finalAdditionalCharges,
+        total_amount: rentAmount + waterCost + electricityCost + additionalTotal,
+        due_date: invoice.due_date,
+        status: 'pending'
+    };
+}
+
+async function getInvoiceSettings() {
+    const [settingsResult, ratesResult] = await Promise.all([
+        pgliteClient.from('app_settings').select('*').single(),
+        pgliteClient.from('position_rent_rates').select('*'),
+    ]);
+
+    if (settingsResult.error) throw settingsResult.error;
+    if (ratesResult.error) throw ratesResult.error;
+
+    const rentRateByPosition = new Map(
+        ((ratesResult.data || []) as RentRate[]).map((rate) => [rate.position_level, rate])
+    );
+
+    return {
+        appSettings: settingsResult.data as AppSettings | null,
+        rentRateByPosition,
+    };
+}
 
 export const invoiceService = {
     // Get all invoices
@@ -8,7 +94,7 @@ export const invoiceService = {
         status?: string,
         month?: string
     ): Promise<Invoice[]> => {
-        let query = supabase
+        let query = pgliteClient
             .from('invoices')
             .select(`
                 *,
@@ -62,7 +148,7 @@ export const invoiceService = {
 
     // Get invoice by ID
     getInvoice: async (id: string): Promise<Invoice> => {
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .from('invoices')
             .select(`
                 *,
@@ -80,7 +166,7 @@ export const invoiceService = {
     // Create invoice
     createInvoice: async (invoice: InvoiceFormData): Promise<Invoice> => {
         // Fetch contract with Room AND Tenant details
-        const { data: contract, error: contractError } = await supabase
+        const { data: contract, error: contractError } = await pgliteClient
             .from('contracts')
             .select('*, room:rooms(*), tenant:tenants(id, position_level)')
             .eq('id', invoice.contract_id)
@@ -90,7 +176,7 @@ export const invoiceService = {
         if (!contract) throw new Error('Contract not found');
 
         // Fetch App Settings for rates
-        const { data: appSettings } = await supabase
+        const { data: appSettings } = await pgliteClient
             .from('app_settings')
             .select('*')
             .single();
@@ -99,7 +185,7 @@ export const invoiceService = {
         let positionRentRate = null;
         let positionCommonFee = null;
         if (contract.tenant?.position_level) {
-            const { data: rentConfig } = await supabase
+            const { data: rentConfig } = await pgliteClient
                 .from('position_rent_rates')
                 .select('rent_amount, common_fee')
                 .eq('position_level', contract.tenant.position_level)
@@ -173,7 +259,7 @@ export const invoiceService = {
             status: 'pending'
         };
 
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .from('invoices')
             .insert(newInvoice)
             .select()
@@ -184,7 +270,7 @@ export const invoiceService = {
         // Save to history_meter
         // billing_month is likely YYYY-MM based on InvoiceFormDialog input
         const billingMonth = invoice.billing_month.substring(0, 7); // Ensure YYYY-MM
-        await supabase.from('history_meter').insert({
+        await pgliteClient.from('history_meter').insert({
             room_id: contract.room_id,
             month: billingMonth,
             water_meter: invoice.water_meter_current,
@@ -194,9 +280,68 @@ export const invoiceService = {
         return data as Invoice;
     },
 
+    getMeterReadingsByMonths: async (
+        roomIds: string[],
+        months: string[]
+    ): Promise<Map<string, { water: number; electricity: number }>> => {
+        if (roomIds.length === 0 || months.length === 0) {
+            return new Map();
+        }
+
+        const monthValues = [...new Set(months.flatMap((month) => [month, `${month}-01`]))];
+        const { data, error } = await pgliteClient
+            .from('history_meter')
+            .select('room_id, month, water_meter, electricity_meter')
+            .in('room_id', roomIds)
+            .in('month', monthValues);
+
+        if (error) throw error;
+
+        return new Map(
+            (data || []).map((row: any) => [
+                monthKey(row.room_id, row.month),
+                {
+                    water: row.water_meter || 0,
+                    electricity: row.electricity_meter || 0,
+                },
+            ])
+        );
+    },
+
+    createInvoicesBulk: async (invoices: BulkInvoiceInput[]): Promise<Invoice[]> => {
+        if (invoices.length === 0) return [];
+
+        const { appSettings, rentRateByPosition } = await getInvoiceSettings();
+        const invoiceRows = invoices.map((invoice) =>
+            buildInvoicePayload(invoice, invoice.contract, appSettings, rentRateByPosition)
+        );
+
+        const { data, error } = await pgliteClient
+            .from('invoices')
+            .insert(invoiceRows)
+            .select();
+
+        if (error) throw error;
+
+        const historyRows = invoices.map((invoice) => ({
+            room_id: invoice.contract.room_id,
+            month: invoice.billing_month.substring(0, 7),
+            water_meter: invoice.water_meter_current || 0,
+            electricity_meter: invoice.electricity_meter_current || 0,
+        }));
+
+        const { error: historyError } = await pgliteClient
+            .from('history_meter')
+            .upsert(historyRows, { onConflict: 'room_id, month' });
+
+        if (historyError) throw historyError;
+
+        return (data || []) as Invoice[];
+    },
+
     // Update invoice status
     updateInvoiceStatus: async (id: string, status: string): Promise<void> => {
-        const { error } = await supabase
+        const { error } = await pgliteClient
             .from('invoices')
             .update({ status })
             .eq('id', id);
@@ -211,7 +356,7 @@ export const invoiceService = {
         // However, we don't store relation id. Let's keep it simple: Invoice deletion doesn't auto-delete history_meter 
         // unless we query it by month/room.
         // For now, leave history_meter as a log.
-        const { error } = await supabase
+        const { error } = await pgliteClient
             .from('invoices')
             .delete()
             .eq('id', id);
@@ -221,7 +366,7 @@ export const invoiceService = {
 
     // Delete multiple invoices
     deleteAllInvoices: async (ids: string[]): Promise<void> => {
-        const { error } = await supabase
+        const { error } = await pgliteClient
             .from('invoices')
             .delete()
             .in('id', ids);
@@ -232,7 +377,7 @@ export const invoiceService = {
     // Get last meter readings for a room
     getLastMeterReading: async (roomId: string): Promise<{ water: number; electricity: number }> => {
         // 1. Try to fetch from history_meter
-        const { data: historyData, error: historyError } = await supabase
+        const { data: historyData, error: historyError } = await pgliteClient
             .from('history_meter')
             .select('water_meter, electricity_meter')
             .eq('room_id', roomId)
@@ -255,7 +400,7 @@ export const invoiceService = {
         }
 
         // 2. Fallback to Invoices (if history_meter is empty or missing data)
-        const { data: lastInvoice } = await supabase
+        const { data: lastInvoice } = await pgliteClient
             .from('invoices')
             .select('water_meter_current, electricity_meter_current')
             .eq('room_id', roomId)
@@ -272,7 +417,7 @@ export const invoiceService = {
         }
 
         // 3. If no history, fetch initial meter from Room
-        const { data: roomData, error: roomError } = await supabase
+        const { data: roomData, error: roomError } = await pgliteClient
             .from('rooms')
             .select('current_water_meter, current_electricity_meter')
             .eq('id', roomId)
@@ -297,7 +442,7 @@ export const invoiceService = {
         // But the insert logic in createInvoice uses usage YYYY-MM.
         // Let's try flexible search: column like 'YYYY-MM%'
 
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .from('history_meter')
             .select('water_meter, electricity_meter')
             .eq('room_id', roomId)

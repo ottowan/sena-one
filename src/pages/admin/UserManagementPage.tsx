@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     Box,
     Grid,
@@ -13,14 +13,13 @@ import {
     Input,
 } from '@chakra-ui/react';
 import { LuUsers, LuSearch, LuShield, LuPencil } from 'react-icons/lu';
-import { supabase } from '../../lib/supabase';
+import { pgliteClient } from '../../lib/pgliteClient';
 import type { Profile, UserRole } from '../../types';
 import { UserRole as UserRoleEnum } from '../../types';
 import { formatDate } from '../../lib/utils';
 import { Button } from '../../components/ui/button';
 import {
     DialogRoot,
-    DialogTrigger,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -28,10 +27,6 @@ import {
     DialogFooter,
     DialogCloseTrigger,
 } from '../../components/ui/dialog';
-import {
-    NativeSelectField,
-    NativeSelectRoot,
-} from '../../components/ui/native-select';
 import { toaster } from '../../components/ui/toaster';
 import { UserFormDialog } from '../../components/users/UserFormDialog';
 import { userService } from '../../services/userService';
@@ -39,27 +34,39 @@ import { userService } from '../../services/userService';
 export const UserManagementPage: React.FC = () => {
     const [users, setUsers] = useState<Profile[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isMutating, setIsMutating] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+    const [page, setPage] = useState(1);
     const [selectedUser, setSelectedUser] = useState<Profile | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false); // Used for Form Dialog
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState<Profile | null>(null);
     const [userToReset, setUserToReset] = useState<Profile | null>(null);
-    const [resetEmail, setResetEmail] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
-    // Services
-    // const { userService } = require('../../services/userService'); // Removed dynamic import
+    const pageSize = 50;
 
     useEffect(() => {
         fetchUsers();
     }, []);
 
+    useEffect(() => {
+        const timer = window.setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm.trim().toLowerCase());
+            setPage(1);
+        }, 250);
+
+        return () => window.clearTimeout(timer);
+    }, [searchTerm]);
+
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const { data, error } = await supabase
+            const { data, error } = await pgliteClient
                 .from('users')
-                .select('*')
+                .select('id, username, phone, full_name, role, created_at, updated_at')
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -78,6 +85,7 @@ export const UserManagementPage: React.FC = () => {
     const handleDeleteUser = async () => {
         if (!userToDelete) return;
         try {
+            setIsMutating(true);
             await userService.deleteUser(userToDelete.id);
             toaster.create({
                 title: 'ลบผู้ใช้สำเร็จ',
@@ -92,20 +100,43 @@ export const UserManagementPage: React.FC = () => {
                 description: error.message,
                 type: 'error',
             });
+        } finally {
+            setIsMutating(false);
         }
     };
 
-    const handleResetPassword = async (email: string) => {
-        try {
-            setLoading(true);
-            await userService.resetPasswordEmail(email);
+    const handleResetPassword = async () => {
+        if (!userToReset) return;
+
+        if (newPassword.length < 6) {
             toaster.create({
-                title: 'ส่งอีเมลรีเซ็ทรหัสผ่านแล้ว',
-                description: `ส่งลิงก์ไปที่ ${email} เรียบร้อย`,
+                title: 'รหัสผ่านสั้นเกินไป',
+                description: 'กรุณากำหนดรหัสผ่านอย่างน้อย 6 ตัวอักษร',
+                type: 'warning',
+            });
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            toaster.create({
+                title: 'รหัสผ่านไม่ตรงกัน',
+                description: 'กรุณาตรวจสอบช่องยืนยันรหัสผ่านอีกครั้ง',
+                type: 'warning',
+            });
+            return;
+        }
+
+        try {
+            setIsMutating(true);
+            await userService.resetUserPassword(userToReset.id, newPassword);
+            toaster.create({
+                title: 'Reset password completed',
+                description: `${userToReset.full_name} can sign in with the new password now.`,
                 type: 'success',
             });
             setUserToReset(null);
-            setResetEmail('');
+            setNewPassword('');
+            setConfirmPassword('');
         } catch (error: any) {
             toaster.create({
                 title: 'เกิดข้อผิดพลาด',
@@ -113,7 +144,7 @@ export const UserManagementPage: React.FC = () => {
                 type: 'error',
             });
         } finally {
-            setLoading(false);
+            setIsMutating(false);
         }
     };
 
@@ -143,19 +174,37 @@ export const UserManagementPage: React.FC = () => {
         }
     };
 
-    const filteredUsers = users.filter(
-        (user) =>
-            user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.role?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredUsers = useMemo(() => {
+        if (!debouncedSearchTerm) return users;
 
-    const stats = {
-        total: users.length,
-        admins: users.filter((u) => u.role === UserRoleEnum.ADMIN).length,
-        owners: users.filter((u) => u.role === UserRoleEnum.OWNER).length,
-        tenants: users.filter((u) => u.role === UserRoleEnum.TENANT).length,
-    };
+        return users.filter((user) =>
+            user.full_name?.toLowerCase().includes(debouncedSearchTerm) ||
+            user.phone?.toLowerCase().includes(debouncedSearchTerm) ||
+            user.role?.toLowerCase().includes(debouncedSearchTerm) ||
+            (user as any).username?.toLowerCase().includes(debouncedSearchTerm)
+        );
+    }, [users, debouncedSearchTerm]);
+
+    const stats = useMemo(() => users.reduce(
+        (acc, user) => {
+            acc.total += 1;
+            if (user.role === UserRoleEnum.ADMIN) acc.admins += 1;
+            if (user.role === UserRoleEnum.OWNER) acc.owners += 1;
+            if (user.role === UserRoleEnum.TENANT) acc.tenants += 1;
+            return acc;
+        },
+        { total: 0, admins: 0, owners: 0, tenants: 0 }
+    ), [users]);
+
+    const totalPages = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
+    const pagedUsers = useMemo(() => {
+        const start = (page - 1) * pageSize;
+        return filteredUsers.slice(start, start + pageSize);
+    }, [filteredUsers, page]);
+
+    useEffect(() => {
+        if (page > totalPages) setPage(totalPages);
+    }, [page, totalPages]);
 
     return (
         <VStack align="stretch" gap={8}>
@@ -301,6 +350,8 @@ export const UserManagementPage: React.FC = () => {
                             </Icon>
                             <Input
                                 placeholder="ค้นหาชื่อ, เบอร์โทร, หรือบทบาท..."
+                                name="user-search"
+                                autoComplete="off"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 pl={10}
@@ -309,6 +360,36 @@ export const UserManagementPage: React.FC = () => {
                         </Box>
                     </HStack>
                 </Card.Body>
+                {filteredUsers.length > pageSize && (
+                    <Card.Footer>
+                        <HStack justify="space-between" w="full">
+                            <Text fontSize="sm" color="gray.600">
+                                แสดง {(page - 1) * pageSize + 1}-{Math.min(page * pageSize, filteredUsers.length)} จาก {filteredUsers.length} รายการ
+                            </Text>
+                            <HStack gap={2}>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    disabled={page <= 1}
+                                    onClick={() => setPage((current) => Math.max(1, current - 1))}
+                                >
+                                    ก่อนหน้า
+                                </Button>
+                                <Text fontSize="sm">
+                                    {page} / {totalPages}
+                                </Text>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    disabled={page >= totalPages}
+                                    onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+                                >
+                                    ถัดไป
+                                </Button>
+                            </HStack>
+                        </HStack>
+                    </Card.Footer>
+                )}
             </Card.Root>
 
             {/* Users Table */}
@@ -340,7 +421,7 @@ export const UserManagementPage: React.FC = () => {
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                                {filteredUsers.map((user) => (
+                                {pagedUsers.map((user) => (
                                     <Table.Row key={user.id}>
                                         <Table.Cell>
                                             <VStack align="start" gap={0}>
@@ -385,7 +466,8 @@ export const UserManagementPage: React.FC = () => {
                                                     colorPalette="blue"
                                                     onClick={() => {
                                                         setUserToReset(user);
-                                                        setResetEmail(''); // Reset email input
+                                                        setNewPassword('');
+                                                        setConfirmPassword('');
                                                     }}
                                                 >
                                                     <Icon mr={1}>
@@ -440,10 +522,10 @@ export const UserManagementPage: React.FC = () => {
                         </Text>
                     </DialogBody>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setDeleteDialogOpen(false)} disabled={loading}>
+                        <Button variant="outline" onClick={() => setDeleteDialogOpen(false)} disabled={isMutating}>
                             ยกเลิก
                         </Button>
-                        <Button colorPalette="red" isLoading={loading} onClick={handleDeleteUser}>
+                        <Button colorPalette="red" loading={isMutating} onClick={handleDeleteUser}>
                             ยืนยันลบ
                         </Button>
                     </DialogFooter>
@@ -452,39 +534,65 @@ export const UserManagementPage: React.FC = () => {
             </DialogRoot>
 
             {/* Reset Password Dialog */}
-            <DialogRoot open={!!userToReset} onOpenChange={(e) => !e.open && setUserToReset(null)}>
+            <DialogRoot
+                open={!!userToReset}
+                onOpenChange={(e) => {
+                    if (!e.open) {
+                        setUserToReset(null);
+                        setNewPassword('');
+                        setConfirmPassword('');
+                    }
+                }}
+            >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>รีเซ็ทรหัสผ่าน</DialogTitle>
+                        <DialogTitle>รีเซ็ตรหัสผ่าน</DialogTitle>
                     </DialogHeader>
                     <DialogBody>
-                        <VStack gap={4}>
+                        <VStack gap={4} align="stretch">
                             <Text>
-                                กรุณาระบุอีเมลของ <strong>{userToReset?.full_name}</strong> เพื่อส่งลิงก์รีเซ็ทรหัสผ่าน
+                                ตั้งรหัสผ่านใหม่ให้ <strong>{userToReset?.full_name}</strong>
                             </Text>
                             <Input
-                                placeholder="ระบุอีเมลผู้ใช้ (เช่น user@example.com)"
-                                value={resetEmail}
-                                onChange={(e) => setResetEmail(e.target.value)}
+                                type="password"
+                                name="new-user-password"
+                                autoComplete="new-password"
+                                placeholder="รหัสผ่านใหม่"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                            />
+                            <Input
+                                type="password"
+                                name="confirm-new-user-password"
+                                autoComplete="new-password"
+                                placeholder="ยืนยันรหัสผ่านใหม่"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                             <Text fontSize="xs" color="gray.500">
-                                * ระบบจะส่งอีเมลพร้อมลิงก์สำหรับตั้งรหัสผ่านใหม่ไปยังที่อยู่ที่ระบุ
+                                * รหัสผ่านจะถูกเปลี่ยนในฐานข้อมูล PGlite ทันที ไม่มีการส่งอีเมล
                             </Text>
                         </VStack>
                     </DialogBody>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setUserToReset(null)} disabled={loading}>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setUserToReset(null);
+                                setNewPassword('');
+                                setConfirmPassword('');
+                            }}
+                            disabled={isMutating}
+                        >
                             ยกเลิก
                         </Button>
                         <Button
                             colorPalette="blue"
-                            isLoading={loading}
-                            onClick={() => {
-                                if (resetEmail) handleResetPassword(resetEmail);
-                            }}
-                            disabled={!resetEmail}
+                            loading={isMutating}
+                            onClick={handleResetPassword}
+                            disabled={!newPassword || !confirmPassword}
                         >
-                            ส่งลิงก์รีเซ็ท
+                            บันทึกรหัสผ่านใหม่
                         </Button>
                     </DialogFooter>
                     <DialogCloseTrigger />

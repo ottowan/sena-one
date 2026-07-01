@@ -374,7 +374,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                         variant="outline"
                                         colorPalette="blue"
                                         onClick={handleLinkUser}
-                                        isLoading={linking}
+                                        loading={linking}
                                     >
                                         ผูกบัญชีอัตโนมัติ
                                     </Button>

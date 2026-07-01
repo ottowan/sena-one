@@ -14,6 +14,7 @@ import {
     useBreakpointValue,
 } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
+import { reportService } from '../../services/reportService';
 import {
     MenuContent,
     MenuItem,
@@ -70,16 +71,13 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onNavigate }) => {
     };
 
     return (
-        <VStack gap={0} align="stretch" h="full" bg="bg.canvas">
+        <VStack gap={0} align="stretch" h="full" bg="white">
             {/* Logo */}
-            <Box p={6} borderBottom="1px" borderColor="border.default">
+            <Box p={6} borderBottom="1px" borderColor="border.default" bg="white">
                 <HStack justify="space-between" mb={1}>
                     <Heading
                         size="xl"
-                        bgGradient="to-r"
-                        gradientFrom="brand.500"
-                        gradientTo="brand.700"
-                        bgClip="text"
+                        color="brand.700"
                     >
                         Sena-One
                     </Heading>
@@ -104,6 +102,11 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onNavigate }) => {
                             w="full"
                             size="lg"
                             onClick={onNavigate}
+                            bg={isActive ? "brand.50" : undefined}
+                            color={isActive ? "brand.800" : "fg.muted"}
+                            borderLeft="3px solid"
+                            borderColor={isActive ? "brand.500" : "transparent"}
+                            _hover={{ bg: isActive ? "brand.100" : "brand.50", color: "brand.800" }}
                         >
                             <RouterLink to={item.path}>
                                 <Icon fontSize="xl" mr={3}>
@@ -131,7 +134,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onNavigate }) => {
                                     w={8}
                                     h={8}
                                     borderRadius="full"
-                                    bg="brand.500"
+                                    bg="brand.600"
                                     color="white"
                                     display="flex"
                                     alignItems="center"
@@ -182,8 +185,14 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onNavigate }) => {
 export const AdminLayout: React.FC = () => {
     const [open, setOpen] = useState(false);
 
+    React.useEffect(() => {
+        reportService.getDashboardStats().catch((error) => {
+            console.error('Error preloading dashboard stats:', error);
+        });
+    }, []);
+
     return (
-        <Flex minH="100vh" bg="bg.subtle">
+        <Flex minH="100vh" bg="bg.canvas">
             {/* Mobile Header */}
             <Box
                 display={{ base: 'block', lg: 'none' }}
@@ -192,7 +201,7 @@ export const AdminLayout: React.FC = () => {
                 left={0}
                 right={0}
                 zIndex={100}
-                bg="bg.canvas"
+                bg="white"
                 borderBottom="1px"
                 borderColor="border.default"
                 px={4}
@@ -214,7 +223,7 @@ export const AdminLayout: React.FC = () => {
                                 </DrawerBody>
                             </DrawerContent>
                         </DrawerRoot>
-                        <Heading size="md" color="brand.600">Sena-One</Heading>
+                        <Heading size="md" color="brand.700">Sena-One</Heading>
                     </HStack>
                     <ColorModeButton />
                 </HStack>
@@ -224,9 +233,10 @@ export const AdminLayout: React.FC = () => {
             <Box
                 display={{ base: 'none', lg: 'block' }}
                 w="280px"
-                bg="bg.canvas"
+                bg="white"
                 borderRight="1px"
                 borderColor="border.default"
+                boxShadow="sm"
                 position="fixed"
                 h="100vh"
                 overflowY="auto"
@@ -241,8 +251,20 @@ export const AdminLayout: React.FC = () => {
                 flex={1}
                 w="full"
             >
-                <Box p={{ base: 4, md: 8 }}>
-                    <Outlet />
+                <Box position="relative" minH="100vh" overflow="hidden" bg="#F8FBFA">
+                    <Box
+                        position="absolute"
+                        top={0}
+                        left={0}
+                        right={0}
+                        h={{ base: '170px', md: '230px' }}
+                        bg="linear-gradient(135deg, #D9ECE9 0%, #FFF7ED 54%, #F8FBFA 100%)"
+                        borderBottom="1px solid"
+                        borderColor="border.muted"
+                    />
+                    <Box position="relative" zIndex={1} p={{ base: 4, md: 8 }}>
+                        <Outlet />
+                    </Box>
                 </Box>
             </Box>
         </Flex>

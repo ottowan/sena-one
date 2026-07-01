@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { pgliteClient } from '../lib/pgliteClient';
 import type { UserRole } from '../types';
 
 export interface CustomUser {
@@ -14,7 +14,7 @@ export const authService = {
     // Login with username (room number format: sena301) and password
     login: async (username: string, password: string): Promise<{ user?: CustomUser; error?: string }> => {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await pgliteClient
                 .rpc('verify_password', {
                     login_input: username,
                     password_input: password
@@ -68,7 +68,7 @@ export const authService = {
         role: UserRole = 'tenant' as UserRole
     ): Promise<{ userId?: string; error?: string }> => {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await pgliteClient
                 .rpc('create_user', {
                     phone_input: phone,
                     password_input: password,
@@ -88,12 +88,12 @@ export const authService = {
     // Update user password
     updatePassword: async (userId: string, newPassword: string): Promise<{ error?: string }> => {
         try {
-            const { error } = await supabase
+            const { error } = await pgliteClient
                 .from('users')
                 .update({
-                    password_hash: supabase.rpc('crypt', {
+                    password_hash: pgliteClient.rpc('crypt', {
                         password: newPassword,
-                        salt: supabase.rpc('gen_salt', { type: 'bf' })
+                        salt: pgliteClient.rpc('gen_salt', { type: 'bf' })
                     })
                 })
                 .eq('id', userId);

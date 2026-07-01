@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, Heading, VStack, Badge, Text, HStack, Button, Table, Separator } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
+import { pgliteClient } from '../../lib/pgliteClient';
 import { formatCurrency } from '../../lib/utils';
 import { LuFileText } from 'react-icons/lu';
 import {
@@ -158,7 +158,7 @@ export const MyBillsPage: React.FC = () => {
             if (!profile?.id) return;
 
             // 1. Get Tenant ID
-            const { data: tenant } = await supabase
+            const { data: tenant } = await pgliteClient
                 .from('tenants')
                 .select('id')
                 .eq('user_id', profile.id)
@@ -170,7 +170,7 @@ export const MyBillsPage: React.FC = () => {
             }
 
             // 2. Get Invoices by Tenant ID
-            const { data } = await supabase
+            const { data } = await pgliteClient
                 .from('invoices')
                 .select('*, contract:contracts(room:rooms(room_number))')
                 .eq('tenant_id', tenant.id)

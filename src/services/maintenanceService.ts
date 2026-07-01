@@ -1,5 +1,5 @@
-import { supabase } from '../lib/supabase';
-import type { MaintenanceRequest, MaintenanceFormData } from '../types';
+import { pgliteClient } from '../lib/pgliteClient';
+import type { MaintenanceRequest, MaintenanceFormData, MaintenanceStatus } from '../types';
 
 export const maintenanceService = {
     // Get all requests
@@ -7,7 +7,7 @@ export const maintenanceService = {
         status?: string,
         searchTerm?: string
     ): Promise<MaintenanceRequest[]> => {
-        let query = supabase
+        let query = pgliteClient
             .from('maintenance_requests')
             .select(`
                 *,
@@ -41,7 +41,7 @@ export const maintenanceService = {
 
     // Get single request
     getMaintenanceRequest: async (id: string): Promise<MaintenanceRequest> => {
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .from('maintenance_requests')
             .select(`
                 *,
@@ -56,7 +56,7 @@ export const maintenanceService = {
     },
 
     // Create request
-    createMaintenanceRequest: async (data: MaintenanceFormData): Promise<MaintenanceRequest> => {
+    createMaintenanceRequest: async (data: MaintenanceFormData, images?: File[]): Promise<MaintenanceRequest> => {
         // Need to find tenant_id for the room if not provided?
         // Usually, a request is linked to a room AND a tenant.
         // If the admin creates it, they pick a room. We should optionally auto-fill tenant_id from current tenant of that room.
@@ -65,14 +65,14 @@ export const maintenanceService = {
 
         let tenantId = '';
 
-        const { data: roomData } = await supabase
+        const { data: roomData } = await pgliteClient
             .from('rooms')
             .select('current_tenant:tenants(id)')
             .eq('id', data.room_id)
             .single();
 
         if (roomData?.current_tenant) {
-            // calculated property might be array or object depending on supabase client version/types
+            // calculated property might be array or object depending on pgliteClient client version/types
             const tenant: any = roomData.current_tenant;
             if (Array.isArray(tenant) && tenant.length > 0) {
                 tenantId = tenant[0].id;
@@ -82,7 +82,7 @@ export const maintenanceService = {
         }
 
         // Revised Logic to find Tenant
-        const { data: contractData } = await supabase
+        const { data: contractData } = await pgliteClient
             .from('contracts')
             .select('tenant_id')
             .eq('room_id', data.room_id)
@@ -99,7 +99,11 @@ export const maintenanceService = {
             throw new Error("Cannot create maintenance request: No active tenant found for this room.");
         }
 
-        const { data: newRequest, error } = await supabase
+        const uploadedImages = images?.length
+            ? await Promise.all(images.map((file) => maintenanceService.uploadMaintenanceImage(file)))
+            : [];
+
+        const { data: newRequest, error } = await pgliteClient
             .from('maintenance_requests')
             .insert({
                 room_id: data.room_id,
@@ -107,7 +111,7 @@ export const maintenanceService = {
                 title: data.title,
                 description: data.description,
                 priority: data.priority,
-                images: data.images || [],
+                images: [...(data.images || []), ...uploadedImages],
                 status: 'pending'
             })
             .select()
@@ -119,7 +123,7 @@ export const maintenanceService = {
 
     // Update request
     updateMaintenanceRequest: async (id: string, updates: Partial<MaintenanceRequest>): Promise<MaintenanceRequest> => {
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .from('maintenance_requests')
             .update(updates)
             .eq('id', id)
@@ -130,9 +134,13 @@ export const maintenanceService = {
         return data as MaintenanceRequest;
     },
 
+    updateStatus: async (id: string, status: MaintenanceStatus): Promise<MaintenanceRequest> => {
+        return maintenanceService.updateMaintenanceRequest(id, { status });
+    },
+
     // Delete request
     deleteMaintenanceRequest: async (id: string): Promise<void> => {
-        const { error } = await supabase
+        const { error } = await pgliteClient
             .from('maintenance_requests')
             .delete()
             .eq('id', id);
@@ -145,7 +153,7 @@ export const maintenanceService = {
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
         const filePath = `${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await pgliteClient.storage
             .from('maintenance-images')
             .upload(filePath, file);
 
@@ -153,7 +161,7 @@ export const maintenanceService = {
             throw uploadError;
         }
 
-        const { data } = supabase.storage
+        const { data } = pgliteClient.storage
             .from('maintenance-images')
             .getPublicUrl(filePath);
 

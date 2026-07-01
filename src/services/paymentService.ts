@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { pgliteClient } from '../lib/pgliteClient';
 import type { Payment, PaymentFormData } from '../types';
 
 export const paymentService = {
@@ -16,7 +16,7 @@ export const paymentService = {
             const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
             const filePath = `${fileName}`;
 
-            const { error: uploadError } = await supabase.storage
+            const { error: uploadError } = await pgliteClient.storage
                 .from('payment-slips')
                 .upload(filePath, slipFile);
 
@@ -25,7 +25,7 @@ export const paymentService = {
                 throw new Error('ไม่สามารถอัปโหลดสลิปได้: ' + uploadError.message);
             }
 
-            const { data: { publicUrl } } = supabase.storage
+            const { data: { publicUrl } } = pgliteClient.storage
                 .from('payment-slips')
                 .getPublicUrl(filePath);
 
@@ -33,7 +33,7 @@ export const paymentService = {
         }
 
         // 2. Create payment record
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .from('payments')
             .insert({
                 invoice_id: paymentData.invoice_id,
@@ -42,7 +42,7 @@ export const paymentService = {
                 payment_date: paymentData.payment_date,
                 notes: paymentData.notes,
                 receipt_image_url: receiptImageUrl,
-                created_by: (await supabase.auth.getUser()).data.user?.id
+                created_by: (await pgliteClient.auth.getUser()).data.user?.id
             })
             .select()
             .single();
@@ -54,7 +54,7 @@ export const paymentService = {
         // Or should we let the user decide? The requirement implies simple status tracking.
         // Let's safe-guard: Update invoice status to 'paid'.
 
-        await supabase
+        await pgliteClient
             .from('invoices')
             .update({ status: 'paid' })
             .eq('id', paymentData.invoice_id);
@@ -64,7 +64,7 @@ export const paymentService = {
 
     // Get payments for an invoice
     getPaymentsByInvoiceId: async (invoiceId: string): Promise<Payment[]> => {
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .from('payments')
             .select('*')
             .eq('invoice_id', invoiceId)

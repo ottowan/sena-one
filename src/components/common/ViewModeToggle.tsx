@@ -18,7 +18,7 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({ value, onChange 
                     aria-label="Grid view"
                     size="sm"
                     variant={value === 'grid' ? 'solid' : 'outline'}
-                    colorPalette={value === 'grid' ? 'blue' : 'gray'}
+                    colorPalette={value === 'grid' ? 'brand' : 'gray'}
                     onClick={() => onChange('grid')}
                 >
                     <LuGrid3X3 />
@@ -30,7 +30,7 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({ value, onChange 
                     aria-label="List view"
                     size="sm"
                     variant={value === 'list' ? 'solid' : 'outline'}
-                    colorPalette={value === 'list' ? 'blue' : 'gray'}
+                    colorPalette={value === 'list' ? 'brand' : 'gray'}
                     onClick={() => onChange('list')}
                 >
                     <LuList />
@@ -42,7 +42,7 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({ value, onChange 
                     aria-label="Table view"
                     size="sm"
                     variant={value === 'table' ? 'solid' : 'outline'}
-                    colorPalette={value === 'table' ? 'blue' : 'gray'}
+                    colorPalette={value === 'table' ? 'brand' : 'gray'}
                     onClick={() => onChange('table')}
                 >
                     <LuTable />

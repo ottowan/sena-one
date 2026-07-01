@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     Box,
     Grid,
@@ -22,6 +22,7 @@ import { InvoiceDetailsDialog } from '../../components/invoices/InvoiceDetailsDi
 import { BulkInvoiceDialog } from '../../components/invoices/BulkInvoiceDialog';
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { Button } from '../../components/ui/button';
+import { useQueryClient } from '@tanstack/react-query';
 import {
     NativeSelectField,
     NativeSelectRoot,
@@ -30,6 +31,7 @@ import type { Invoice } from '../../types';
 
 export const InvoicesPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('');
     const [monthFilter, setMonthFilter] = useState<string>('');
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -39,12 +41,22 @@ export const InvoicesPage: React.FC = () => {
     const [viewMode, setViewMode] = useState<ViewMode>('table');
     const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
     const [isDeleting, setIsDeleting] = useState(false);
+    const queryClient = useQueryClient();
+
+    useEffect(() => {
+        const timer = window.setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm.trim());
+        }, 250);
+
+        return () => window.clearTimeout(timer);
+    }, [searchTerm]);
 
     const { data: invoices, isLoading } = useInvoices({
-        searchTerm: searchTerm || undefined,
+        searchTerm: debouncedSearchTerm || undefined,
         status: statusFilter || undefined,
         month: monthFilter || undefined,
     });
+    const selectedInvoiceSet = useMemo(() => new Set(selectedInvoices), [selectedInvoices]);
 
     const deleteInvoice = useDeleteInvoice();
 
@@ -89,7 +101,7 @@ export const InvoicesPage: React.FC = () => {
                 });
 
                 setSelectedInvoices([]);
-                window.location.reload(); // Refresh to update list
+                await queryClient.invalidateQueries({ queryKey: ['invoices'] });
             } catch (error: any) {
                 toaster.create({
                     title: 'เกิดข้อผิดพลาด',
@@ -289,6 +301,7 @@ export const InvoicesPage: React.FC = () => {
                                 onDelete={handleDelete}
                                 onExportRoom={handleExportByRoom}
                                 selectedInvoices={selectedInvoices}
+                                selectedInvoiceSet={selectedInvoiceSet}
                                 onSelectInvoice={handleSelectInvoice}
                                 onSelectAll={handleSelectAll}
                             />
@@ -341,23 +354,29 @@ export const InvoicesPage: React.FC = () => {
             </VStack>
 
             {/* Invoice Form Dialog */}
-            <InvoiceFormDialog
-                open={dialogOpen}
-                onClose={handleCloseDialog}
-            />
+            {dialogOpen && (
+                <InvoiceFormDialog
+                    open={dialogOpen}
+                    onClose={handleCloseDialog}
+                />
+            )}
 
             {/* Invoice Details Dialog */}
-            <InvoiceDetailsDialog
-                open={detailsDialogOpen}
-                onClose={() => setDetailsDialogOpen(false)}
-                invoice={selectedInvoice}
-            />
+            {detailsDialogOpen && (
+                <InvoiceDetailsDialog
+                    open={detailsDialogOpen}
+                    onClose={() => setDetailsDialogOpen(false)}
+                    invoice={selectedInvoice}
+                />
+            )}
 
             {/* Bulk Invoice Dialog */}
-            <BulkInvoiceDialog
-                open={bulkDialogOpen}
-                onClose={() => setBulkDialogOpen(false)}
-            />
+            {bulkDialogOpen && (
+                <BulkInvoiceDialog
+                    open={bulkDialogOpen}
+                    onClose={() => setBulkDialogOpen(false)}
+                />
+            )}
         </>
     );
 };

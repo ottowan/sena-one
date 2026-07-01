@@ -15,12 +15,12 @@ export const FloorFilter: React.FC<FloorFilterProps> = ({ value, onChange, count
             <Button
                 size="sm"
                 variant={value === null ? 'solid' : 'outline'}
-                colorPalette={value === null ? 'blue' : 'gray'}
+                colorPalette={value === null ? 'brand' : 'gray'}
                 onClick={() => onChange(null)}
             >
                 ทั้งหมด
                 {counts && (
-                    <Badge ml={2} colorPalette="blue">
+                    <Badge ml={2} colorPalette="brand">
                         {Object.values(counts).reduce((a, b) => a + b, 0)}
                     </Badge>
                 )}
@@ -31,12 +31,12 @@ export const FloorFilter: React.FC<FloorFilterProps> = ({ value, onChange, count
                     key={floor}
                     size="sm"
                     variant={value === floor ? 'solid' : 'outline'}
-                    colorPalette={value === floor ? 'blue' : 'gray'}
+                    colorPalette={value === floor ? 'brand' : 'gray'}
                     onClick={() => onChange(floor)}
                 >
                     ชั้น {floor}
                     {counts && counts[floor] !== undefined && (
-                        <Badge ml={2} colorPalette="blue">
+                        <Badge ml={2} colorPalette="brand">
                             {counts[floor]}
                         </Badge>
                     )}

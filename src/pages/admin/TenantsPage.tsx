@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Box,
     Grid,
@@ -19,6 +19,9 @@ import { TenantDetailsDialog } from '../../components/tenants/TenantDetailsDialo
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { Button } from '../../components/ui/button';
 import type { Tenant } from '../../types';
+import { tenantService } from '../../services/tenantService';
+import { toaster } from '../../components/ui/toaster';
+import { useQueryClient } from '@tanstack/react-query';
 import {
     NativeSelectField,
     NativeSelectRoot,
@@ -32,6 +35,8 @@ export const TenantsPage: React.FC = () => {
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
     const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
     const [viewMode, setViewMode] = useState<ViewMode>('grid');
+    const queryClient = useQueryClient();
+    const autoLinkRunKey = useRef('');
 
     const { data: tenants, isLoading } = useTenants({
         searchTerm: searchTerm || undefined,
@@ -41,6 +46,34 @@ export const TenantsPage: React.FC = () => {
 
     const { data: stats } = useTenantStats();
     const deleteTenant = useDeleteTenant();
+
+    useEffect(() => {
+        if (isLoading || !tenants?.length) return;
+
+        const eligibleTenantIds = tenants
+            .filter((tenant) => !tenant.user_id && tenant.phone && tenant.room?.id)
+            .map((tenant) => tenant.id)
+            .sort();
+        const runKey = eligibleTenantIds.join(',');
+
+        if (!runKey || autoLinkRunKey.current === runKey) return;
+        autoLinkRunKey.current = runKey;
+
+        tenantService.autoLinkUsersWithActiveContracts(eligibleTenantIds)
+            .then((linkedCount) => {
+                if (linkedCount > 0) {
+                    toaster.create({
+                        title: 'ผูกบัญชีผู้ใช้งานอัตโนมัติแล้ว',
+                        description: `ผูกบัญชีให้ผู้เช่า ${linkedCount} รายการ`,
+                        type: 'success',
+                    });
+                    queryClient.invalidateQueries({ queryKey: ['tenants'] });
+                }
+            })
+            .catch((error) => {
+                console.error('Error auto-linking tenant users:', error);
+            });
+    }, [isLoading, tenants, queryClient]);
 
     const handleView = (tenant: Tenant) => {
         setSelectedTenant(tenant);

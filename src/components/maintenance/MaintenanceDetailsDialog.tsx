@@ -51,7 +51,7 @@ export const MaintenanceDetailsDialog: React.FC<MaintenanceDetailsDialogProps> =
     if (!request) return null;
 
     const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newStatus = e.target.value;
+        const newStatus = e.target.value as MaintenanceStatus;
         if (newStatus) {
             updateStatus.mutate({ id: request.id, status: newStatus });
         }

@@ -16,6 +16,7 @@ import { NativeSelectField, NativeSelectRoot } from '../ui/native-select';
 import { useTransferContract } from '../../hooks/useContracts';
 import { useRooms } from '../../hooks/useRooms';
 import type { Contract } from '../../types';
+import { formatThaiShortDate } from '../../lib/utils';
 
 interface TransferContractDialogProps {
     open: boolean;
@@ -82,7 +83,7 @@ export const TransferContractDialog: React.FC<TransferContractDialogProps> = ({
             `ผู้เช่า: ${contract.tenant?.full_name}\n` +
             `จากห้อง: ${contract.room?.room_number}\n` +
             `ไปห้อง: ${newRoom?.room_number}\n` +
-            `วันที่โอน: ${new Date(formData.transfer_date).toLocaleDateString('th-TH')}\n\n` +
+            `วันที่โอน: ${formatThaiShortDate(formData.transfer_date)}\n\n` +
             `การย้ายห้องจะอัปเดตสัญญาและสถานะห้องทั้งสองห้อง`
         );
 

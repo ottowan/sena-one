@@ -1,14 +1,14 @@
 
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { supabase } from '../lib/supabase';
+import { pgliteClient } from '../lib/pgliteClient';
 import { format } from 'date-fns';
 import { th } from 'date-fns/locale';
 
 export const exportService = {
     exportMonthlyInvoices: async (month: string) => {
         // 1. Fetch all rooms
-        const { data: roomsData, error: roomError } = await supabase
+        const { data: roomsData, error: roomError } = await pgliteClient
             .from('rooms')
             .select('*');
 
@@ -24,7 +24,7 @@ export const exportService = {
         const startDate = `${month}-01`;
         const endDate = new Date(year, m, 0).toISOString().split('T')[0];
 
-        const { data: invoices, error: invoiceError } = await supabase
+        const { data: invoices, error: invoiceError } = await pgliteClient
             .from('invoices')
             .select(`
         *,
@@ -38,7 +38,7 @@ export const exportService = {
 
         // 3. Fetch history_meter for Current and Previous Month (for rooms without invoices)
         // Current Month
-        const { data: currentMeters } = await supabase
+        const { data: currentMeters } = await pgliteClient
             .from('history_meter')
             .select('room_id, water_meter, electricity_meter')
             .eq('month', month); // month is YYYY-MM
@@ -53,14 +53,14 @@ export const exportService = {
         }
         const prevMonthStr = `${prevY}-${String(prevM).padStart(2, '0')}`;
 
-        const { data: prevMeters } = await supabase
+        const { data: prevMeters } = await pgliteClient
             .from('history_meter')
             .select('room_id, water_meter, electricity_meter')
             .ilike('month', `${prevMonthStr}%`);
 
         // Create Maps for fast lookup
-        const currentMeterMap = new Map(currentMeters?.map(m => [m.room_id, m]));
-        const prevMeterMap = new Map(prevMeters?.map(m => [m.room_id, m]));
+        const currentMeterMap = new Map<string, any>(currentMeters?.map(m => [m.room_id, m]));
+        const prevMeterMap = new Map<string, any>(prevMeters?.map(m => [m.room_id, m]));
 
         // 4. Prepare Header Data... (existing code)
         // ... (Skipping header setup lines 39-82 as they are unchanged) ...

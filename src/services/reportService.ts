@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { pgliteClient } from '../lib/pgliteClient';
 
 export interface RoomStatusStats {
     available: number;
@@ -12,11 +12,26 @@ export interface RevenueStats {
     amount: number;
 }
 
+interface DashboardStats {
+    totalRooms: number;
+    availableRooms: number;
+    occupiedRooms: number;
+    maintenanceRooms: number;
+    monthlyRevenue: number;
+    overduePayments: number;
+    activeTenants: number;
+    openMaintenanceRequests: number;
+}
+
+const DASHBOARD_STATS_CACHE_MS = 30_000;
+let dashboardStatsCache: { data: DashboardStats; expiresAt: number } | null = null;
+let dashboardStatsPromise: Promise<DashboardStats> | null = null;
+
 export const reportService = {
     // Get room status statistics
     getRoomStatusStats: async (): Promise<RoomStatusStats> => {
         // Fetch rooms directly to count statuses
-        const { data: rooms, error: roomError } = await supabase
+        const { data: rooms, error: roomError } = await pgliteClient
             .from('rooms')
             .select('status');
 
@@ -44,7 +59,7 @@ export const reportService = {
         sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
         const dateStr = `${sixMonthsAgo.getFullYear()}-${String(sixMonthsAgo.getMonth() + 1).padStart(2, '0')}-01`;
 
-        const { data: invoices, error } = await supabase
+        const { data: invoices, error } = await pgliteClient
             .from('invoices')
             .select('billing_month, total_amount')
             .eq('status', 'paid')
@@ -69,7 +84,7 @@ export const reportService = {
 
     // Get detailed financial report
     getFinancialReport: async (month: string, status?: string): Promise<any[]> => {
-        let query = supabase
+        let query = pgliteClient
             .from('invoices')
             .select(`
                 *,
@@ -103,7 +118,7 @@ export const reportService = {
     // Get utility usage report
     getUtilityReport: async (month: string): Promise<any[]> => {
         // 1. Fetch ALL Rooms (to include Vacant, Maintenance)
-        const { data: allRooms, error: roomError } = await supabase
+        const { data: allRooms, error: roomError } = await pgliteClient
             .from('rooms')
             .select('*')
             .order('room_number');
@@ -112,22 +127,22 @@ export const reportService = {
 
         // 2. Fetch history_meter for SELECTED month
         // We use month string query since column is TEXT YYYY-MM
-        const { data: meters, error: meterError } = await supabase
+        const { data: meters, error: meterError } = await pgliteClient
             .from('history_meter')
             .select('*')
             .eq('month', month);
 
         if (meterError) throw meterError;
 
-        const meterMap = new Map(meters?.map(m => [m.room_id, m]));
+        const meterMap = new Map<string, any>(meters?.map(m => [m.room_id, m]));
 
         // 3. Fetch active contracts to get tenant names
-        const { data: contracts } = await supabase
+        const { data: contracts } = await pgliteClient
             .from('contracts')
             .select('room_id, tenant:tenants(full_name)')
             .eq('status', 'active');
 
-        const contractMap = new Map(contracts?.map(c => [c.room_id, (c.tenant as any)?.full_name]));
+        const contractMap = new Map<string, string>(contracts?.map(c => [c.room_id, (c.tenant as any)?.full_name]));
 
         // 4. Fetch PREVIOUS month history (for calc)
         const [y, m] = month.split('-').map(Number);
@@ -139,12 +154,12 @@ export const reportService = {
         }
         const prevMonthStr = `${prevY}-${String(prevM).padStart(2, '0')}`;
         // Flexible fetch for prev month
-        const { data: prevMeters } = await supabase
+        const { data: prevMeters } = await pgliteClient
             .from('history_meter')
             .select('room_id, water_meter, electricity_meter')
             .ilike('month', `${prevMonthStr}%`);
 
-        const prevMap = new Map(prevMeters?.map(pm => [pm.room_id, pm]));
+        const prevMap = new Map<string, any>(prevMeters?.map(pm => [pm.room_id, pm]));
 
         // 5. Combine Data
         const reportData = allRooms.map(room => {
@@ -193,64 +208,58 @@ export const reportService = {
 
 
     // Get dashboard statistics
-    getDashboardStats: async () => {
+    getDashboardStats: async (options?: { forceRefresh?: boolean }): Promise<DashboardStats> => {
+        if (!options?.forceRefresh && dashboardStatsCache && dashboardStatsCache.expiresAt > Date.now()) {
+            return dashboardStatsCache.data;
+        }
+        if (!options?.forceRefresh && dashboardStatsPromise) {
+            return dashboardStatsPromise;
+        }
+
         const today = new Date();
         const currentMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
         const nextMonthStart = new Date(today.getFullYear(), today.getMonth() + 1, 1).toISOString().slice(0, 10);
-
-        // 1. Room Stats (Available vs Total)
-        const { data: rooms } = await supabase.from('rooms').select('status');
-        const totalRooms = rooms?.length || 0;
-        const availableRooms = rooms?.filter(r => r.status === 'available').length || 0;
-        const occupiedRooms = rooms?.filter(r => r.status === 'occupied').length || 0;
-        const maintenanceRooms = rooms?.filter(r => r.status === 'maintenance').length || 0;
-
-        // 2. Revenue (Paid Invoices in Current Month)
-        const { data: paidInvoices } = await supabase
-            .from('invoices')
-            .select('total_amount')
-            .eq('status', 'paid')
-            .gte('billing_month', currentMonthStart)
-            .lt('billing_month', nextMonthStart);
-
-        const monthlyRevenue = paidInvoices?.reduce((sum, inv) => sum + inv.total_amount, 0) || 0;
-
-        // 3. Overdue Payments (Pending and Due Date < Today)
         const todayStr = today.toISOString().slice(0, 10);
-        const { count: overdueCount } = await supabase
-            .from('invoices')
-            .select('*', { count: 'exact', head: true })
-            .eq('status', 'pending')
-            .lt('due_date', todayStr);
 
-        // 4. Active Tenants
-        const { count: activeTenants } = await supabase
-            .from('contracts')
-            .select('*', { count: 'exact', head: true })
-            .eq('status', 'active');
+        dashboardStatsPromise = (async () => {
+            const { data, error } = await pgliteClient.rpc('get_dashboard_stats', {
+                current_month_start: currentMonthStart,
+                next_month_start: nextMonthStart,
+                today: todayStr,
+            });
 
-        // 5. Open Maintenance Requests
-        const { count: openMaintenance } = await supabase
-            .from('maintenance_requests')
-            .select('*', { count: 'exact', head: true })
-            .eq('status', 'pending');
+            if (error) throw error;
 
-        return {
-            totalRooms,
-            availableRooms,
-            occupiedRooms,
-            maintenanceRooms,
-            monthlyRevenue,
-            overduePayments: overdueCount || 0,
-            activeTenants: activeTenants || 0,
-            openMaintenanceRequests: openMaintenance || 0
-        };
+            const stats: DashboardStats = {
+                totalRooms: Number(data?.totalRooms || 0),
+                availableRooms: Number(data?.availableRooms || 0),
+                occupiedRooms: Number(data?.occupiedRooms || 0),
+                maintenanceRooms: Number(data?.maintenanceRooms || 0),
+                monthlyRevenue: Number(data?.monthlyRevenue || 0),
+                overduePayments: Number(data?.overduePayments || 0),
+                activeTenants: Number(data?.activeTenants || 0),
+                openMaintenanceRequests: Number(data?.openMaintenanceRequests || 0),
+            };
+
+            dashboardStatsCache = {
+                data: stats,
+                expiresAt: Date.now() + DASHBOARD_STATS_CACHE_MS,
+            };
+
+            return stats;
+        })();
+
+        try {
+            return await dashboardStatsPromise;
+        } finally {
+            dashboardStatsPromise = null;
+        }
     },
 
     // Get recent activity
     getRecentActivity: async () => {
         // Fetch last 3 paid invoices
-        const { data: invoices } = await supabase
+        const { data: invoices } = await pgliteClient
             .from('invoices')
             .select(`
                 id,
@@ -264,7 +273,7 @@ export const reportService = {
             .limit(3);
 
         // Fetch last 3 created maintenance requests
-        const { data: maintenance } = await supabase
+        const { data: maintenance } = await pgliteClient
             .from('maintenance_requests')
             .select(`
                 id,

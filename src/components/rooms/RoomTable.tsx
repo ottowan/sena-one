@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Badge, HStack, IconButton, Icon } from '@chakra-ui/react';
-import { LuEye, LuPencil, LuTrash2 } from 'react-icons/lu';
+import { LuEye, LuLock, LuPencil, LuTrash2 } from 'react-icons/lu';
 import type { Room } from '../../types';
 import { Tooltip } from '../ui/tooltip';
 import type { RentRate } from '../../types';
@@ -59,7 +59,10 @@ export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, 
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {rooms.map((room) => (
+                {rooms.map((room) => {
+                    const isLocked = !!room.has_active_contract;
+
+                    return (
                     <Table.Row key={room.id}>
                         <Table.Cell fontWeight="medium">{room.room_number}</Table.Cell>
                         <Table.Cell>{room.room_type}</Table.Cell>
@@ -105,10 +108,11 @@ export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, 
                                         aria-label="View"
                                         size="xs"
                                         variant="ghost"
+                                        disabled={isLocked}
                                         onClick={() => onView(room)}
                                     >
                                         <Icon>
-                                            <LuEye />
+                                            {isLocked ? <LuLock /> : <LuEye />}
                                         </Icon>
                                     </IconButton>
                                 </Tooltip>
@@ -117,10 +121,11 @@ export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, 
                                         aria-label="Edit"
                                         size="xs"
                                         variant="ghost"
+                                        disabled={isLocked}
                                         onClick={() => onEdit(room)}
                                     >
                                         <Icon>
-                                            <LuPencil />
+                                            {isLocked ? <LuLock /> : <LuPencil />}
                                         </Icon>
                                     </IconButton>
                                 </Tooltip>
@@ -130,17 +135,19 @@ export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, 
                                         size="xs"
                                         variant="ghost"
                                         colorPalette="red"
+                                        disabled={isLocked}
                                         onClick={() => onDelete(room)}
                                     >
                                         <Icon>
-                                            <LuTrash2 />
+                                            {isLocked ? <LuLock /> : <LuTrash2 />}
                                         </Icon>
                                     </IconButton>
                                 </Tooltip>
                             </HStack>
                         </Table.Cell>
                     </Table.Row>
-                ))}
+                    );
+                })}
             </Table.Body>
         </Table.Root>
     );

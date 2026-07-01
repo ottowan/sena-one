@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { maintenanceService } from '../services/maintenanceService';
-import type { MaintenanceFormData } from '../types';
+import type { MaintenanceFormData, MaintenanceStatus } from '../types';
 import { toaster } from '../components/ui/toaster';
 
 export const useMaintenanceRequests = (status?: string, searchTerm?: string) => {
@@ -38,7 +38,7 @@ export const useUpdateMaintenanceStatus = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ id, status }: { id: string; status: string }) =>
+        mutationFn: ({ id, status }: { id: string; status: MaintenanceStatus }) =>
             maintenanceService.updateStatus(id, status),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['maintenance-requests'] });

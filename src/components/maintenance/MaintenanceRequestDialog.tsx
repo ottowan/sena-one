@@ -187,11 +187,10 @@ export const MaintenanceRequestDialog: React.FC<MaintenanceRequestDialogProps> =
                     <form id="maintenance-form" onSubmit={handleSubmit}>
                         <VStack align="stretch" gap={4}>
                             <Field label="ห้อง (เฉพาะห้องที่มีผู้เช่า)" required>
-                                <NativeSelectRoot>
+                                <NativeSelectRoot disabled={!!requestToEdit}>
                                     <NativeSelectField
                                         value={formData.room_id}
                                         onChange={(e) => setFormData({ ...formData, room_id: e.target.value })}
-                                        disabled={!!requestToEdit} // Can't change room when editing
                                         placeholder="เลือกห้อง"
                                     >
                                         {rooms.map((room) => (
@@ -288,7 +287,7 @@ export const MaintenanceRequestDialog: React.FC<MaintenanceRequestDialogProps> =
                         type="submit"
                         form="maintenance-form"
                         colorPalette="blue"
-                        isLoading={isSubmitting || mutation.isPending}
+                        loading={isSubmitting || mutation.isPending}
                     >
                         บันทึก
                     </Button>

@@ -56,6 +56,11 @@ export const RoomsPage: React.FC = () => {
     }, [rooms]);
 
     const handleEdit = (room: Room) => {
+        if (room.has_active_contract) {
+            alert('This room has an active contract and cannot be edited.');
+            return;
+        }
+
         setSelectedRoom(room);
         setDialogOpen(true);
     };

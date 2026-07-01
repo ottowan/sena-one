@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, Heading, VStack, Text, Grid, Badge, Spinner } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
+import { pgliteClient } from '../../lib/pgliteClient';
 import { formatCurrency } from '../../lib/utils';
 
 export const MyContractPage: React.FC = () => {
@@ -13,7 +13,7 @@ export const MyContractPage: React.FC = () => {
         const fetchContract = async () => {
             if (!profile?.id) return;
 
-            const { data: tenant } = await supabase
+            const { data: tenant } = await pgliteClient
                 .from('tenants')
                 .select('id, position_level')
                 .eq('user_id', profile.id)
@@ -24,7 +24,7 @@ export const MyContractPage: React.FC = () => {
                 return;
             }
 
-            const { data: contractData } = await supabase
+            const { data: contractData } = await pgliteClient
                 .from('contracts')
                 .select('*, room:rooms(*)')
                 .eq('tenant_id', tenant.id)
@@ -33,7 +33,7 @@ export const MyContractPage: React.FC = () => {
                 .maybeSingle();
 
             // Fetch rent rates to calculate dynamic rent
-            const { data: rentRates } = await supabase
+            const { data: rentRates } = await pgliteClient
                 .from('position_rent_rates')
                 .select('*');
 

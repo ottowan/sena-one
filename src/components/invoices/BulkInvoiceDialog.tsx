@@ -24,6 +24,7 @@ import { contractService } from '../../services/contractService';
 import { invoiceService } from '../../services/invoiceService';
 import { toaster } from '../../components/ui/toaster';
 import { type Contract, ContractStatus } from '../../types';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface BulkInvoiceDialogProps {
     open: boolean;
@@ -40,6 +41,7 @@ interface BulkRowData {
 }
 
 export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onClose }) => {
+    const queryClient = useQueryClient();
     const [isLoading, setIsLoading] = useState(false);
     const [rows, setRows] = useState<BulkRowData[]>([]);
     const [billingMonth, setBillingMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
@@ -62,24 +64,20 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
         try {
             const contracts = await contractService.getContracts({ status: ContractStatus.ACTIVE });
 
-            // Fetch last meter readings for each room in parallel
-            const rowsData = await Promise.all(contracts.map(async (c) => {
-                // Determine Previous Month String
-                // billingMonth is YYYY-MM
-                const [y, m] = billingMonth.split('-').map(Number);
-                let prevY = y;
-                let prevM = m - 1;
-                if (prevM === 0) {
-                    prevM = 12;
-                    prevY -= 1;
-                }
-                const prevMonthStr = `${prevY}-${prevM.toString().padStart(2, '0')}`;
+            const [y, m] = billingMonth.split('-').map(Number);
+            let prevY = y;
+            let prevM = m - 1;
+            if (prevM === 0) {
+                prevM = 12;
+                prevY -= 1;
+            }
+            const prevMonthStr = `${prevY}-${prevM.toString().padStart(2, '0')}`;
+            const roomIds = contracts.map((contract) => contract.room_id);
+            const meterReadings = await invoiceService.getMeterReadingsByMonths(roomIds, [prevMonthStr, billingMonth]);
 
-                // Fetch Previous Reading (for 'Last Meter')
-                const prevMeter = await invoiceService.getMeterReadingByMonth(c.room_id, prevMonthStr);
-
-                // Fetch Current Reading (for 'Current Meter' - if already entered)
-                const currentMeter = await invoiceService.getMeterReadingByMonth(c.room_id, billingMonth);
+            const rowsData = contracts.map((c) => {
+                const prevMeter = meterReadings.get(`${c.room_id}:${prevMonthStr}`);
+                const currentMeter = meterReadings.get(`${c.room_id}:${billingMonth}`);
 
                 // Fallback for Last Meter if specifically prev month not found?
                 // logic: if prev month empty, maybe try get absolute last? 
@@ -109,7 +107,7 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
                     electricityMeterCurrent: currentMeter ? currentElec : lastElec,
                     isSelected: true // Default to selected
                 };
-            }));
+            });
 
             // Sort by room number
             rowsData.sort((a, b) => a.contract.room?.room_number.localeCompare(b.contract.room?.room_number || '') || 0);
@@ -158,6 +156,36 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
         }
 
         setIsLoading(true);
+        try {
+            await invoiceService.createInvoicesBulk(
+                selectedRows.map((row) => ({
+                    contract: row.contract,
+                    contract_id: row.contract.id,
+                    billing_month: billingMonth,
+                    due_date: dueDate,
+                    water_usage: Math.max(0, row.waterMeterCurrent - row.waterMeterLast),
+                    electricity_usage: Math.max(0, row.electricityMeterCurrent - row.electricityMeterLast),
+                    water_meter_last: row.waterMeterLast,
+                    water_meter_current: row.waterMeterCurrent,
+                    electricity_meter_last: row.electricityMeterLast,
+                    electricity_meter_current: row.electricityMeterCurrent,
+                    additional_charges: [],
+                }))
+            );
+            toaster.create({
+                title: `เธชเธฃเนเธฒเธเนเธเนเธเนเธเธซเธเธตเนเธชเธณเน€เธฃเนเธ ${selectedRows.length} เธฃเธฒเธขเธเธฒเธฃ`,
+                type: 'success'
+            });
+            onClose();
+            await queryClient.invalidateQueries({ queryKey: ['invoices'] });
+        } catch (error) {
+            console.error('Bulk invoice create failed:', error);
+            toaster.create({ title: 'เน€เธเธดเธ”เธเนเธญเธเธดเธ”เธเธฅเธฒเธ”เนเธเธเธฒเธฃเธชเธฃเนเธฒเธเนเธเนเธเนเธเธซเธเธตเน', type: 'error' });
+        } finally {
+            setIsLoading(false);
+        }
+        return;
+
         let successCount = 0;
         let failCount = 0;
 

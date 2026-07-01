@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { invoiceService } from '../services/invoiceService';
 import type { InvoiceFormData } from '../types';
 import { toaster } from '../components/ui/toaster';
@@ -13,6 +13,8 @@ export const useInvoices = (options: UseInvoicesOptions = {}) => {
     return useQuery({
         queryKey: ['invoices', options],
         queryFn: () => invoiceService.getInvoices(options.searchTerm, options.status, options.month),
+        placeholderData: keepPreviousData,
+        staleTime: 30_000,
     });
 };
 

@@ -11,8 +11,7 @@ import {
     Grid,
     Image,
 } from '@chakra-ui/react';
-import { LuMapPin, LuDollarSign, LuMaximize, LuPencil, LuTrash2, LuImage, LuRotateCcw, LuHistory } from 'react-icons/lu';
-import { IconButton } from '@chakra-ui/react';
+import { LuMapPin, LuDollarSign, LuMaximize, LuPencil, LuTrash2, LuImage, LuRotateCcw, LuHistory, LuLock } from 'react-icons/lu';
 import type { Room, RoomStatus } from '../../types';
 import { formatCurrency } from '../../lib/utils';
 import { Button } from '../ui/button';
@@ -62,23 +61,15 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onEdit, onD
     const statusColor = getStatusColor(room.status);
     const statusLabel = getStatusLabel(room.status);
     const [historyOpen, setHistoryOpen] = useState(false);
+    const isLocked = !!room.has_active_contract;
 
     const handleDelete = () => {
+        if (isLocked) return;
+
         if (confirm(`ต้องการลบห้อง ${room.room_number} ใช่หรือไม่?`)) {
-            deleteDelete.mutate(room.id);
+            onDelete(room);
         }
     };
-
-    // NOTE: onDelete is passed as prop, but original code used deleteRoom hook inside handleDelete.
-    // However, the prop is named onDelete. I will stick to using the prop or the internal handler if defined.
-    // Reading previous code, `handleDelete` was defined inside calling `deleteRoom.mutate`.
-    // But `deleteRoom` was NOT defined in the previous view! 
-    // Ah, `useDeleteRoom` wasn't imported. The previous code had `onDelete(room)` in the JSX but `handleDelete` function calling `deleteRoom.mutate`.
-    // Let's assume the parent handles deletion via `onDelete` prop which is safer.
-
-    const handleCardDelete = () => {
-        onDelete(room);
-    }
 
     return (
         <>
@@ -223,10 +214,11 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onEdit, onD
                                     variant="outline"
                                     size="sm"
                                     flex={1}
+                                    disabled={isLocked}
                                     onClick={() => onEdit(room)}
                                 >
                                     <Icon mr={2}>
-                                        <LuPencil />
+                                        {isLocked ? <LuLock /> : <LuPencil />}
                                     </Icon>
                                     แก้ไข
                                 </Button>
@@ -235,10 +227,11 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onEdit, onD
                                         variant="outline"
                                         colorPalette="orange"
                                         size="sm"
+                                        disabled={isLocked}
                                         onClick={() => onRelease(room)}
                                     >
                                         <Icon mr={2}>
-                                            <LuRotateCcw />
+                                            {isLocked ? <LuLock /> : <LuRotateCcw />}
                                         </Icon>
                                         คืนห้อง
                                     </Button>
@@ -258,10 +251,11 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onEdit, onD
                                     variant="outline"
                                     colorPalette="red"
                                     size="sm"
+                                    disabled={isLocked}
                                     onClick={handleDelete}
                                 >
                                     <Icon>
-                                        <LuTrash2 />
+                                        {isLocked ? <LuLock /> : <LuTrash2 />}
                                     </Icon>
                                 </Button>
                             </HStack>

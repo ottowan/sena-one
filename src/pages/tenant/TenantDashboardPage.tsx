@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Grid, Heading, Text, Card, VStack, HStack, Button, Icon, Badge, Input, Table } from '@chakra-ui/react';
 import { LuWallet, LuFileText, LuHouse, LuWrench, LuDroplet } from 'react-icons/lu';
 import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
+import { pgliteClient } from '../../lib/pgliteClient';
 import { formatCurrency } from '../../lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { toaster } from '../../components/ui/toaster';
@@ -29,7 +29,7 @@ export const TenantDashboardPage: React.FC = () => {
     const fetchMeterHistory = async (roomId: string, year: number) => {
         const startMonth = `${year}-01`;
         const endMonth = `${year}-12`;
-        const { data } = await supabase
+        const { data } = await pgliteClient
             .from('history_meter')
             .select('*')
             .eq('room_id', roomId)
@@ -46,7 +46,7 @@ export const TenantDashboardPage: React.FC = () => {
 
             try {
                 // 1. Get Tenant Record linked to this User
-                const { data: tenant } = await supabase
+                const { data: tenant } = await pgliteClient
                     .from('tenants')
                     .select('id')
                     .eq('user_id', profile.id)
@@ -58,7 +58,7 @@ export const TenantDashboardPage: React.FC = () => {
                 }
 
                 // 2. Get Active Contract using Tenant ID
-                const { data: contractData } = await supabase
+                const { data: contractData } = await pgliteClient
                     .from('contracts')
                     .select('*, room:rooms(*)')
                     .eq('tenant_id', tenant.id)
@@ -73,7 +73,7 @@ export const TenantDashboardPage: React.FC = () => {
 
                     // Fallback: Fetch room manually if missing
                     if (!contractData.room && contractData.room_id) {
-                        const { data: roomData } = await supabase
+                        const { data: roomData } = await pgliteClient
                             .from('rooms')
                             .select('*')
                             .eq('id', contractData.room_id)
@@ -86,7 +86,7 @@ export const TenantDashboardPage: React.FC = () => {
 
                 // 3. Get Unpaid Invoices
                 if (contractData) {
-                    const { data: invoices } = await supabase
+                    const { data: invoices } = await pgliteClient
                         .from('invoices')
                         .select('*')
                         .eq('contract_id', contractData.id)
@@ -301,7 +301,7 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
         if (!contract?.room_id) return;
 
         // 1. Calculate Smart Default Month
-        const { data: history } = await supabase
+        const { data: history } = await pgliteClient
             .from('history_meter')
             .select('month')
             .eq('room_id', contract.room_id)
@@ -334,7 +334,7 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
         setInvoiceIssued(false);
 
         // 1. Check if Selected Month already exists (Edit Mode)
-        const { data: currentData } = await supabase.from('history_meter')
+        const { data: currentData } = await pgliteClient.from('history_meter')
             .select('water_meter')
             .eq('room_id', contract.room_id)
             .eq('month', monthStr)
@@ -360,7 +360,7 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
         // nextMonth needs to be index 1 (Feb). so m is correct index for next month.
         const nextMonthStr = nextMonthDate.toISOString().slice(0, 10);
 
-        const { data: invoice } = await supabase.from('invoices')
+        const { data: invoice } = await pgliteClient.from('invoices')
             .select('id')
             .eq('room_id', contract.room_id)
             .neq('status', 'cancelled')
@@ -374,7 +374,7 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
         }
 
         // 3. Fetch "Previous" Meter Reading reliably
-        const { data: prevData } = await supabase.from('history_meter')
+        const { data: prevData } = await pgliteClient.from('history_meter')
             .select('water_meter, month')
             .eq('room_id', contract.room_id)
             .lt('month', monthStr)
@@ -392,7 +392,7 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
 
         setIsLoading(true);
         try {
-            const { data: existing } = await supabase.from('history_meter')
+            const { data: existing } = await pgliteClient.from('history_meter')
                 .select('*')
                 .eq('room_id', contract.room_id)
                 .eq('month', selectedMonth)
@@ -405,7 +405,7 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
                 electricity_meter: existing?.electricity_meter || 0
             };
 
-            const { error } = await supabase.from('history_meter').upsert(payload, { onConflict: 'room_id, month' });
+            const { error } = await pgliteClient.from('history_meter').upsert(payload, { onConflict: 'room_id, month' });
             if (error) throw error;
 
             toaster.create({ title: 'บันทึกมิเตอร์น้ำเรียบร้อย', type: 'success' });

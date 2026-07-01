@@ -11,6 +11,7 @@ interface InvoiceTableProps {
     onDelete?: (invoice: Invoice) => void;
     onExportRoom?: (roomNumber: string) => void;
     selectedInvoices?: string[];
+    selectedInvoiceSet?: Set<string>;
     onSelectInvoice?: (id: string) => void;
     onSelectAll?: () => void;
 }
@@ -51,9 +52,12 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({
     onDelete,
     onExportRoom,
     selectedInvoices = [],
+    selectedInvoiceSet,
     onSelectInvoice,
     onSelectAll,
 }) => {
+    const selectedSet = selectedInvoiceSet || new Set(selectedInvoices);
+
     return (
         <Table.Root size="sm" variant="outline">
             <Table.Header>
@@ -82,7 +86,7 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({
                         {onSelectInvoice && (
                             <Table.Cell>
                                 <Checkbox
-                                    checked={selectedInvoices.includes(invoice.id)}
+                                    checked={selectedSet.has(invoice.id)}
                                     onCheckedChange={() => onSelectInvoice(invoice.id)}
                                 />
                             </Table.Cell>

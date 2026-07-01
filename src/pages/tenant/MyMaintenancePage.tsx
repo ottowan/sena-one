@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Card, Heading, VStack, Badge, Text, HStack, Button, Dialog, Input, Textarea } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { maintenanceService } from '../../services/maintenanceService';
-import { supabase } from '../../lib/supabase';
+import { pgliteClient } from '../../lib/pgliteClient';
 import { toaster } from '../../components/ui/toaster';
 import { LuPlus } from 'react-icons/lu';
 import {
@@ -35,7 +35,7 @@ export const MyMaintenancePage: React.FC = () => {
         if (!currentTenantId) return;
 
         setIsLoading(true);
-        const { data: requestData } = await supabase
+        const { data: requestData } = await pgliteClient
             .from('maintenance_requests')
             .select('*')
             .eq('tenant_id', currentTenantId)
@@ -48,7 +48,7 @@ export const MyMaintenancePage: React.FC = () => {
         const init = async () => {
             if (!profile?.id) return;
 
-            const { data: tenant } = await supabase
+            const { data: tenant } = await pgliteClient
                 .from('tenants')
                 .select('id')
                 .eq('user_id', profile.id)
@@ -63,7 +63,7 @@ export const MyMaintenancePage: React.FC = () => {
             await fetchRequests(tenant.id); // Initial fetch
 
             // Fetch Room ID for creating new requests
-            const { data: contractData } = await supabase
+            const { data: contractData } = await pgliteClient
                 .from('contracts')
                 .select('room_id')
                 .eq('tenant_id', tenant.id)

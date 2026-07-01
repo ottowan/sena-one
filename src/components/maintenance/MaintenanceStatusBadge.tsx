@@ -8,7 +8,7 @@ interface MaintenanceStatusBadgeProps {
 
 export const MaintenanceStatusBadge: React.FC<MaintenanceStatusBadgeProps> = ({ status }) => {
     let colorPalette = 'gray';
-    let label = status;
+    let label: string = status;
 
     switch (status) {
         case 'pending':

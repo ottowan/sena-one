@@ -22,7 +22,7 @@ import {
     SelectValueText,
 } from '../../components/ui/select';
 import { toaster } from '../../components/ui/toaster';
-import { supabase } from '../../lib/supabase';
+import { pgliteClient } from '../../lib/pgliteClient';
 import { ContractStatus } from '../../types';
 
 interface MeterRow {
@@ -31,10 +31,40 @@ interface MeterRow {
     tenantName: string;
     statusColor?: string;
     waterMeterPrev: number;
-    waterMeterCurr: number;
+    waterMeterCurr: number | '';
     electricityMeterPrev: number;
-    electricityMeterCurr: number;
+    electricityMeterCurr: number | '';
     hasHistory: boolean; // true if current value comes from history_meter
+}
+
+interface MeterRoomRow {
+    id: string;
+    room_number: string;
+    status: string;
+    current_water_meter?: number | null;
+    current_electricity_meter?: number | null;
+}
+
+interface MeterContractRow {
+    room_id: string;
+    tenant_id: string;
+}
+
+interface MeterTenantRow {
+    id: string;
+    full_name: string;
+}
+
+interface MeterHistoryRow {
+    room_id: string;
+    water_meter?: number | null;
+    electricity_meter?: number | null;
+}
+
+interface MeterInvoiceRow {
+    room_id: string;
+    water_meter_current?: number | null;
+    electricity_meter_current?: number | null;
 }
 
 export const MeterManagementPage: React.FC = () => {
@@ -57,31 +87,6 @@ export const MeterManagementPage: React.FC = () => {
     const fetchMeterData = async () => {
         setIsLoading(true);
         try {
-            // 1. Get ALL Rooms (to include Vacant, Maintenance, etc.)
-            const { data: allRooms, error: roomError } = await supabase
-                .from('rooms')
-                .select('*')
-                .order('room_number'); // Use room_number for natural sorting if possible, but it's string.
-
-            if (roomError) throw roomError;
-
-            // 2. Get active contracts to map tenants
-            const { data: contracts, error: contractError } = await supabase
-                .from('contracts')
-                .select('*, tenant:tenants(*)')
-                .eq('status', ContractStatus.ACTIVE);
-
-            if (contractError) throw contractError;
-
-            // 3. Get history_meter for SELECTED month
-            const { data: currentHistory, error: historyError } = await supabase
-                .from('history_meter')
-                .select('*')
-                .eq('month', selectedMonth);
-
-            if (historyError) throw historyError;
-
-            // 4. Get history_meter for PREVIOUS month (Logic matched with other fix)
             const [year, month] = selectedMonth.split('-').map(Number);
             let prevYear = year;
             let prevMonth = month - 1;
@@ -91,35 +96,79 @@ export const MeterManagementPage: React.FC = () => {
             }
             const prevMonthStr = `${prevYear}-${String(prevMonth).padStart(2, '0')}`;
 
-            // Flexible search for prev month (TEXT column)
-            const { data: prevHistory, error: prevHistoryError } = await supabase
-                .from('history_meter')
-                .select('*')
-                .ilike('month', `${prevMonthStr}%`);
+            const [
+                roomsResult,
+                contractsResult,
+                currentHistoryResult,
+                prevHistoryResult,
+                prevInvoicesResult,
+            ] = await Promise.all([
+                pgliteClient
+                    .from('rooms')
+                    .select('*')
+                    .order('room_number'),
+                pgliteClient
+                    .from('contracts')
+                    .select('*')
+                    .eq('status', ContractStatus.ACTIVE),
+                pgliteClient
+                    .from('history_meter')
+                    .select('*')
+                    .eq('month', selectedMonth),
+                pgliteClient
+                    .from('history_meter')
+                    .select('*')
+                    .ilike('month', `${prevMonthStr}%`),
+                pgliteClient
+                    .from('invoices')
+                    .select('room_id, water_meter_current, electricity_meter_current')
+                    .gte('billing_month', `${prevMonthStr}-01`)
+                    .lt('billing_month', `${selectedMonth}-01`)
+                    .order('billing_month', { ascending: false }),
+            ]);
 
-            if (prevHistoryError) throw prevHistoryError;
+            if (roomsResult.error) throw roomsResult.error;
+            if (contractsResult.error) throw contractsResult.error;
+            if (currentHistoryResult.error) throw currentHistoryResult.error;
+            if (prevHistoryResult.error) throw prevHistoryResult.error;
 
-            // 5. Fallback: Get invoices for PREVIOUS month
-            // Note: Invoices are tied to contracts. Vacant rooms won't have invoices.
-            // But we still fetch them for occupied rooms fallback.
-            const { data: prevMonthInvoices } = await supabase
-                .from('invoices')
-                .select('room_id, water_meter_current, electricity_meter_current')
-                .gte('billing_month', `${prevMonthStr}-01`)
-                .lt('billing_month', `${selectedMonth}-01`)
-                .order('billing_month', { ascending: false });
+            const allRooms = (roomsResult.data || []) as MeterRoomRow[];
+            const contracts = (contractsResult.data || []) as MeterContractRow[];
+            const currentHistory = (currentHistoryResult.data || []) as MeterHistoryRow[];
+            const prevHistory = (prevHistoryResult.data || []) as MeterHistoryRow[];
+            const prevMonthInvoices = (prevInvoicesResult.data || []) as MeterInvoiceRow[];
+
+            const tenantIds = [...new Set(contracts.map((contract: any) => contract.tenant_id).filter(Boolean))];
+            const tenantsResult = tenantIds.length
+                ? await pgliteClient.from('tenants').select('id, full_name').in('id', tenantIds)
+                : { data: [], error: null };
+
+            if (tenantsResult.error) throw tenantsResult.error;
+
+            const tenantMap = new Map(((tenantsResult.data || []) as MeterTenantRow[]).map((tenant) => [tenant.id, tenant]));
+            const contractMap = new Map(contracts.map((contract) => [contract.room_id, contract]));
+            const currentHistoryMap = new Map(currentHistory.map((history) => [history.room_id, history]));
+            const prevHistoryMap = new Map(prevHistory.map((history) => [history.room_id, history]));
+            const prevInvoiceMap = new Map<string, MeterInvoiceRow>();
+
+            for (const invoice of prevMonthInvoices) {
+                if (!prevInvoiceMap.has(invoice.room_id)) {
+                    prevInvoiceMap.set(invoice.room_id, invoice);
+                }
+            }
 
             // Map data
-            const mappedRows: MeterRow[] = (allRooms || []).map(room => {
+            const mappedRows: MeterRow[] = allRooms.map(room => {
                 const roomId = room.id;
 
                 // Find Active Contract/Tenant
-                const activeContract = contracts?.find(c => c.room_id === roomId);
+                const activeContract = contractMap.get(roomId);
+                const activeTenant = activeContract ? tenantMap.get(activeContract.tenant_id) : null;
                 let tenantName = '-';
                 let statusColor = undefined;
 
-                if (activeContract && activeContract.tenant) {
-                    tenantName = activeContract.tenant.full_name;
+                if (activeTenant) {
+                    tenantName = activeTenant.full_name;
                 } else {
                     // Use Room Status
                     if (room.status === 'maintenance') {
@@ -135,8 +184,8 @@ export const MeterManagementPage: React.FC = () => {
                 }
 
                 // Find in histories
-                const currRecord = currentHistory?.find(h => h.room_id === roomId);
-                const prevRecord = prevHistory?.find(h => h.room_id === roomId);
+                const currRecord = currentHistoryMap.get(roomId);
+                const prevRecord = prevHistoryMap.get(roomId);
 
                 // Determine Previous Values
                 let waterPrev = 0;
@@ -147,7 +196,7 @@ export const MeterManagementPage: React.FC = () => {
                     elecPrev = prevRecord.electricity_meter || 0;
                 } else {
                     // Fallback to invoice (only works if room was occupied)
-                    const prevInvoice = prevMonthInvoices?.find(inv => inv.room_id === roomId);
+                    const prevInvoice = prevInvoiceMap.get(roomId);
                     if (prevInvoice) {
                         waterPrev = prevInvoice.water_meter_current || 0;
                         elecPrev = prevInvoice.electricity_meter_current || 0;
@@ -170,10 +219,8 @@ export const MeterManagementPage: React.FC = () => {
                     statusColor: statusColor,
                     waterMeterPrev: waterPrev,
                     electricityMeterPrev: elecPrev,
-                    waterMeterCurr: currRecord ? currRecord.water_meter : 0, // Default to 0 if not entered? Or maybe waterPrev?
-                    // User usually wants to key in data. 0 is fine as visual cue or maybe empty string in UI?
-                    // But interface says number.
-                    electricityMeterCurr: currRecord ? currRecord.electricity_meter : 0,
+                    waterMeterCurr: currRecord ? currRecord.water_meter : '',
+                    electricityMeterCurr: currRecord ? currRecord.electricity_meter : '',
                     hasHistory: !!currRecord
                 };
             });
@@ -196,14 +243,17 @@ export const MeterManagementPage: React.FC = () => {
     };
 
     const handleReadingChange = (index: number, type: 'water' | 'electricity', value: string) => {
-        const numVal = parseFloat(value) || 0;
+        const meterValue = value === '' ? '' : parseFloat(value) || 0;
         setRows(prev => {
             const newRows = [...prev];
-            if (type === 'water') newRows[index].waterMeterCurr = numVal;
-            else newRows[index].electricityMeterCurr = numVal;
+            if (type === 'water') newRows[index].waterMeterCurr = meterValue;
+            else newRows[index].electricityMeterCurr = meterValue;
             return newRows;
         });
     };
+
+    const meterNumber = (value: number | '') => value === '' ? 0 : value;
+    const isLowerThanPrevious = (value: number | '', previous: number) => value !== '' && value < previous;
 
     const handleSave = async () => {
         setIsSaving(true);
@@ -215,12 +265,12 @@ export const MeterManagementPage: React.FC = () => {
             const payload = rows.map(row => ({
                 room_id: row.roomId,
                 month: selectedMonth,
-                water_meter: row.waterMeterCurr,
-                electricity_meter: row.electricityMeterCurr,
+                water_meter: meterNumber(row.waterMeterCurr),
+                electricity_meter: meterNumber(row.electricityMeterCurr),
                 // created_at / updated_at handled by db default?
             }));
 
-            const { error } = await supabase
+            const { error } = await pgliteClient
                 .from('history_meter')
                 .upsert(payload, { onConflict: 'room_id, month' });
 
@@ -328,9 +378,9 @@ export const MeterManagementPage: React.FC = () => {
                                                     type="number"
                                                     value={row.waterMeterCurr}
                                                     onChange={(e) => handleReadingChange(originalIndex, 'water', e.target.value)}
-                                                    borderColor={row.waterMeterCurr < row.waterMeterPrev ? 'red.300' : 'gray.200'}
+                                                    borderColor={isLowerThanPrevious(row.waterMeterCurr, row.waterMeterPrev) ? 'red.300' : 'gray.200'}
                                                 />
-                                                {row.waterMeterCurr < row.waterMeterPrev && (
+                                                {isLowerThanPrevious(row.waterMeterCurr, row.waterMeterPrev) && (
                                                     <Text fontSize="xs" color="red.500">ต่ำกว่าครั้งก่อน</Text>
                                                 )}
                                             </Table.Cell>
@@ -345,9 +395,9 @@ export const MeterManagementPage: React.FC = () => {
                                                     type="number"
                                                     value={row.electricityMeterCurr}
                                                     onChange={(e) => handleReadingChange(originalIndex, 'electricity', e.target.value)}
-                                                    borderColor={row.electricityMeterCurr < row.electricityMeterPrev ? 'red.300' : 'gray.200'}
+                                                    borderColor={isLowerThanPrevious(row.electricityMeterCurr, row.electricityMeterPrev) ? 'red.300' : 'gray.200'}
                                                 />
-                                                {row.electricityMeterCurr < row.electricityMeterPrev && (
+                                                {isLowerThanPrevious(row.electricityMeterCurr, row.electricityMeterPrev) && (
                                                     <Text fontSize="xs" color="red.500">ต่ำกว่าครั้งก่อน</Text>
                                                 )}
                                             </Table.Cell>

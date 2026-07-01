@@ -9,7 +9,7 @@ import {
     Badge,
     Icon,
 } from '@chakra-ui/react';
-import { LuPencil, LuTrash2, LuCalendar, LuRotateCcw, LuHistory } from 'react-icons/lu';
+import { LuPencil, LuTrash2, LuCalendar, LuRotateCcw, LuHistory, LuLock } from 'react-icons/lu';
 import type { Room, RoomStatus } from '../../types';
 import { formatCurrency } from '../../lib/utils';
 import { Button } from '../ui/button';
@@ -65,8 +65,11 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
     const statusColor = getStatusColor(room.status);
     const statusLabel = getStatusLabel(room.status);
     const [historyOpen, setHistoryOpen] = useState(false);
+    const isLocked = !!room.has_active_contract;
 
     const handleDelete = () => {
+        if (isLocked) return;
+
         if (confirm(`ต้องการลบห้อง ${room.room_number} ใช่หรือไม่?`)) {
             onDelete(room);
         }
@@ -133,10 +136,11 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                                 variant="ghost"
                                 size="xs"
                                 flex={1}
+                                disabled={isLocked}
                                 onClick={() => onEdit(room)}
                             >
                                 <Icon fontSize="xs" mr={1}>
-                                    <LuPencil />
+                                    {isLocked ? <LuLock /> : <LuPencil />}
                                 </Icon>
                                 แก้ไข
                             </Button>
@@ -145,11 +149,12 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                                     variant="ghost"
                                     colorPalette="orange"
                                     size="xs"
+                                    disabled={isLocked}
                                     onClick={() => onRelease(room)}
                                     title="บังคับคืนห้อง (Reset)"
                                 >
                                     <Icon fontSize="xs">
-                                        <LuRotateCcw />
+                                        {isLocked ? <LuLock /> : <LuRotateCcw />}
                                     </Icon>
                                 </Button>
                             )}
@@ -168,10 +173,11 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                                 variant="ghost"
                                 colorPalette="red"
                                 size="xs"
+                                disabled={isLocked}
                                 onClick={handleDelete}
                             >
                                 <Icon fontSize="xs">
-                                    <LuTrash2 />
+                                    {isLocked ? <LuLock /> : <LuTrash2 />}
                                 </Icon>
                             </Button>
                         </HStack>

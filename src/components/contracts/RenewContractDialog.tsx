@@ -14,6 +14,7 @@ import { Input, VStack, Grid, Text } from '@chakra-ui/react';
 import { Field } from '../ui/field';
 import { useRenewContract } from '../../hooks/useContracts';
 import type { Contract } from '../../types';
+import { formatThaiShortDate } from '../../lib/utils';
 
 interface RenewContractDialogProps {
     open: boolean;
@@ -90,7 +91,7 @@ export const RenewContractDialog: React.FC<RenewContractDialogProps> = ({
             `ยืนยันการต่อสัญญา?\n\n` +
             `ผู้เช่า: ${contract.tenant?.full_name}\n` +
             `ห้อง: ${contract.room?.room_number}\n` +
-            `วันสิ้นสุดใหม่: ${new Date(formData.end_date).toLocaleDateString('th-TH')}\n` +
+            `วันสิ้นสุดใหม่: ${formatThaiShortDate(formData.end_date)}\n` +
             `ค่าเช่า: ฿${parseFloat(formData.monthly_rent).toLocaleString()}\n\n` +
             `การต่อสัญญาจะสร้างสัญญาใหม่และทำให้สัญญาเดิมมีสถานะ "ต่ออายุแล้ว"`
         );
@@ -137,7 +138,7 @@ export const RenewContractDialog: React.FC<RenewContractDialogProps> = ({
                             <Text fontSize="sm" color="gray.600">
                                 สัญญาเดิมสิ้นสุด:{' '}
                                 <strong>
-                                    {new Date(contract.end_date).toLocaleDateString('th-TH')}
+                                    {formatThaiShortDate(contract.end_date)}
                                 </strong>
                             </Text>
 

@@ -84,31 +84,47 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [matchingUser, setMatchingUser] = useState<any | null>(null);
 
-    // User search state
-    const [userSearchTerm, setUserSearchTerm] = useState('');
-    const [foundUsers, setFoundUsers] = useState<any[]>([]);
-    const [showUserResults, setShowUserResults] = useState(false);
+    const [tenantUserOptions, setTenantUserOptions] = useState<any[]>([]);
+    const [selectedUserId, setSelectedUserId] = useState('');
     const [debugError, setDebugError] = useState<string | null>(null);
 
     useEffect(() => {
-        const timeout = setTimeout(async () => {
-            if (userSearchTerm) {
-                try {
-                    const users = await userService.searchUsers(userSearchTerm);
-                    setFoundUsers(users);
-                    setDebugError(null);
-                } catch (err: any) {
-                    console.error("Search failed", err);
-                    setDebugError(err.message || JSON.stringify(err));
-                    setFoundUsers([]);
-                }
-            } else {
-                setFoundUsers([]);
+        if (!open || isEdit) return;
+
+        let cancelled = false;
+        userService.getTenantUserOptions()
+            .then((users) => {
+                if (cancelled) return;
+                setTenantUserOptions(users);
                 setDebugError(null);
-            }
-        }, 300);
-        return () => clearTimeout(timeout);
-    }, [userSearchTerm]);
+            })
+            .catch((err: any) => {
+                if (cancelled) return;
+                console.error('Load tenant users failed', err);
+                setDebugError(err.message || JSON.stringify(err));
+                setTenantUserOptions([]);
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [open, isEdit]);
+
+    const handleSelectUser = (userId: string) => {
+        setSelectedUserId(userId);
+        const user = tenantUserOptions.find((item) => item.id === userId);
+        if (user) {
+            setFormData((prev) => ({
+                ...prev,
+                full_name: user.full_name || prev.full_name,
+                phone: user.phone || prev.phone,
+                email: user.email || prev.email,
+            }));
+            setMatchingUser(user);
+        } else {
+            setMatchingUser(null);
+        }
+    };
 
     useEffect(() => {
         if (tenant) {
@@ -145,6 +161,7 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
             setVehicles([]);
         }
         setErrors({});
+        setSelectedUserId('');
     }, [tenant, open]);
 
     const handleAddVehicle = () => {
@@ -259,74 +276,29 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
                             {!isEdit && (
                                 <Box p={4} bg="gray.50" borderRadius="md" border="1px dashed" borderColor="gray.300">
                                     <Heading size="sm" mb={2}>ดึงข้อมูลจากผู้ใช้งาน (Optional)</Heading>
-                                    <Box position="relative">
-                                        <Input
-                                            placeholder="พิมพ์ชื่อ หรือเบอร์โทร เพื่อค้นหา..."
-                                            value={userSearchTerm}
-                                            onChange={(e) => {
-                                                console.log('Search term changed:', e.target.value);
-                                                setUserSearchTerm(e.target.value);
-                                                setShowUserResults(true);
-                                            }}
-                                            onFocus={() => setShowUserResults(true)}
-                                            onBlur={() => setTimeout(() => setShowUserResults(false), 200)}
-                                        />
-                                        {debugError && (
-                                            <Text color="red.500" fontSize="xs" mt={1}>
-                                                System Error: {debugError}
-                                            </Text>
-                                        )}
-                                        {showUserResults && userSearchTerm && (
-                                            <Box
-                                                position="absolute"
-                                                top="100%"
-                                                left={0}
-                                                right={0}
-                                                zIndex={1500} // High z-index
-                                                bg="white"
-                                                boxShadow="lg"
-                                                borderRadius="md"
-                                                maxH="200px"
-                                                overflowY="auto"
-                                                mt={1}
-                                                border="1px solid"
-                                                borderColor="gray.200"
-                                            >
-                                                <VStack gap={0} align="stretch">
-                                                    {foundUsers.length > 0 ? (
-                                                        foundUsers.map((user) => (
-                                                            <Box
-                                                                key={user.id}
-                                                                p={3}
-                                                                cursor="pointer"
-                                                                _hover={{ bg: 'blue.50' }}
-                                                                onMouseDown={(e) => e.preventDefault()} // Prevent blur
-                                                                onClick={() => {
-                                                                    console.log('Selected user:', user);
-                                                                    setFormData((prev) => ({
-                                                                        ...prev,
-                                                                        full_name: user.full_name || prev.full_name,
-                                                                        phone: user.phone || prev.phone,
-                                                                        email: user.email || prev.email,
-                                                                    }));
-                                                                    setMatchingUser(user);
-                                                                    setUserSearchTerm(`${user.full_name} (${user.phone})`);
-                                                                    setShowUserResults(false);
-                                                                }}
-                                                            >
-                                                                <Text fontWeight="medium" fontSize="sm">{user.full_name}</Text>
-                                                                <Text fontSize="xs" color="gray.500">{user.phone}</Text>
-                                                            </Box>
-                                                        ))
-                                                    ) : (
-                                                        <Box p={3} color="gray.500">
-                                                            <Text fontSize="sm">ไม่พบข้อมูลผู้ใช้งาน</Text>
-                                                        </Box>
-                                                    )}
-                                                </VStack>
-                                            </Box>
-                                        )}
-                                    </Box>
+                                    <NativeSelectRoot>
+                                        <NativeSelectField
+                                            value={selectedUserId}
+                                            onChange={(e) => handleSelectUser(e.target.value)}
+                                        >
+                                            <option value="">เลือกผู้ใช้งาน</option>
+                                            {tenantUserOptions.map((user) => (
+                                                <option key={user.id} value={user.id}>
+                                                    {user.full_name} ({user.phone})
+                                                </option>
+                                            ))}
+                                        </NativeSelectField>
+                                    </NativeSelectRoot>
+                                    {debugError && (
+                                        <Text color="red.500" fontSize="xs" mt={1}>
+                                            System Error: {debugError}
+                                        </Text>
+                                    )}
+                                    {!debugError && tenantUserOptions.length === 0 && (
+                                        <Text color="gray.500" fontSize="xs" mt={1}>
+                                            ไม่พบรายชื่อผู้ใช้งานสำหรับผู้เช่า
+                                        </Text>
+                                    )}
                                 </Box>
                             )}
 

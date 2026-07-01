@@ -109,7 +109,9 @@ export interface Room {
     images?: string[];
     created_at: string;
     updated_at: string;
+    current_tenant_id?: string | null;
     // Relations
+    has_active_contract?: boolean;
     current_tenant?: {
         id: string;
         full_name: string;

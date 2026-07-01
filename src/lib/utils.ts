@@ -33,6 +33,26 @@ export const formatDate = (date: string | Date, format: 'short' | 'long' = 'shor
     }).format(d);
 };
 
+const parseDateInput = (date: string | Date): Date => {
+    if (date instanceof Date) return date;
+
+    const datePart = date.split('T')[0];
+    const [year, month, day] = datePart.split('-').map(Number);
+    if (year && month && day) {
+        return new Date(year, month - 1, day);
+    }
+
+    return new Date(date);
+};
+
+export const formatThaiShortDate = (date: string | Date): string => {
+    return new Intl.DateTimeFormat('th-TH-u-ca-buddhist', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    }).format(parseDateInput(date));
+};
+
 /**
  * Format วันที่และเวลา
  */

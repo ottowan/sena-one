@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
+backups/
+public/pglite-seed/*.json
 
 # Editor directories and files
 .vscode/*

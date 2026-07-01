@@ -5,16 +5,29 @@ const customConfig = defineConfig({
         tokens: {
             colors: {
                 brand: {
-                    50: { value: "#E6F6FF" },
-                    100: { value: "#BAE3FF" },
-                    200: { value: "#7CC4FA" },
-                    300: { value: "#47A3F3" },
-                    400: { value: "#2186EB" },
-                    500: { value: "#0967D2" },
-                    600: { value: "#0552B5" },
-                    700: { value: "#03449E" },
-                    800: { value: "#01337D" },
-                    900: { value: "#002159" },
+                    50: { value: "#F0F7F6" },
+                    100: { value: "#D9ECE9" },
+                    200: { value: "#B8DCD6" },
+                    300: { value: "#8FC7BD" },
+                    400: { value: "#62AB9D" },
+                    500: { value: "#3F8F83" },
+                    600: { value: "#2F746B" },
+                    700: { value: "#285F59" },
+                    800: { value: "#234D49" },
+                    900: { value: "#1F403D" },
+                    950: { value: "#102624" },
+                },
+                accent: {
+                    50: { value: "#FFF7ED" },
+                    100: { value: "#FFEDD5" },
+                    200: { value: "#FED7AA" },
+                    300: { value: "#FDBA74" },
+                    400: { value: "#FB923C" },
+                    500: { value: "#F97316" },
+                    600: { value: "#EA580C" },
+                    700: { value: "#C2410C" },
+                    800: { value: "#9A3412" },
+                    900: { value: "#7C2D12" },
                 },
                 success: {
                     50: { value: "#E3F9E5" },
@@ -86,32 +99,32 @@ const customConfig = defineConfig({
                 },
                 bg: {
                     canvas: {
-                        value: { base: "white", _dark: "gray.900" }
+                        value: { base: "#F7FAF9", _dark: "#111827" }
                     },
                     subtle: {
-                        value: { base: "gray.50", _dark: "gray.800" }
+                        value: { base: "#EEF5F3", _dark: "#182322" }
                     },
                     muted: {
-                        value: { base: "gray.100", _dark: "gray.700" }
+                        value: { base: "#E2ECE9", _dark: "#263433" }
                     }
                 },
                 fg: {
                     default: {
-                        value: { base: "gray.900", _dark: "gray.100" }
+                        value: { base: "#172321", _dark: "#F3F6F5" }
                     },
                     muted: {
-                        value: { base: "gray.600", _dark: "gray.400" }
+                        value: { base: "#586866", _dark: "#AEBAB8" }
                     },
                     subtle: {
-                        value: { base: "gray.500", _dark: "gray.500" }
+                        value: { base: "#71817E", _dark: "#84918F" }
                     }
                 },
                 border: {
                     default: {
-                        value: { base: "gray.200", _dark: "gray.700" }
+                        value: { base: "#D7E2DF", _dark: "#334240" }
                     },
                     muted: {
-                        value: { base: "gray.100", _dark: "gray.800" }
+                        value: { base: "#EAF1EF", _dark: "#263433" }
                     }
                 }
             },

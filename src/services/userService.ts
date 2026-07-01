@@ -1,19 +1,15 @@
-import { createClient } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import { pgliteClient } from '../lib/pgliteClient';
 import type { Profile, UserRole } from '../types';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const userService = {
     // Determine user role logic (helper)
-    // Note: In Supabase, creating a user usually requires SignUp.
+    // Note: In pgliteClient, creating a user usually requires SignUp.
     // If we want to create a user WITHOUT logging out the admin, we need a separate client instance
     // that doesn't persist the session to the same storage key or uses memory storage.
 
     createUserWithPhone: async (phone: string, password: string, fullName: string, role: UserRole) => {
         // ตรวจสอบว่าเบอร์โทรซ้ำหรือไม่
-        const { data: existingUser } = await supabase
+        const { data: existingUser } = await pgliteClient
             .from('users')
             .select('phone')
             .eq('phone', phone)
@@ -24,7 +20,7 @@ export const userService = {
         }
 
         // สร้างผู้ใช้ใหม่ผ่าน RPC function
-        const { data, error } = await supabase
+        const { data, error } = await pgliteClient
             .rpc('create_user', {
                 phone_input: phone,
                 password_input: password,
@@ -42,65 +38,22 @@ export const userService = {
 
     // เก็บฟังก์ชันเก่าไว้เพื่อ backward compatibility
     createUser: async (email: string, password: string, fullName: string, phone: string, role: UserRole) => {
-        // Create a temporary client with no persistence to avoid overwriting Admin's session
-        const tempClient = createClient(supabaseUrl, supabaseAnonKey, {
-            auth: {
-                persistSession: false, // Don't save session
-                autoRefreshToken: false,
-                detectSessionInUrl: false
-            }
-        });
-
-        // 1. Sign Up the new user
-        const { data: authData, error: authError } = await tempClient.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    full_name: fullName,
-                    role: role // Save role in metadata as well for triggers if any
-                }
-            }
-        });
-
-        if (authError) throw authError;
-        if (!authData.user) throw new Error('Failed to create user');
-
-        const userId = authData.user.id;
-
-        // 2. Update the profile with additional details including email
-        // Note: The 'profiles' row might be created by a trigger automatically.
-        // We should wait a bit or try to update it. 
-        // Or we can just insert/update manually if no trigger exists.
-        // Assuming there IS a trigger (often is), we update. If not, we insert.
-        // Let's try upsert.
-
-        const { error: profileError } = await supabase
-            .from('profiles')
-            .upsert({
-                id: userId,
-                email: email,
-                full_name: fullName,
-                phone: phone,
-                role: role,
-                updated_at: new Date().toISOString()
+        const { data: userId, error } = await pgliteClient
+            .rpc('create_user', {
+                phone_input: phone,
+                password_input: password,
+                full_name_input: fullName,
+                role_input: role,
+                email_input: email,
             });
 
-        if (profileError) {
-            // Check if error is because user can't update other profiles?
-            // Since we are Admin, RLS "Admins can view all profiles" and "Users can update own profile".
-            // We need an "Admins can update all profiles" policy.
-            // If that policy is missing, this will fail.
-            // For now, let's assume we have or will add the policy.
-            console.error('Profile update error:', profileError);
-            throw profileError;
-        }
+        if (error) throw error;
 
-        return authData.user;
+        return { id: userId, email, phone, full_name: fullName, role };
     },
 
     updateUser: async (id: string, updates: Partial<Profile>) => {
-        const { error } = await supabase
+        const { error } = await pgliteClient
             .from('profiles')
             .update({
                 ...updates,
@@ -113,7 +66,7 @@ export const userService = {
 
     resetUserPassword: async (userId: string, newPassword: string) => {
         try {
-            const { data, error } = await supabase
+            const { data, error } = await pgliteClient
                 .rpc('update_user_password', {
                     user_id_input: userId,
                     new_password_input: newPassword
@@ -132,9 +85,14 @@ export const userService = {
     },
 
     deleteUser: async (id: string) => {
-        // We can only delete the profile. The Auth User will remain but become "orphaned".
-        // This is a limitation of client-side Admin.
-        const { error } = await supabase
+        const usersResult = await pgliteClient
+            .from('users')
+            .delete()
+            .eq('id', id);
+
+        if (usersResult.error) throw usersResult.error;
+
+        const { error } = await pgliteClient
             .from('profiles')
             .delete()
             .eq('id', id);
@@ -149,9 +107,60 @@ export const userService = {
         return { phone, tempPassword };
     },
 
+    getTenantUserOptions: async (): Promise<Array<{ id: string; full_name: string; phone: string; email?: string }>> => {
+        const { data, error } = await pgliteClient
+            .from('users')
+            .select('id, full_name, phone, role')
+            .eq('role', 'tenant')
+            .order('full_name');
+
+        if (error) {
+            console.error('Error fetching tenant users:', error);
+            throw error;
+        }
+
+        const { data: linkedTenants, error: tenantError } = await pgliteClient
+            .from('tenants')
+            .select('id, user_id, current_room_id')
+            .neq('user_id', '');
+
+        if (tenantError) {
+            console.error('Error fetching linked tenants:', tenantError);
+            throw tenantError;
+        }
+
+        const tenantIds = (linkedTenants || []).map((tenant: any) => tenant.id).filter(Boolean);
+        const { data: activeContracts, error: contractError } = tenantIds.length
+            ? await pgliteClient
+                .from('contracts')
+                .select('tenant_id, room_id')
+                .in('tenant_id', tenantIds)
+                .eq('status', 'active')
+            : { data: [], error: null };
+
+        if (contractError) {
+            console.error('Error fetching linked tenant contracts:', contractError);
+            throw contractError;
+        }
+
+        const activeContractTenantIds = new Set((activeContracts || []).map((contract: any) => contract.tenant_id));
+        const unavailableUserIds = new Set(
+            (linkedTenants || [])
+                .filter((tenant: any) => tenant.user_id || tenant.current_room_id || activeContractTenantIds.has(tenant.id))
+                .map((tenant: any) => tenant.user_id)
+                .filter(Boolean)
+        );
+
+        return (data || []).filter((user: any) => !unavailableUserIds.has(user.id)).map((user: any) => ({
+            id: user.id,
+            full_name: user.full_name,
+            phone: user.phone,
+        }));
+    },
+
     searchUsers: async (searchTerm: string): Promise<Profile[]> => {
         console.log('Searching users with term:', searchTerm);
-        let query = supabase
+        let query = pgliteClient
             .from('profiles')
             .select('*')
             .limit(20);
