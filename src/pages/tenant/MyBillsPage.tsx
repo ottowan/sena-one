@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, Heading, VStack, Badge, Text, HStack, Button, Table, Separator } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
-import { pgliteClient } from '../../lib/pgliteClient';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
+import { fetchByIds } from '../../lib/firestoreUtils';
 import { formatCurrency } from '../../lib/utils';
 import { LuFileText } from 'react-icons/lu';
 import {
@@ -178,20 +180,6 @@ const MobileInvoiceCard = ({ invoice }: { invoice: any }) => {
     );
 };
 
-const mergeInvoices = (...groups: any[][]) => {
-    const byId = new Map<string, any>();
-    groups.flat().forEach((invoice) => {
-        if (invoice?.id) byId.set(invoice.id, invoice);
-    });
-    return [...byId.values()].sort((a, b) => {
-        const monthCompare = String(b.billing_month || '').localeCompare(String(a.billing_month || ''));
-        if (monthCompare !== 0) return monthCompare;
-        return String(b.created_at || '').localeCompare(String(a.created_at || ''));
-    });
-};
-
-const normalizePhone = (value?: string | null) => String(value || '').replace(/\D/g, '');
-
 export const MyBillsPage: React.FC = () => {
     const { profile } = useAuth();
     const [invoices, setInvoices] = useState<any[]>([]);
@@ -208,73 +196,22 @@ export const MyBillsPage: React.FC = () => {
 
             setIsLoading(true);
             try {
-                const profilePhone = normalizePhone(profile.phone);
-                const { data: tenantRows, error: tenantError } = await pgliteClient
-                    .from('tenants')
-                    .select('id, current_room_id, phone, user_id');
+                // Invoices carry a denormalized tenant_uid (== this user's uid)
+                // so a tenant session can query them directly - Firestore
+                // Security Rules require the query itself to be scoped this
+                // way for a `list` read, not just the eventual results.
+                const snap = await getDocs(query(collection(db, 'invoices'), where('tenant_uid', '==', profile.id)));
+                const rows = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as any);
+                const roomById = await fetchByIds<any>('rooms', rows.map((inv) => inv.room_id));
+                const withRoom = rows
+                    .map((inv) => ({ ...inv, room: roomById.get(inv.room_id) }))
+                    .sort((a, b) => {
+                        const monthCompare = String(b.billing_month || '').localeCompare(String(a.billing_month || ''));
+                        if (monthCompare !== 0) return monthCompare;
+                        return String(b.created_at || '').localeCompare(String(a.created_at || ''));
+                    });
 
-                if (tenantError) throw tenantError;
-
-                const matchingTenants = (tenantRows || []).filter((tenant) => {
-                    const tenantPhone = normalizePhone(tenant.phone);
-                    return tenant.user_id === profile.id || (profilePhone && tenantPhone === profilePhone);
-                });
-
-                if (matchingTenants.length === 0) {
-                    if (!cancelled) setInvoices([]);
-                    return;
-                }
-
-                const tenantIds = [...new Set(matchingTenants.map((tenant) => tenant.id).filter(Boolean))];
-
-                const { data: contracts, error: contractError } = tenantIds.length
-                    ? await pgliteClient
-                        .from('contracts')
-                        .select('id, room_id, tenant_id')
-                        .in('tenant_id', tenantIds)
-                    : { data: [], error: null };
-
-                if (contractError) throw contractError;
-
-                const contractIds = [...new Set((contracts || []).map((contract) => contract.id).filter(Boolean))];
-                const roomIds = [...new Set([
-                    ...matchingTenants.map((tenant) => tenant.current_room_id),
-                    ...(contracts || []).map((contract) => contract.room_id),
-                ].filter(Boolean))];
-
-                const baseSelect = '*, contract:contracts(room:rooms(room_number)), room:rooms(room_number)';
-
-                const [byTenant, byContracts, byRooms] = await Promise.all([
-                    tenantIds.length
-                        ? pgliteClient
-                            .from('invoices')
-                            .select(baseSelect)
-                            .in('tenant_id', tenantIds)
-                            .order('billing_month', { ascending: false })
-                        : Promise.resolve({ data: [], error: null }),
-                    contractIds.length
-                        ? pgliteClient
-                            .from('invoices')
-                            .select(baseSelect)
-                            .in('contract_id', contractIds)
-                            .order('billing_month', { ascending: false })
-                        : Promise.resolve({ data: [], error: null }),
-                    roomIds.length
-                        ? pgliteClient
-                            .from('invoices')
-                            .select(baseSelect)
-                            .in('room_id', roomIds)
-                            .order('billing_month', { ascending: false })
-                        : Promise.resolve({ data: [], error: null }),
-                ]);
-
-                if (byTenant.error) throw byTenant.error;
-                if (byContracts.error) throw byContracts.error;
-                if (byRooms.error) throw byRooms.error;
-
-                if (!cancelled) {
-                    setInvoices(mergeInvoices(byTenant.data || [], byContracts.data || [], byRooms.data || []));
-                }
+                if (!cancelled) setInvoices(withRoom);
             } catch (error) {
                 console.error('Error fetching tenant invoices:', error);
                 if (!cancelled) setInvoices([]);

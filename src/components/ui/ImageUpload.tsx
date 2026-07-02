@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { LuUpload, LuX } from 'react-icons/lu';
 import { Button } from '../ui/button';
+import { STORAGE_ENABLED } from '../../lib/firebase';
 
 interface ImageUploadProps {
     images: string[];
@@ -71,17 +72,24 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                         multiple
                         onChange={handleFileSelect}
                         style={{ display: 'none' }}
+                        disabled={!STORAGE_ENABLED}
                     />
                     <Button
                         variant="outline"
                         onClick={handleUploadClick}
                         w="full"
+                        disabled={!STORAGE_ENABLED}
                     >
                         <Icon mr={2}>
                             <LuUpload />
                         </Icon>
                         อัปโหลดรูปภาพ ({images.length}/{maxImages})
                     </Button>
+                    {!STORAGE_ENABLED && (
+                        <Text color="gray.500" fontSize="xs" mt={1}>
+                            อัปโหลดรูปภาพยังไม่เปิดใช้งาน (รอเปิด Firebase Storage)
+                        </Text>
+                    )}
                 </Box>
             )}
 

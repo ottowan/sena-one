@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Box, Card, Heading, VStack, Badge, Text, HStack, Button, Dialog, Input, Textarea } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { maintenanceService } from '../../services/maintenanceService';
-import { pgliteClient } from '../../lib/pgliteClient';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { toaster } from '../../components/ui/toaster';
 import { LuPlus } from 'react-icons/lu';
 import {
@@ -28,19 +29,19 @@ export const MyMaintenancePage: React.FC = () => {
     const [description, setDescription] = useState('');
     const [roomId, setRoomId] = useState('');
 
-    const [tenantId, setTenantId] = useState<string | null>(null);
-
-    const fetchRequests = async (id?: string) => {
-        const currentTenantId = id || tenantId;
-        if (!currentTenantId) return;
+    const fetchRequests = async () => {
+        if (!profile?.id) return;
 
         setIsLoading(true);
-        const { data: requestData } = await pgliteClient
-            .from('maintenance_requests')
-            .select('*')
-            .eq('tenant_id', currentTenantId)
-            .order('created_at', { ascending: false });
-        setRequests(requestData || []);
+        // Query by tenant_uid (== this user's uid) so the list read is
+        // provably scoped under the tenant-role Security Rules.
+        const snap = await getDocs(
+            query(collection(db, 'maintenance_requests'), where('tenant_uid', '==', profile.id))
+        );
+        const rows = snap.docs
+            .map((d) => ({ id: d.id, ...d.data() }) as any)
+            .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+        setRequests(rows);
         setIsLoading(false);
     };
 
@@ -48,28 +49,23 @@ export const MyMaintenancePage: React.FC = () => {
         const init = async () => {
             if (!profile?.id) return;
 
-            const { data: tenant } = await pgliteClient
-                .from('tenants')
-                .select('id')
-                .eq('user_id', profile.id)
-                .maybeSingle();
+            const tenantSnap = await getDocs(query(collection(db, 'tenants'), where('user_id', '==', profile.id)));
+            const tenantDoc = tenantSnap.docs[0];
 
-            if (!tenant) {
+            if (!tenantDoc) {
                 setIsLoading(false);
                 return;
             }
 
-            setTenantId(tenant.id);
-            await fetchRequests(tenant.id); // Initial fetch
+            await fetchRequests();
 
-            // Fetch Room ID for creating new requests
-            const { data: contractData } = await pgliteClient
-                .from('contracts')
-                .select('room_id')
-                .eq('tenant_id', tenant.id)
-                .eq('status', 'active')
-                .maybeSingle();
-            if (contractData) setRoomId(contractData.room_id);
+            // The room's own current_tenant_uid field is directly readable
+            // by its occupant under the Security Rules, so use it instead
+            // of a `contracts` query (which isn't tenant_uid-scoped).
+            const roomSnap = await getDocs(
+                query(collection(db, 'rooms'), where('current_tenant_uid', '==', profile.id))
+            );
+            if (!roomSnap.empty) setRoomId(roomSnap.docs[0].id);
         };
 
         init();

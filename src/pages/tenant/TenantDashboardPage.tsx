@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Box, Grid, Heading, Text, Card, VStack, HStack, Button, Icon, Badge, Input, Table } from '@chakra-ui/react';
 import { LuWallet, LuFileText, LuHouse, LuWrench, LuDroplet } from 'react-icons/lu';
 import { useAuth } from '../../contexts/AuthContext';
-import { pgliteClient } from '../../lib/pgliteClient';
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { formatCurrency } from '../../lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { toaster } from '../../components/ui/toaster';
@@ -43,15 +44,17 @@ export const TenantDashboardPage: React.FC = () => {
     const fetchMeterHistory = async (roomId: string, year: number) => {
         setMeterLoading(true);
         try {
-            const { data } = await pgliteClient
-                .from('history_meter')
-                .select('*')
-                .eq('room_id', roomId)
-                .gte('month', `${year}-01`)
-                .lte('month', `${year}-12`)
-                .order('month', { ascending: false });
-
-            setMeterHistory(data || []);
+            const snap = await getDocs(
+                query(
+                    collection(db, 'history_meter'),
+                    where('room_id', '==', roomId),
+                    where('month', '>=', `${year}-01`),
+                    where('month', '<=', `${year}-12`)
+                )
+            );
+            const rows = snap.docs.map((d) => d.data());
+            rows.sort((a, b) => String(b.month).localeCompare(String(a.month)));
+            setMeterHistory(rows);
         } finally {
             setMeterLoading(false);
         }
@@ -68,11 +71,8 @@ export const TenantDashboardPage: React.FC = () => {
 
             setContractLoading(true);
             try {
-                const { data: tenant } = await pgliteClient
-                    .from('tenants')
-                    .select('id')
-                    .eq('user_id', profile.id)
-                    .maybeSingle();
+                const tenantSnap = await getDocs(query(collection(db, 'tenants'), where('user_id', '==', profile.id)));
+                const tenant = tenantSnap.docs[0] ? { id: tenantSnap.docs[0].id, ...tenantSnap.docs[0].data() } : null;
 
                 if (cancelled) return;
                 setTenantId(tenant?.id || null);
@@ -82,29 +82,20 @@ export const TenantDashboardPage: React.FC = () => {
                     return;
                 }
 
-                const { data: contractData } = await pgliteClient
-                    .from('contracts')
-                    .select('*, room:rooms(*)')
-                    .eq('tenant_id', tenant.id)
-                    .eq('status', 'active')
-                    .maybeSingle();
+                const contractsSnap = await getDocs(
+                    query(collection(db, 'contracts'), where('tenant_uid', '==', profile.id))
+                );
+                const activeContractDoc = contractsSnap.docs.find((d) => d.data().status === 'active');
+                let contractData = activeContractDoc ? { id: activeContractDoc.id, ...activeContractDoc.data() } as any : null;
 
                 if (cancelled) return;
 
-                if (contractData && Array.isArray(contractData.room)) {
-                    contractData.room = contractData.room[0];
+                if (contractData?.room_id) {
+                    const roomSnap = await getDoc(doc(db, 'rooms', contractData.room_id));
+                    if (roomSnap.exists()) contractData = { ...contractData, room: { id: roomSnap.id, ...roomSnap.data() } };
                 }
 
-                if (contractData && !contractData.room && contractData.room_id) {
-                    const { data: roomData } = await pgliteClient
-                        .from('rooms')
-                        .select('*')
-                        .eq('id', contractData.room_id)
-                        .maybeSingle();
-                    if (roomData) contractData.room = roomData;
-                }
-
-                setContract(contractData || null);
+                setContract(contractData);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -123,21 +114,22 @@ export const TenantDashboardPage: React.FC = () => {
         let cancelled = false;
 
         const fetchInvoices = async () => {
-            if (!contract?.id) {
+            if (!contract?.id || !profile?.id) {
                 setUnpaidInvoices([]);
                 return;
             }
 
             setInvoiceLoading(true);
             try {
-                const { data } = await pgliteClient
-                    .from('invoices')
-                    .select('*')
-                    .eq('contract_id', contract.id)
-                    .eq('status', 'pending')
-                    .order('due_date', { ascending: true });
+                const snap = await getDocs(
+                    query(collection(db, 'invoices'), where('tenant_uid', '==', profile.id))
+                );
+                const rows = snap.docs
+                    .map((d) => ({ id: d.id, ...d.data() }) as any)
+                    .filter((inv) => inv.contract_id === contract.id && inv.status === 'pending')
+                    .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)));
 
-                if (!cancelled) setUnpaidInvoices(data || []);
+                if (!cancelled) setUnpaidInvoices(rows);
             } finally {
                 if (!cancelled) setInvoiceLoading(false);
             }
@@ -148,7 +140,7 @@ export const TenantDashboardPage: React.FC = () => {
         return () => {
             cancelled = true;
         };
-    }, [contract?.id]);
+    }, [contract?.id, profile?.id]);
 
     useEffect(() => {
         if (!contract?.room_id) {
@@ -341,19 +333,14 @@ const MeterReadingDialog = ({
     const [isLoading, setIsLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [invoiceIssued, setInvoiceIssued] = useState(false);
+    const { profile } = useAuth();
 
-    const loadMonthData = async (monthStr: string) => {
+    const loadMonthData = async (monthStr: string, roomHistory: any[]) => {
         if (!contract?.room_id) return;
 
         setInvoiceIssued(false);
 
-        const { data: currentData } = await pgliteClient
-            .from('history_meter')
-            .select('water_meter')
-            .eq('room_id', contract.room_id)
-            .eq('month', monthStr)
-            .maybeSingle();
-
+        const currentData = roomHistory.find((h) => h.month === monthStr);
         if (currentData?.water_meter) {
             setWaterMeter(currentData.water_meter.toString());
             setIsEdit(true);
@@ -366,43 +353,38 @@ const MeterReadingDialog = ({
         const [year, month] = monthStr.split('-').map(Number);
         const nextMonthStr = new Date(year, month, 1).toISOString().slice(0, 10);
 
-        const { data: invoice } = await pgliteClient
-            .from('invoices')
-            .select('id')
-            .eq('room_id', contract.room_id)
-            .neq('status', 'cancelled')
-            .gte('billing_month', startDate)
-            .lt('billing_month', nextMonthStr)
-            .limit(1)
-            .maybeSingle();
+        if (profile?.id) {
+            const invoicesSnap = await getDocs(
+                query(collection(db, 'invoices'), where('tenant_uid', '==', profile.id))
+            );
+            const hasInvoice = invoicesSnap.docs.some((d) => {
+                const inv = d.data();
+                return (
+                    inv.room_id === contract.room_id &&
+                    inv.status !== 'cancelled' &&
+                    inv.billing_month >= startDate &&
+                    inv.billing_month < nextMonthStr
+                );
+            });
+            setInvoiceIssued(hasInvoice);
+        }
 
-        setInvoiceIssued(!!invoice);
+        const prevRecord = roomHistory
+            .filter((h) => h.month < monthStr)
+            .sort((a, b) => String(b.month).localeCompare(String(a.month)))[0];
 
-        const { data: prevData } = await pgliteClient
-            .from('history_meter')
-            .select('water_meter, month')
-            .eq('room_id', contract.room_id)
-            .lt('month', monthStr)
-            .order('month', { ascending: false })
-            .limit(1)
-            .maybeSingle();
-
-        setPrevWaterMeter(prevData?.water_meter || 0);
-        setPrevMonthStr(prevData?.month || '');
+        setPrevWaterMeter(prevRecord?.water_meter || 0);
+        setPrevMonthStr(prevRecord?.month || '');
     };
 
     const handleOpen = async () => {
         setIsOpen(true);
         if (!contract?.room_id) return;
 
-        const { data: history } = await pgliteClient
-            .from('history_meter')
-            .select('month')
-            .eq('room_id', contract.room_id)
-            .order('month', { ascending: false })
-            .limit(12);
+        const historySnap = await getDocs(query(collection(db, 'history_meter'), where('room_id', '==', contract.room_id)));
+        const roomHistory = historySnap.docs.map((d) => d.data());
 
-        const filledMonths = new Set((history || []).map((item) => item.month));
+        const filledMonths = new Set(roomHistory.map((item) => item.month));
         const today = new Date();
         let targetMonth = today.toISOString().slice(0, 7);
 
@@ -416,7 +398,7 @@ const MeterReadingDialog = ({
         }
 
         setSelectedMonth(targetMonth);
-        await loadMonthData(targetMonth);
+        await loadMonthData(targetMonth, roomHistory);
     };
 
     const handleSubmit = async () => {
@@ -424,25 +406,20 @@ const MeterReadingDialog = ({
 
         setIsLoading(true);
         try {
-            const { data: existing } = await pgliteClient
-                .from('history_meter')
-                .select('*')
-                .eq('room_id', contract.room_id)
-                .eq('month', selectedMonth)
-                .maybeSingle();
+            const ref = doc(db, 'history_meter', `${contract.room_id}_${selectedMonth}`);
+            const existingSnap = await getDoc(ref);
+            const existing = existingSnap.exists() ? existingSnap.data() : null;
 
-            const payload = {
-                room_id: contract.room_id,
-                month: selectedMonth,
-                water_meter: parseFloat(waterMeter),
-                electricity_meter: existing?.electricity_meter || 0,
-            };
-
-            const { error } = await pgliteClient
-                .from('history_meter')
-                .upsert(payload, { onConflict: 'room_id, month' });
-
-            if (error) throw error;
+            await setDoc(
+                ref,
+                {
+                    room_id: contract.room_id,
+                    month: selectedMonth,
+                    water_meter: parseFloat(waterMeter),
+                    electricity_meter: existing?.electricity_meter || 0,
+                },
+                { merge: true }
+            );
 
             toaster.create({ title: 'บันทึกมิเตอร์น้ำเรียบร้อย', type: 'success' });
             setIsOpen(false);

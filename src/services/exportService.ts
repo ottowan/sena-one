@@ -1,18 +1,17 @@
 
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { pgliteClient } from '../lib/pgliteClient';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { fetchByIds } from '../lib/firestoreUtils';
 import { format } from 'date-fns';
 import { th } from 'date-fns/locale';
 
 export const exportService = {
     exportMonthlyInvoices: async (month: string) => {
         // 1. Fetch all rooms
-        const { data: roomsData, error: roomError } = await pgliteClient
-            .from('rooms')
-            .select('*');
-
-        if (roomError) throw roomError;
+        const roomsSnap = await getDocs(collection(db, 'rooms'));
+        const roomsData = roomsSnap.docs.map((d) => ({ id: d.id, ...d.data() }) as any);
 
         // Customize Sort: Numeric sort for room numbers
         const rooms = roomsData.sort((a, b) => {
@@ -24,24 +23,28 @@ export const exportService = {
         const startDate = `${month}-01`;
         const endDate = new Date(year, m, 0).toISOString().split('T')[0];
 
-        const { data: invoices, error: invoiceError } = await pgliteClient
-            .from('invoices')
-            .select(`
-        *,
-        tenant:tenants(full_name, position_title, position_level, workplace, phone),
-        contract:contracts(monthly_rent)
-      `)
-            .gte('billing_month', startDate)
-            .lte('billing_month', endDate);
-
-        if (invoiceError) throw invoiceError;
+        const invoicesSnap = await getDocs(
+            query(
+                collection(db, 'invoices'),
+                where('billing_month', '>=', startDate),
+                where('billing_month', '<=', endDate)
+            )
+        );
+        const rawInvoices = invoicesSnap.docs.map((d) => ({ id: d.id, ...d.data() }) as any);
+        const [tenantById, contractById] = await Promise.all([
+            fetchByIds<any>('tenants', rawInvoices.map((inv) => inv.tenant_id)),
+            fetchByIds<any>('contracts', rawInvoices.map((inv) => inv.contract_id)),
+        ]);
+        const invoices = rawInvoices.map((inv) => ({
+            ...inv,
+            tenant: tenantById.get(inv.tenant_id),
+            contract: contractById.get(inv.contract_id),
+        }));
 
         // 3. Fetch history_meter for Current and Previous Month (for rooms without invoices)
         // Current Month
-        const { data: currentMeters } = await pgliteClient
-            .from('history_meter')
-            .select('room_id, water_meter, electricity_meter')
-            .eq('month', month); // month is YYYY-MM
+        const currentMetersSnap = await getDocs(query(collection(db, 'history_meter'), where('month', '==', month)));
+        const currentMeters = currentMetersSnap.docs.map((d) => d.data());
 
         // Previous Month
         // Reuse year and m from above
@@ -53,10 +56,8 @@ export const exportService = {
         }
         const prevMonthStr = `${prevY}-${String(prevM).padStart(2, '0')}`;
 
-        const { data: prevMeters } = await pgliteClient
-            .from('history_meter')
-            .select('room_id, water_meter, electricity_meter')
-            .ilike('month', `${prevMonthStr}%`);
+        const prevMetersSnap = await getDocs(query(collection(db, 'history_meter'), where('month', '==', prevMonthStr)));
+        const prevMeters = prevMetersSnap.docs.map((d) => d.data());
 
         // Create Maps for fast lookup
         const currentMeterMap = new Map<string, any>(currentMeters?.map(m => [m.room_id, m]));

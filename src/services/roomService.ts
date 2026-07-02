@@ -1,4 +1,20 @@
-import { pgliteClient } from '../lib/pgliteClient';
+import {
+    collection,
+    deleteDoc,
+    doc,
+    getDoc,
+    getDocs,
+    limit,
+    orderBy,
+    query,
+    setDoc,
+    updateDoc,
+    where,
+    writeBatch,
+} from 'firebase/firestore';
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { db, storage } from '../lib/firebase';
+import { fetchByIds, fetchWhereIn, nowIso, withId } from '../lib/firestoreUtils';
 import type { Room, RoomStatus } from '../types';
 
 export interface RoomFilters {
@@ -7,70 +23,48 @@ export interface RoomFilters {
     searchTerm?: string;
 }
 
-async function roomHasActiveContract(roomId: string) {
-    const { data, error } = await pgliteClient
-        .from('contracts')
-        .select('id')
-        .eq('room_id', roomId)
-        .eq('status', 'active')
-        .limit(1);
+async function roomHasActiveContract(roomId: string): Promise<boolean> {
+    const snap = await getDocs(
+        query(
+            collection(db, 'contracts'),
+            where('room_id', '==', roomId),
+            where('status', '==', 'active'),
+            limit(1)
+        )
+    );
+    return !snap.empty;
+}
 
-    if (error) throw error;
-    return (data?.length || 0) > 0;
+function normalizeMonth(month: string): string {
+    return month.length >= 7 ? month.slice(0, 7) : month;
 }
 
 export const roomService = {
-    // ดึงรายการห้องทั้งหมด
-    async getRooms(filters?: RoomFilters) {
-        let query = pgliteClient
-            .from('rooms')
-            .select('*')
-            .order('room_number', { ascending: true });
-
-        if (filters?.floor) {
-            query = query.eq('floor', filters.floor);
-        }
+    async getRooms(filters?: RoomFilters): Promise<Room[]> {
+        const constraints = filters?.floor ? [where('floor', '==', filters.floor)] : [];
+        const snap = await getDocs(query(collection(db, 'rooms'), ...constraints, orderBy('room_number', 'asc')));
+        let rooms = snap.docs.map((d) => withId<Room>(d));
 
         if (filters?.searchTerm) {
-            query = query.ilike('room_number', `%${filters.searchTerm}%`);
+            const term = filters.searchTerm.toLowerCase();
+            rooms = rooms.filter((room) => room.room_number?.toLowerCase().includes(term));
         }
 
-        const { data, error } = await query;
-
-        if (error) throw error;
-
-        const rooms = (data || []) as Room[];
         const roomIds = rooms.map((room) => room.id);
-        const { data: contractRows = [] } = roomIds.length
-            ? await pgliteClient
-                .from('contracts')
-                .select('id, room_id, tenant_id, monthly_rent')
-                .in('room_id', roomIds)
-                .eq('status', 'active')
-            : { data: [] };
-        const contracts = contractRows as Array<{
-            id: string;
-            room_id: string;
-            tenant_id: string;
-            monthly_rent: number;
-        }>;
+        const contracts = await fetchWhereIn<{ id: string; room_id: string; tenant_id: string; monthly_rent: number }>(
+            'contracts',
+            'room_id',
+            roomIds,
+            where('status', '==', 'active')
+        );
 
         const tenantIds = [...new Set(contracts.map((contract) => contract.tenant_id).filter(Boolean))];
-        const { data: tenantRows = [] } = tenantIds.length
-            ? await pgliteClient
-                .from('tenants')
-                .select('id, full_name, phone, position_level')
-                .in('id', tenantIds)
-            : { data: [] };
-        const tenants = tenantRows as Array<{
-            id: string;
-            full_name: string;
-            phone: string;
-            position_level?: string;
-        }>;
+        const tenantById = await fetchByIds<{ id: string; full_name: string; phone: string; position_level?: string }>(
+            'tenants',
+            tenantIds
+        );
 
         const contractByRoom = new Map(contracts.map((contract) => [contract.room_id, contract]));
-        const tenantById = new Map(tenants.map((tenant) => [tenant.id, tenant]));
 
         const roomsWithTenants = rooms.map((room) => {
             const contract = contractByRoom.get(room.id);
@@ -92,285 +86,223 @@ export const roomService = {
         return filteredRooms as Room[];
     },
 
-    // ดึงข้อมูลห้องเดียว
-    async getRoom(id: string) {
-        const { data, error } = await pgliteClient
-            .from('rooms')
-            .select('*')
-            .eq('id', id)
-            .single();
+    async getRoom(id: string): Promise<Room> {
+        const roomSnap = await getDoc(doc(db, 'rooms', id));
+        if (!roomSnap.exists()) throw new Error('Room not found');
+        const data = withId<Room>(roomSnap as any);
 
-        if (error) throw error;
+        const contracts = await getDocs(
+            query(
+                collection(db, 'contracts'),
+                where('room_id', '==', id),
+                where('status', '==', 'active'),
+                limit(1)
+            )
+        );
+        const contract = contracts.docs[0]?.data() as { monthly_rent: number; tenant_id: string } | undefined;
+        const tenant = contract?.tenant_id
+            ? await fetchByIds<{ id: string; full_name: string; phone: string; position_level?: string }>('tenants', [
+                  contract.tenant_id,
+              ]).then((map) => map.get(contract.tenant_id) || null)
+            : null;
 
-        // Get active contract to find current tenant
-        const { data: contract } = await pgliteClient
-            .from('contracts')
-            .select(`
-                monthly_rent,
-                tenant:tenants(id, full_name, phone, position_level)
-            `)
-            .eq('room_id', id)
-            .eq('status', 'active')
-            .limit(1)
-            .maybeSingle();
-
-        const normalizedRoom = {
+        return {
             ...data,
             status: contract ? 'occupied' : data.status,
-            current_tenant_id: (contract as any)?.tenant?.id || data.current_tenant_id || null,
+            current_tenant_id: tenant?.id || data.current_tenant_id || null,
             has_active_contract: !!contract,
-            current_tenant: contract?.tenant || null,
+            current_tenant: tenant,
             current_rent: contract?.monthly_rent || null,
-        };
-
-        return normalizedRoom as Room;
+        } as Room;
     },
 
-    // สร้างห้องใหม่
-    async createRoom(roomData: Omit<Room, 'id' | 'created_at' | 'updated_at'>) {
-        const { data, error } = await pgliteClient
-            .from('rooms')
-            .insert({
-                ...roomData,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            })
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data as Room;
+    async createRoom(roomData: Omit<Room, 'id' | 'created_at' | 'updated_at'>): Promise<Room> {
+        const roomRef = doc(collection(db, 'rooms'));
+        const now = nowIso();
+        const payload = { ...roomData, current_tenant_uid: null, created_at: now, updated_at: now };
+        await setDoc(roomRef, payload);
+        return { id: roomRef.id, ...payload } as unknown as Room;
     },
 
-    // อัปเดตห้อง
-    async updateRoom(id: string, roomData: Partial<Room>) {
+    async updateRoom(id: string, roomData: Partial<Room>): Promise<Room> {
         if (await roomHasActiveContract(id)) {
             throw new Error('ห้องนี้มีสัญญาใช้งานอยู่ ไม่สามารถแก้ไขข้อมูลห้องพักได้');
         }
 
-        const { data, error } = await pgliteClient
-            .from('rooms')
-            .update({
-                ...roomData,
-                updated_at: new Date().toISOString(),
-            })
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data as Room;
+        const updates = { ...roomData, updated_at: nowIso() };
+        await updateDoc(doc(db, 'rooms', id), updates as Record<string, unknown>);
+        const updated = await getDoc(doc(db, 'rooms', id));
+        return withId<Room>(updated as any);
     },
 
-    // ลบห้อง
-    async deleteRoom(id: string) {
+    async deleteRoom(id: string): Promise<void> {
         if (await roomHasActiveContract(id)) {
             throw new Error('ห้องนี้มีสัญญาใช้งานอยู่ ไม่สามารถลบห้องพักได้');
         }
-
-        const { error } = await pgliteClient
-            .from('rooms')
-            .delete()
-            .eq('id', id);
-
-        if (error) throw error;
+        await deleteDoc(doc(db, 'rooms', id));
     },
 
-    // ดึงสถิติห้อง
     async getRoomStats() {
-        const { data, error } = await pgliteClient
-            .from('rooms')
-            .select('id, status');
+        const snap = await getDocs(collection(db, 'rooms'));
+        const rooms = snap.docs.map((d) => ({ id: d.id, status: d.data().status as RoomStatus }));
 
-        if (error) throw error;
-
-        const roomIds = data.map((room) => room.id);
-        const { data: activeContracts = [] } = roomIds.length
-            ? await pgliteClient
-                .from('contracts')
-                .select('room_id')
-                .in('room_id', roomIds)
-                .eq('status', 'active')
-            : { data: [] };
+        const roomIds = rooms.map((r) => r.id);
+        const activeContracts = await fetchWhereIn<{ room_id: string }>(
+            'contracts',
+            'room_id',
+            roomIds,
+            where('status', '==', 'active')
+        );
         const occupiedRoomIds = new Set(activeContracts.map((contract) => contract.room_id));
-        const effectiveRooms = data.map((room) => ({
+        const effectiveRooms = rooms.map((room) => ({
             ...room,
             status: occupiedRoomIds.has(room.id) ? 'occupied' : room.status,
         }));
 
-        const stats = {
+        return {
             total: effectiveRooms.length,
             available: effectiveRooms.filter((r) => r.status === 'available').length,
             occupied: effectiveRooms.filter((r) => r.status === 'occupied').length,
             reserved: effectiveRooms.filter((r) => r.status === 'reserved').length,
             maintenance: effectiveRooms.filter((r) => r.status === 'maintenance').length,
         };
-
-        return stats;
     },
 
-    // อัปโหลดรูปภาพห้อง
-    async uploadRoomImage(roomId: string, file: File) {
+    async uploadRoomImage(roomId: string, file: File): Promise<string> {
         const fileExt = file.name.split('.').pop();
-        const fileName = `${roomId}/${Date.now()}.${fileExt}`;
-
-        const { error: uploadError } = await pgliteClient.storage
-            .from('room-images')
-            .upload(fileName, file);
-
-        if (uploadError) throw uploadError;
-
-        const { data } = pgliteClient.storage
-            .from('room-images')
-            .getPublicUrl(fileName);
-
-        return data.publicUrl;
+        const path = `room-images/${roomId}/${Date.now()}.${fileExt}`;
+        const storageRef = ref(storage, path);
+        await uploadBytes(storageRef, file);
+        return getDownloadURL(storageRef);
     },
 
-    // ลบรูปภาพห้อง
-    async deleteRoomImage(url: string) {
-        const path = url.split('/room-images/')[1];
-        if (!path) return;
-
-        const { error } = await pgliteClient.storage
-            .from('room-images')
-            .remove([path]);
-
-        if (error) throw error;
+    async deleteRoomImage(url: string): Promise<void> {
+        try {
+            await deleteObject(ref(storage, url));
+        } catch (error) {
+            console.error('Error deleting room image:', error);
+        }
     },
 
-    // ซิงค์สถานะห้อง
+    // Admin-triggered repair job (not a startup job - there's no server to run
+    // it automatically anymore). Terminates orphaned contracts (tenant
+    // deleted) and corrects room status drift.
     async syncRoomStatuses(): Promise<number> {
-        // 1. Get all rooms
-        const { data: rooms } = await pgliteClient.from('rooms').select('id, status, current_tenant_id');
-        if (!rooms || rooms.length === 0) return 0;
+        const roomsSnap = await getDocs(collection(db, 'rooms'));
+        const rooms = roomsSnap.docs.map((d) => ({
+            id: d.id,
+            status: d.data().status as RoomStatus,
+            current_tenant_id: d.data().current_tenant_id as string | null,
+        }));
+        if (rooms.length === 0) return 0;
+
+        const roomIds = rooms.map((r) => r.id);
+        const activeContracts = await fetchWhereIn<{ id: string; room_id: string; tenant_id: string }>(
+            'contracts',
+            'room_id',
+            roomIds,
+            where('status', '==', 'active')
+        );
+
+        const tenantIds = activeContracts.map((c) => c.tenant_id);
+        const existingTenants = await fetchByIds<{ id: string }>('tenants', tenantIds);
 
         let fixCount = 0;
+        const batch = writeBatch(db);
+        const now = nowIso();
 
-        // 2. For each room, check active contracts
+        const contractsByRoom = new Map<string, typeof activeContracts>();
+        activeContracts.forEach((contract) => {
+            const list = contractsByRoom.get(contract.room_id) || [];
+            list.push(contract);
+            contractsByRoom.set(contract.room_id, list);
+        });
+
         for (const room of rooms) {
-            // Get ALL active contracts (in case of duplicates)
-            const { data: contracts } = await pgliteClient
-                .from('contracts')
-                .select('id, tenant_id, tenant:tenants(id)')
-                .eq('room_id', room.id)
-                .eq('status', 'active');
-
+            const contracts = contractsByRoom.get(room.id) || [];
             let hasValidContract = false;
-            let validTenantId = null;
+            let validTenantId: string | null = null;
 
-            if (contracts && contracts.length > 0) {
-                for (const contract of contracts) {
-                    if (contract.tenant) {
-                        // Found a valid tenant
-                        hasValidContract = true;
-                        validTenantId = contract.tenant_id;
-                    } else {
-                        // Orphan contract (Tenant deleted) -> Terminate it
-                        await pgliteClient.from('contracts').update({
-                            status: 'terminated',
-                            updated_at: new Date().toISOString()
-                        }).eq('id', contract.id);
-                        fixCount++;
-                    }
+            for (const contract of contracts) {
+                if (existingTenants.has(contract.tenant_id)) {
+                    hasValidContract = true;
+                    validTenantId = contract.tenant_id;
+                } else {
+                    batch.update(doc(db, 'contracts', contract.id), { status: 'terminated', updated_at: now });
+                    fixCount += 1;
                 }
             }
 
             if (hasValidContract) {
-                // Should be occupied
                 if (room.status !== 'occupied' || room.current_tenant_id !== validTenantId) {
-                    await pgliteClient.from('rooms').update({
+                    batch.update(doc(db, 'rooms', room.id), {
                         status: 'occupied',
                         current_tenant_id: validTenantId,
-                        updated_at: new Date().toISOString()
-                    }).eq('id', room.id);
-                    fixCount++;
+                        current_tenant_uid: null,
+                        updated_at: now,
+                    });
+                    fixCount += 1;
                 }
-            } else {
-                // Should be available (unless it's 'maintenance' or 'reserved' which we might want to respect)
-                // However, user specifically complained about rooms stuck as "occupied"
-                // So if it is 'occupied', force it to 'available'
-                if (room.status === 'occupied') {
-                    await pgliteClient.from('rooms').update({
-                        status: 'available',
-                        current_tenant_id: null,
-                        updated_at: new Date().toISOString()
-                    }).eq('id', room.id);
-                    fixCount++;
-                }
+            } else if (room.status === 'occupied') {
+                batch.update(doc(db, 'rooms', room.id), {
+                    status: 'available',
+                    current_tenant_id: null,
+                    current_tenant_uid: null,
+                    updated_at: now,
+                });
+                fixCount += 1;
             }
         }
 
+        if (fixCount > 0) await batch.commit();
         return fixCount;
     },
 
-    // บังคับคืนห้อง (สำหรับแก้ปัญหาห้องค้าง)
-    async forceReleaseRoom(roomId: string) {
+    async forceReleaseRoom(roomId: string): Promise<void> {
         if (await roomHasActiveContract(roomId)) {
             throw new Error('This room has an active contract and cannot be released from the rooms page.');
         }
 
-        // 1. Terminate all active contracts for this room
-        await pgliteClient
-            .from('contracts')
-            .update({
-                status: 'terminated',
-                updated_at: new Date().toISOString()
-            })
-            .eq('room_id', roomId)
-            .eq('status', 'active');
+        const staleContracts = await getDocs(
+            query(collection(db, 'contracts'), where('room_id', '==', roomId), where('status', '==', 'active'))
+        );
+        const now = nowIso();
+        await Promise.all(
+            staleContracts.docs.map((d) => updateDoc(d.ref, { status: 'terminated', updated_at: now }))
+        );
 
-        // 2. Clear room status
-        const { error } = await pgliteClient
-            .from('rooms')
-            .update({
-                status: 'available',
-                current_tenant_id: null,
-                updated_at: new Date().toISOString()
-            })
-            .eq('id', roomId);
-
-        if (error) throw error;
+        await updateDoc(doc(db, 'rooms', roomId), {
+            status: 'available',
+            current_tenant_id: null,
+            current_tenant_uid: null,
+            updated_at: now,
+        });
     },
 
-    // Get Meter History for a specific year
     async getMeterHistory(roomId: string, year: number) {
-        const startMonth = `${year}-01-01`;
-        const endMonth = `${year + 1}-01-01`;
-
-        const { data, error } = await pgliteClient
-            .from('history_meter')
-            .select('*')
-            .eq('room_id', roomId)
-            .gte('month', startMonth)
-            .lt('month', endMonth)
-            .order('month', { ascending: true });
-
-        if (error) {
-            console.error('Error fetching meter history:', error);
-            throw error;
-        }
-        return data || [];
+        const snap = await getDocs(
+            query(
+                collection(db, 'history_meter'),
+                where('room_id', '==', roomId),
+                where('month', '>=', `${year}-01`),
+                where('month', '<', `${year + 1}-01`),
+                orderBy('month', 'asc')
+            )
+        );
+        return snap.docs.map((d) => d.data());
     },
 
-    // Update Meter History
     async updateMeterHistory(roomId: string, month: string, water: number, elec: number) {
-        const { data, error } = await pgliteClient
-            .from('history_meter')
-            .upsert({
-                room_id: roomId,
-                month: month,
-                water_meter: water,
-                electricity_meter: elec,
-                updated_at: new Date().toISOString()
-            }, { onConflict: 'room_id, month' })
-            .select()
-            .single();
-
-        if (error) {
-            console.error('Error updating meter history:', error);
-            throw error;
-        }
-        return data;
-    }
+        const normalizedMonth = normalizeMonth(month);
+        const ref = doc(db, 'history_meter', `${roomId}_${normalizedMonth}`);
+        const payload = {
+            room_id: roomId,
+            month: normalizedMonth,
+            water_meter: water,
+            electricity_meter: elec,
+            updated_at: nowIso(),
+        };
+        await setDoc(ref, payload, { merge: true });
+        return payload;
+    },
 };

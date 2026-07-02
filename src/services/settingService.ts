@@ -1,67 +1,46 @@
-import { pgliteClient } from '../lib/pgliteClient';
-import type { RentRate, AppSettings } from '../types';
+import { collection, doc, documentId, getDoc, getDocs, orderBy, query, setDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { nowIso } from '../lib/firestoreUtils';
+import type { AppSettings, RentRate } from '../types';
+
+const APP_SETTINGS_DOC_ID = 'singleton';
 
 export const settingService = {
-    // Get all rent rates
     getRentRates: async (): Promise<RentRate[]> => {
-        const { data, error } = await pgliteClient
-            .from('position_rent_rates')
-            .select('*')
-            .order('position_level', { ascending: true }); // Or custom sort if we add sort_order
-
-        if (error) {
-            // Handle table not found (during migration) by returning defaults
-            if (error.code === '42P01') {
-                return [];
-            }
-            throw error;
-        }
-
-        return data as RentRate[];
+        const snap = await getDocs(query(collection(db, 'position_rent_rates'), orderBy(documentId(), 'asc')));
+        return snap.docs.map((d) => ({ position_level: d.id, ...d.data() }) as RentRate);
     },
 
-    // Update rent rate
     updateRentRate: async (position_level: string, rent_amount: number, common_fee: number): Promise<void> => {
-        const { error } = await pgliteClient
-            .from('position_rent_rates')
-            .upsert({ position_level, rent_amount, common_fee, updated_at: new Date().toISOString() })
-            .select();
-
-        if (error) throw error;
+        await setDoc(
+            doc(db, 'position_rent_rates', position_level),
+            { rent_amount, common_fee, updated_at: nowIso() },
+            { merge: true }
+        );
     },
 
-    // Get App Settings
     getAppSettings: async (): Promise<AppSettings> => {
-        const { data, error } = await pgliteClient
-            .from('app_settings')
-            .select('*')
-            .single();
-
-        if (error) {
-            // Handle table not found or empty (return default)
-            if (error.code === '42P01' || error.code === 'PGRST116') {
-                return {
-                    id: 1,
-                    common_fee: 0,
-                    water_rate: 18,
-                    water_maintenance_fee: 0,
-                    electricity_rate: 8,
-                    updated_at: new Date().toISOString()
-                };
-            }
-            throw error;
+        const snap = await getDoc(doc(db, 'app_settings', APP_SETTINGS_DOC_ID));
+        if (!snap.exists()) {
+            return {
+                id: 1,
+                common_fee: 0,
+                water_rate: 18,
+                water_maintenance_fee: 0,
+                electricity_rate: 8,
+                updated_at: nowIso(),
+            };
         }
-
-        return data as AppSettings;
+        return { id: 1, ...snap.data() } as AppSettings;
     },
 
-    // Update App Settings
     updateAppSettings: async (settings: Partial<AppSettings>): Promise<void> => {
-        const { error } = await pgliteClient
-            .from('app_settings')
-            .upsert({ ...settings, id: 1, updated_at: new Date().toISOString() })
-            .select();
-
-        if (error) throw error;
-    }
+        const rest = { ...settings };
+        delete rest.id;
+        await setDoc(
+            doc(db, 'app_settings', APP_SETTINGS_DOC_ID),
+            { ...rest, updated_at: nowIso() },
+            { merge: true }
+        );
+    },
 };

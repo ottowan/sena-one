@@ -22,6 +22,7 @@ import {
     Image,
     HStack,
     IconButton,
+    Text,
 } from '@chakra-ui/react';
 import { LuImage, LuX } from 'react-icons/lu';
 import { Field } from '../../components/ui/field';
@@ -29,6 +30,7 @@ import { toaster } from '../../components/ui/toaster';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { maintenanceService } from '../../services/maintenanceService';
 import { roomService } from '../../services/roomService';
+import { STORAGE_ENABLED } from '../../lib/firebase';
 import { type MaintenanceRequest, MaintenancePriority } from '../../types';
 
 interface MaintenanceRequestDialogProps {
@@ -269,12 +271,21 @@ export const MaintenanceRequestDialog: React.FC<MaintenanceRequestDialogProps> =
                                             onChange={handleFileChange}
                                             style={{ display: 'none' }}
                                             id="image-upload"
+                                            disabled={!STORAGE_ENABLED}
                                         />
-                                        <Button asChild variant="outline" size="sm">
-                                            <label htmlFor="image-upload" style={{ cursor: 'pointer' }}>
+                                        <Button asChild variant="outline" size="sm" disabled={!STORAGE_ENABLED}>
+                                            <label
+                                                htmlFor="image-upload"
+                                                style={{ cursor: STORAGE_ENABLED ? 'pointer' : 'not-allowed' }}
+                                            >
                                                 <LuImage /> เลือกรูปภาพ
                                             </label>
                                         </Button>
+                                        {!STORAGE_ENABLED && (
+                                            <Text color="gray.500" fontSize="xs" mt={1}>
+                                                อัปโหลดรูปภาพยังไม่เปิดใช้งาน (รอเปิด Firebase Storage)
+                                            </Text>
+                                        )}
                                     </Box>
                                 </VStack>
                             </Field>

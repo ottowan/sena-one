@@ -4,11 +4,15 @@ import {
     Box,
     Container,
     Heading,
+    HStack,
+    Icon,
+    IconButton,
     Input,
     Text,
     Card,
     VStack,
 } from '@chakra-ui/react';
+import { LuEye, LuEyeOff } from 'react-icons/lu';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserRole } from '../../types';
 import { Field } from '../../components/ui/field';
@@ -22,6 +26,7 @@ export const LoginPage: React.FC = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const from = (location.state as any)?.from?.pathname || '/';
@@ -105,15 +110,26 @@ export const LoginPage: React.FC = () => {
                                     </Field>
 
                                     <Field label="รหัสผ่าน" required>
-                                        <Input
-                                            type="password"
-                                            placeholder="••••••••"
-                                            value={password}
-                                            onChange={(event) => setPassword(event.target.value)}
-                                            size="lg"
-                                            autoComplete="current-password"
-                                            required
-                                        />
+                                        <HStack w="full">
+                                            <Input
+                                                type={showPassword ? 'text' : 'password'}
+                                                placeholder="••••••••"
+                                                value={password}
+                                                onChange={(event) => setPassword(event.target.value)}
+                                                size="lg"
+                                                autoComplete="current-password"
+                                                required
+                                            />
+                                            <IconButton
+                                                variant="ghost"
+                                                size="lg"
+                                                type="button"
+                                                aria-label={showPassword ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน'}
+                                                onClick={() => setShowPassword((prev) => !prev)}
+                                            >
+                                                <Icon>{showPassword ? <LuEyeOff /> : <LuEye />}</Icon>
+                                            </IconButton>
+                                        </HStack>
                                     </Field>
 
                                     <Button

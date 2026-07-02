@@ -1,170 +1,118 @@
-import { pgliteClient } from '../lib/pgliteClient';
-import type { MaintenanceRequest, MaintenanceFormData, MaintenanceStatus } from '../types';
+import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { db, storage } from '../lib/firebase';
+import { fetchByIds, nowIso, withId } from '../lib/firestoreUtils';
+import type { MaintenanceFormData, MaintenanceRequest, MaintenanceStatus } from '../types';
+
+async function attachRelations(requests: MaintenanceRequest[]): Promise<MaintenanceRequest[]> {
+    const tenantIds = requests.map((r) => r.tenant_id);
+    const directRoomIds = requests.map((r) => r.room_id);
+
+    const tenantById = await fetchByIds<any>('tenants', tenantIds);
+    // Nested embed (tenant.room via tenant.current_room_id) needs a second
+    // fan-out pass once tenant docs are known - Firestore has no server-side
+    // joins, so this mirrors the old server's two-level relation attach.
+    const tenantRoomIds = [...tenantById.values()].map((t) => t.current_room_id).filter(Boolean);
+    const roomById = await fetchByIds<any>('rooms', [...directRoomIds, ...tenantRoomIds]);
+
+    return requests.map((request) => {
+        const tenant = tenantById.get(request.tenant_id);
+        return {
+            ...request,
+            room: roomById.get(request.room_id),
+            tenant: tenant
+                ? { ...tenant, room: tenant.current_room_id ? roomById.get(tenant.current_room_id) : undefined }
+                : undefined,
+        };
+    });
+}
 
 export const maintenanceService = {
-    // Get all requests
-    getMaintenanceRequests: async (
-        status?: string,
-        searchTerm?: string
-    ): Promise<MaintenanceRequest[]> => {
-        let query = pgliteClient
-            .from('maintenance_requests')
-            .select(`
-                *,
-                tenant:tenants(id, full_name, phone, room:rooms(room_number)),
-                room:rooms(id, room_number)
-            `)
-            .order('created_at', { ascending: false });
-
-        if (status && status !== 'all') {
-            query = query.eq('status', status);
-        }
-
-        const { data, error } = await query;
-
-        if (error) throw error;
-
-        let requests = data as MaintenanceRequest[];
+    getMaintenanceRequests: async (status?: string, searchTerm?: string): Promise<MaintenanceRequest[]> => {
+        const constraints = status && status !== 'all' ? [where('status', '==', status)] : [];
+        const snap = await getDocs(
+            query(collection(db, 'maintenance_requests'), ...constraints, orderBy('created_at', 'desc'))
+        );
+        let requests = await attachRelations(snap.docs.map((d) => withId<MaintenanceRequest>(d)));
 
         if (searchTerm) {
             const lowerTerm = searchTerm.toLowerCase();
-            requests = requests.filter(req =>
-                req.title.toLowerCase().includes(lowerTerm) ||
-                req.description.toLowerCase().includes(lowerTerm) ||
-                req.tenant?.full_name.toLowerCase().includes(lowerTerm) ||
-                req.room?.room_number.toLowerCase().includes(lowerTerm)
+            requests = requests.filter(
+                (req) =>
+                    req.title.toLowerCase().includes(lowerTerm) ||
+                    req.description.toLowerCase().includes(lowerTerm) ||
+                    req.tenant?.full_name.toLowerCase().includes(lowerTerm) ||
+                    req.room?.room_number.toLowerCase().includes(lowerTerm)
             );
         }
 
         return requests;
     },
 
-    // Get single request
     getMaintenanceRequest: async (id: string): Promise<MaintenanceRequest> => {
-        const { data, error } = await pgliteClient
-            .from('maintenance_requests')
-            .select(`
-                *,
-                tenant:tenants(*),
-                room:rooms(*)
-            `)
-            .eq('id', id)
-            .single();
-
-        if (error) throw error;
-        return data as MaintenanceRequest;
+        const snap = await getDoc(doc(db, 'maintenance_requests', id));
+        if (!snap.exists()) throw new Error('Maintenance request not found');
+        const [request] = await attachRelations([withId<MaintenanceRequest>(snap as any)]);
+        return request;
     },
 
-    // Create request
     createMaintenanceRequest: async (data: MaintenanceFormData, images?: File[]): Promise<MaintenanceRequest> => {
-        // Need to find tenant_id for the room if not provided?
-        // Usually, a request is linked to a room AND a tenant.
-        // If the admin creates it, they pick a room. We should optionally auto-fill tenant_id from current tenant of that room.
-
-        // This logic assumes we only create requests for Occupied rooms.
-
-        let tenantId = '';
-
-        const { data: roomData } = await pgliteClient
-            .from('rooms')
-            .select('current_tenant:tenants(id)')
-            .eq('id', data.room_id)
-            .single();
-
-        if (roomData?.current_tenant) {
-            // calculated property might be array or object depending on pgliteClient client version/types
-            const tenant: any = roomData.current_tenant;
-            if (Array.isArray(tenant) && tenant.length > 0) {
-                tenantId = tenant[0].id;
-            } else if (tenant?.id) {
-                tenantId = tenant.id;
-            }
+        // Resolve tenant_id/tenant_uid from the room's own denormalized
+        // current_tenant fields (kept in sync by contractService's
+        // transactions) rather than querying `contracts` directly: a tenant
+        // caller can only ever `get()` a single room document under the
+        // Security Rules (allowed when they own it), not run an
+        // unconstrained `contracts` list query - a single-document read
+        // here keeps this working for both admin and tenant callers.
+        const roomSnap = await getDoc(doc(db, 'rooms', data.room_id));
+        if (!roomSnap.exists() || !roomSnap.data().current_tenant_id) {
+            throw new Error('Cannot create maintenance request: No active tenant found for this room.');
         }
-
-        // Revised Logic to find Tenant
-        const { data: contractData } = await pgliteClient
-            .from('contracts')
-            .select('tenant_id')
-            .eq('room_id', data.room_id)
-            .eq('status', 'active')
-            .single();
-
-        if (contractData?.tenant_id) {
-            tenantId = contractData.tenant_id;
-        } else {
-            // Note: If admin wants to log maintenance for empty room, we might skip tenant_id check? 
-            // But schema says tenant_id is NOT NULL?
-            // "tenant_id UUID NOT NULL REFERENCES tenants(id)"
-            // So we MUST have a tenant.
-            throw new Error("Cannot create maintenance request: No active tenant found for this room.");
-        }
+        const room = roomSnap.data();
+        const tenantId = room.current_tenant_id as string;
+        const tenantUid = (room.current_tenant_uid as string | null) ?? null;
 
         const uploadedImages = images?.length
             ? await Promise.all(images.map((file) => maintenanceService.uploadMaintenanceImage(file)))
             : [];
 
-        const { data: newRequest, error } = await pgliteClient
-            .from('maintenance_requests')
-            .insert({
-                room_id: data.room_id,
-                tenant_id: tenantId,
-                title: data.title,
-                description: data.description,
-                priority: data.priority,
-                images: [...(data.images || []), ...uploadedImages],
-                status: 'pending'
-            })
-            .select()
-            .single();
-
-        if (error) throw error;
-        return newRequest as MaintenanceRequest;
+        const requestRef = doc(collection(db, 'maintenance_requests'));
+        const now = nowIso();
+        const payload = {
+            room_id: data.room_id,
+            tenant_id: tenantId,
+            tenant_uid: tenantUid,
+            title: data.title,
+            description: data.description,
+            priority: data.priority,
+            images: [...(data.images || []), ...uploadedImages],
+            status: 'pending',
+            created_at: now,
+            updated_at: now,
+        };
+        await setDoc(requestRef, payload);
+        return { id: requestRef.id, ...payload } as unknown as MaintenanceRequest;
     },
 
-    // Update request
     updateMaintenanceRequest: async (id: string, updates: Partial<MaintenanceRequest>): Promise<MaintenanceRequest> => {
-        const { data, error } = await pgliteClient
-            .from('maintenance_requests')
-            .update(updates)
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data as MaintenanceRequest;
+        await updateDoc(doc(db, 'maintenance_requests', id), { ...updates, updated_at: nowIso() } as Record<string, unknown>);
+        const updated = await getDoc(doc(db, 'maintenance_requests', id));
+        return withId<MaintenanceRequest>(updated as any);
     },
 
     updateStatus: async (id: string, status: MaintenanceStatus): Promise<MaintenanceRequest> => {
         return maintenanceService.updateMaintenanceRequest(id, { status });
     },
 
-    // Delete request
     deleteMaintenanceRequest: async (id: string): Promise<void> => {
-        const { error } = await pgliteClient
-            .from('maintenance_requests')
-            .delete()
-            .eq('id', id);
-
-        if (error) throw error;
+        await deleteDoc(doc(db, 'maintenance_requests', id));
     },
-    // Upload image
+
     uploadMaintenanceImage: async (file: File): Promise<string> => {
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `${fileName}`;
-
-        const { error: uploadError } = await pgliteClient.storage
-            .from('maintenance-images')
-            .upload(filePath, file);
-
-        if (uploadError) {
-            throw uploadError;
-        }
-
-        const { data } = pgliteClient.storage
-            .from('maintenance-images')
-            .getPublicUrl(filePath);
-
-        return data.publicUrl;
-    }
+        const storageRef = ref(storage, `maintenance-images/${fileName}`);
+        await uploadBytes(storageRef, file);
+        return getDownloadURL(storageRef);
+    },
 };

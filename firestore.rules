@@ -1,0 +1,130 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userRole() {
+      return get(/databases/$(db)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdminOrOwner() {
+      return isSignedIn() && userRole() in ['admin', 'owner'];
+    }
+
+    function isTenant() {
+      return isSignedIn() && userRole() == 'tenant';
+    }
+
+    function isSelf(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function ownsRoom(roomId) {
+      return get(/databases/$(db)/documents/rooms/$(roomId)).data.current_tenant_uid == request.auth.uid;
+    }
+
+    // Login resolution: username/phone -> {uid, email}. Must be readable
+    // by exact key before the caller is signed in; never listable.
+    match /username_lookup/{username} {
+      allow get: if true;
+      allow list: if false;
+      allow write: if isAdminOrOwner();
+    }
+
+    match /phone_lookup/{phone} {
+      allow get: if true;
+      allow list: if false;
+      allow write: if isAdminOrOwner();
+    }
+
+    // Login identity + role. Merges the old `users`+`profiles` tables.
+    match /users/{uid} {
+      allow read: if isSelf(uid) || isAdminOrOwner();
+      allow create, update: if isAdminOrOwner() || isSelf(uid);
+      allow delete: if isAdminOrOwner();
+    }
+
+    match /app_settings/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdminOrOwner();
+    }
+
+    match /position_rent_rates/{level} {
+      allow read: if isSignedIn();
+      allow write: if isAdminOrOwner();
+    }
+
+    match /rooms/{roomId} {
+      allow read: if isAdminOrOwner() ||
+        (isTenant() && resource.data.current_tenant_uid == request.auth.uid);
+      allow write: if isAdminOrOwner();
+    }
+
+    match /tenants/{tenantId} {
+      allow read: if isAdminOrOwner() ||
+        (isTenant() && resource.data.user_id == request.auth.uid);
+      allow write: if isAdminOrOwner();
+    }
+
+    match /contracts/{contractId} {
+      allow read: if isAdminOrOwner() ||
+        (isTenant() && resource.data.tenant_uid == request.auth.uid);
+      allow write: if isAdminOrOwner();
+    }
+
+    match /invoices/{invoiceId} {
+      allow read: if isAdminOrOwner() ||
+        (isTenant() && resource.data.tenant_uid == request.auth.uid);
+      allow write: if isAdminOrOwner();
+    }
+
+    match /payments/{paymentId} {
+      allow read: if isAdminOrOwner() ||
+        (isTenant() && resource.data.tenant_uid == request.auth.uid);
+      // Tenants never create payments directly (mirrors old tenantCanMutate,
+      // which never allowed tenant-initiated payment writes).
+      allow write: if isAdminOrOwner();
+    }
+
+    match /deposits/{depositId} {
+      allow read: if isAdminOrOwner() ||
+        (isTenant() && resource.data.tenant_uid == request.auth.uid);
+      allow write: if isAdminOrOwner();
+    }
+
+    match /maintenance_requests/{requestId} {
+      allow read: if isAdminOrOwner() ||
+        (isTenant() && resource.data.tenant_uid == request.auth.uid);
+      allow create: if isAdminOrOwner() ||
+        (isTenant()
+          && request.resource.data.tenant_uid == request.auth.uid
+          && ownsRoom(request.resource.data.room_id));
+      // Tenants may never update/delete, even their own requests - matches
+      // old tenantCanMutate, which only ever allowed `insert`.
+      allow update, delete: if isAdminOrOwner();
+    }
+
+    match /history_meter/{docId} {
+      allow read: if isAdminOrOwner() ||
+        (isTenant() && ownsRoom(resource.data.room_id));
+      allow create, update: if isAdminOrOwner() ||
+        (isTenant() && ownsRoom(request.resource.data.room_id));
+      allow delete: if isAdminOrOwner();
+    }
+
+    match /notifications/{notificationId} {
+      allow read, update, delete: if isAdminOrOwner() ||
+        (isSignedIn() && resource.data.user_id == request.auth.uid);
+      allow create: if isAdminOrOwner() ||
+        (isSignedIn() && request.resource.data.user_id == request.auth.uid);
+    }
+
+    // Legacy/unused (no service references these today) - admin-only.
+    match /bookings/{bookingId} {
+      allow read, write: if isAdminOrOwner();
+    }
+  }
+}

@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
 import { authService, type CustomUser } from '../services/authService';
-import type { UserRole } from '../types';
 
 interface AuthContextType {
     user: CustomUser | null;
     profile: CustomUser | null; // Keep for backward compatibility
     loading: boolean;
-    signIn: (phone: string, password: string) => Promise<{ user?: CustomUser; error?: string }>;
+    signIn: (loginInput: string, password: string) => Promise<{ user?: CustomUser; error?: string }>;
     signOut: () => void;
 }
 
@@ -29,26 +31,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        let cancelled = false;
+        const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
+            if (!fbUser) {
+                setUser(null);
+                setLoading(false);
+                return;
+            }
 
-        const loadSession = async () => {
-            await authService.warmUp();
-            const currentUser = await authService.getCurrentUser();
-            if (!cancelled) {
-                setUser(currentUser);
+            try {
+                const userDoc = await getDoc(doc(db, 'users', fbUser.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    setUser({ id: fbUser.uid, phone: data.phone, full_name: data.full_name, role: data.role });
+                } else {
+                    setUser(null);
+                }
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+                setUser(null);
+            } finally {
                 setLoading(false);
             }
-        };
+        });
 
-        void loadSession();
-
-        return () => {
-            cancelled = true;
-        };
+        return () => unsubscribe();
     }, []);
 
-    const signIn = async (phone: string, password: string) => {
-        const { user: loggedInUser, error } = await authService.login(phone, password);
+    const signIn = async (loginInput: string, password: string) => {
+        const { user: loggedInUser, error } = await authService.login(loginInput, password);
 
         if (error) {
             return { error };

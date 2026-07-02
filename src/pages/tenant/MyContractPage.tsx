@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, Heading, VStack, Text, Grid, Badge, Spinner } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
-import { pgliteClient } from '../../lib/pgliteClient';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { formatCurrency } from '../../lib/utils';
 
 export const MyContractPage: React.FC = () => {
@@ -13,36 +14,36 @@ export const MyContractPage: React.FC = () => {
         const fetchContract = async () => {
             if (!profile?.id) return;
 
-            const { data: tenant } = await pgliteClient
-                .from('tenants')
-                .select('id, position_level')
-                .eq('user_id', profile.id)
-                .maybeSingle();
-
-            if (!tenant) {
+            const tenantSnap = await getDocs(query(collection(db, 'tenants'), where('user_id', '==', profile.id)));
+            const tenantDoc = tenantSnap.docs[0];
+            if (!tenantDoc) {
                 setIsLoading(false);
                 return;
             }
+            const tenant = { id: tenantDoc.id, ...tenantDoc.data() } as any;
 
-            const { data: contractData } = await pgliteClient
-                .from('contracts')
-                .select('*, room:rooms(*)')
-                .eq('tenant_id', tenant.id)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .maybeSingle();
+            // Query by tenant_uid (not tenant_id) so this list read is
+            // provably scoped under the tenant-role Security Rules.
+            const contractsSnap = await getDocs(query(collection(db, 'contracts'), where('tenant_uid', '==', profile.id)));
+            const contractRows = contractsSnap.docs
+                .map((d) => ({ id: d.id, ...d.data() }) as any)
+                .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+            let contractData = contractRows[0] || null;
 
-            // Fetch rent rates to calculate dynamic rent
-            const { data: rentRates } = await pgliteClient
-                .from('position_rent_rates')
-                .select('*');
+            if (contractData?.room_id) {
+                const roomSnap = await getDoc(doc(db, 'rooms', contractData.room_id));
+                if (roomSnap.exists()) contractData = { ...contractData, room: { id: roomSnap.id, ...roomSnap.data() } };
+            }
+
+            // Rent rates are world-readable to any signed-in user.
+            const rentRatesSnap = await getDocs(collection(db, 'position_rent_rates'));
+            const rentRates = rentRatesSnap.docs.map((d) => ({ position_level: d.id, ...d.data() }) as any);
 
             if (contractData) {
                 let displayRent = contractData.monthly_rent;
 
-                // Apply dynamic rent logic if position level exists
-                if (tenant.position_level && rentRates) {
-                    const rate = rentRates.find((r: any) => r.position_level === tenant.position_level);
+                if (tenant.position_level) {
+                    const rate = rentRates.find((r) => r.position_level === tenant.position_level);
                     if (rate && rate.rent_amount > 0) {
                         displayRent = rate.rent_amount;
                     }

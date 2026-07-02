@@ -22,7 +22,9 @@ import {
     SelectValueText,
 } from '../../components/ui/select';
 import { toaster } from '../../components/ui/toaster';
-import { pgliteClient } from '../../lib/pgliteClient';
+import { collection, doc, getDocs, orderBy, query, where, writeBatch } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
+import { fetchByIds, nowIso } from '../../lib/firestoreUtils';
 import { ContractStatus } from '../../types';
 
 interface MeterRow {
@@ -96,56 +98,31 @@ export const MeterManagementPage: React.FC = () => {
             }
             const prevMonthStr = `${prevYear}-${String(prevMonth).padStart(2, '0')}`;
 
-            const [
-                roomsResult,
-                contractsResult,
-                currentHistoryResult,
-                prevHistoryResult,
-                prevInvoicesResult,
-            ] = await Promise.all([
-                pgliteClient
-                    .from('rooms')
-                    .select('*')
-                    .order('room_number'),
-                pgliteClient
-                    .from('contracts')
-                    .select('*')
-                    .eq('status', ContractStatus.ACTIVE),
-                pgliteClient
-                    .from('history_meter')
-                    .select('*')
-                    .eq('month', selectedMonth),
-                pgliteClient
-                    .from('history_meter')
-                    .select('*')
-                    .ilike('month', `${prevMonthStr}%`),
-                pgliteClient
-                    .from('invoices')
-                    .select('room_id, water_meter_current, electricity_meter_current')
-                    .gte('billing_month', `${prevMonthStr}-01`)
-                    .lt('billing_month', `${selectedMonth}-01`)
-                    .order('billing_month', { ascending: false }),
+            const [roomsSnap, contractsSnap, currentHistorySnap, prevHistorySnap, prevInvoicesSnap] = await Promise.all([
+                getDocs(query(collection(db, 'rooms'), orderBy('room_number', 'asc'))),
+                getDocs(query(collection(db, 'contracts'), where('status', '==', ContractStatus.ACTIVE))),
+                getDocs(query(collection(db, 'history_meter'), where('month', '==', selectedMonth))),
+                getDocs(query(collection(db, 'history_meter'), where('month', '==', prevMonthStr))),
+                getDocs(
+                    query(
+                        collection(db, 'invoices'),
+                        where('billing_month', '>=', `${prevMonthStr}-01`),
+                        where('billing_month', '<', `${selectedMonth}-01`),
+                        orderBy('billing_month', 'desc')
+                    )
+                ),
             ]);
 
-            if (roomsResult.error) throw roomsResult.error;
-            if (contractsResult.error) throw contractsResult.error;
-            if (currentHistoryResult.error) throw currentHistoryResult.error;
-            if (prevHistoryResult.error) throw prevHistoryResult.error;
+            const allRooms = roomsSnap.docs.map((d) => ({ id: d.id, ...d.data() }) as MeterRoomRow);
+            const contracts = contractsSnap.docs.map((d) => d.data() as MeterContractRow);
+            const currentHistory = currentHistorySnap.docs.map((d) => d.data() as MeterHistoryRow);
+            const prevHistory = prevHistorySnap.docs.map((d) => d.data() as MeterHistoryRow);
+            const prevMonthInvoices = prevInvoicesSnap.docs.map((d) => d.data() as MeterInvoiceRow);
 
-            const allRooms = (roomsResult.data || []) as MeterRoomRow[];
-            const contracts = (contractsResult.data || []) as MeterContractRow[];
-            const currentHistory = (currentHistoryResult.data || []) as MeterHistoryRow[];
-            const prevHistory = (prevHistoryResult.data || []) as MeterHistoryRow[];
-            const prevMonthInvoices = (prevInvoicesResult.data || []) as MeterInvoiceRow[];
+            const tenantIds = [...new Set(contracts.map((contract) => contract.tenant_id).filter(Boolean))];
+            const tenantById = await fetchByIds<MeterTenantRow>('tenants', tenantIds);
 
-            const tenantIds = [...new Set(contracts.map((contract: any) => contract.tenant_id).filter(Boolean))];
-            const tenantsResult = tenantIds.length
-                ? await pgliteClient.from('tenants').select('id, full_name').in('id', tenantIds)
-                : { data: [], error: null };
-
-            if (tenantsResult.error) throw tenantsResult.error;
-
-            const tenantMap = new Map(((tenantsResult.data || []) as MeterTenantRow[]).map((tenant) => [tenant.id, tenant]));
+            const tenantMap = new Map([...tenantById.entries()].map(([id, tenant]) => [id, tenant]));
             const contractMap = new Map(contracts.map((contract) => [contract.room_id, contract]));
             const currentHistoryMap = new Map(currentHistory.map((history) => [history.room_id, history]));
             const prevHistoryMap = new Map(prevHistory.map((history) => [history.room_id, history]));
@@ -262,19 +239,22 @@ export const MeterManagementPage: React.FC = () => {
             // We upsert. unique key in history_meter is usually (room_id, month).
             // check constraints.
 
-            const payload = rows.map(row => ({
-                room_id: row.roomId,
-                month: selectedMonth,
-                water_meter: meterNumber(row.waterMeterCurr),
-                electricity_meter: meterNumber(row.electricityMeterCurr),
-                // created_at / updated_at handled by db default?
-            }));
-
-            const { error } = await pgliteClient
-                .from('history_meter')
-                .upsert(payload, { onConflict: 'room_id, month' });
-
-            if (error) throw error;
+            const batch = writeBatch(db);
+            rows.forEach((row) => {
+                const ref = doc(db, 'history_meter', `${row.roomId}_${selectedMonth}`);
+                batch.set(
+                    ref,
+                    {
+                        room_id: row.roomId,
+                        month: selectedMonth,
+                        water_meter: meterNumber(row.waterMeterCurr),
+                        electricity_meter: meterNumber(row.electricityMeterCurr),
+                        updated_at: nowIso(),
+                    },
+                    { merge: true }
+                );
+            });
+            await batch.commit();
 
             toaster.create({ title: 'บันทึกข้อมูลเรียบร้อยแล้ว', type: 'success' });
             fetchMeterData(); // Refresh to ensure sync

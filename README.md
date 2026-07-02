@@ -1,6 +1,6 @@
 # Sena-One
 
-ระบบจัดการหอพัก/อพาร์ตเมนต์สำหรับผู้ดูแลและผู้เช่า สร้างด้วย React, TypeScript, Chakra UI v3 และ Express + SQLite backend
+ระบบจัดการหอพัก/อพาร์ตเมนต์สำหรับผู้ดูแลและผู้เช่า สร้างด้วย React, TypeScript, Chakra UI v3 และ Firebase (Firestore + Authentication + Storage + Cloud Functions)
 
 ## ความสามารถหลัก
 
@@ -8,23 +8,16 @@
 - จัดการห้องพัก ผู้เช่า สัญญา บิล มิเตอร์ การชำระเงิน และงานแจ้งซ่อม
 - รายงานการเงิน ห้องว่าง และค่าสาธารณูปโภค
 - หน้าผู้เช่าสำหรับดูบิล สัญญา Dashboard ส่วนตัว และแจ้งซ่อม
-- ระบบ login ด้วย username/phone และ password
-- เก็บ session ด้วย httpOnly cookie จาก backend
-- เก็บข้อมูลกลางใน SQLite ที่ `data/sena-one.sqlite`
-- เก็บไฟล์อัปโหลดใน `data/uploads`
+- ระบบ login ด้วย username/phone และ password (ผ่าน Firebase Auth email+password ภายใน)
+- เก็บข้อมูลใน Firestore, ไฟล์อัปโหลดใน Firebase Storage
+- สิทธิ์การเข้าถึงข้อมูลบังคับด้วย Firestore/Storage Security Rules
 
 ## Tech Stack
 
-- React 19
-- TypeScript
-- Vite
-- Chakra UI v3
-- React Router
-- TanStack React Query
-- Express
-- SQLite ผ่าน `better-sqlite3`
-- bcryptjs สำหรับ hash รหัสผ่านฝั่ง server
-- multer สำหรับ upload ไฟล์
+- React 19, TypeScript, Vite
+- Chakra UI v3, React Router, TanStack React Query
+- Firebase: Firestore, Authentication, Storage, Hosting
+- Cloud Functions (2 functions เท่านั้น - admin reset/delete user account, ต้องใช้ Blaze plan)
 - XLSX / file-saver สำหรับ export
 
 ## ติดตั้ง
@@ -33,156 +26,72 @@
 npm install
 ```
 
+## ตั้งค่า Firebase
+
+1. สร้างหรือใช้ Firebase project ที่มีอยู่แล้ว (project นี้ใช้ `sena-one`)
+2. เปิดใช้งานใน Firebase Console:
+   - **Firestore Database** (Native mode)
+   - **Authentication** → Sign-in method → เปิด **Email/Password**
+   - **Storage**
+3. คัดลอกค่า config จาก Console > Project settings > General > Your apps ใส่ใน `.env` (ดู `.env.example`)
+4. Deploy security rules และ indexes:
+   ```bash
+   npx firebase login
+   npx firebase deploy --only firestore:rules,firestore:indexes,storage --project sena-one
+   ```
+5. (ครั้งแรกเท่านั้น) seed ข้อมูลจาก `public/pglite-seed/*.json` เข้า Firestore:
+   ```bash
+   # ต้องมี service-account.json (Console > Project settings > Service accounts > Generate new private key)
+   GOOGLE_APPLICATION_CREDENTIALS=./service-account.json npm run migrate:firestore -- --dry-run
+   GOOGLE_APPLICATION_CREDENTIALS=./service-account.json npm run migrate:firestore
+   ```
+   ทุกบัญชีที่ seed จะมีรหัสผ่านเริ่มต้น `sP@ssw0rd`
+6. (สำหรับ 2 ฟังก์ชัน admin reset/delete user) อัปเกรดโปรเจกต์เป็น Blaze plan แล้ว deploy:
+   ```bash
+   cd functions && npm install && cd ..
+   npx firebase deploy --only functions --project sena-one
+   ```
+
 ## รันสำหรับพัฒนา
 
-รัน frontend และ backend พร้อมกัน:
-
 ```bash
-npm run dev:all
-```
-
-หรือแยก terminal:
-
-```bash
-npm run server
 npm run dev
 ```
 
-ค่า default:
+Frontend: `http://localhost:5173` (เชื่อมต่อ Firebase project ตรงจาก client เลย ไม่มี local backend/proxy)
 
-```txt
-Backend:  http://localhost:3000
-Frontend: http://localhost:5173
-```
-
-ถ้า port 5173 ถูกใช้แล้ว Vite อาจเลื่อนไป port ถัดไป เช่น `5174`
-
-## Production
-
-Build frontend:
+## Production build + Deploy
 
 ```bash
 npm run build
+npm run deploy            # deploy hosting + firestore + storage
+npm run deploy:functions  # deploy 2 cloud functions (ต้องมี Blaze plan)
 ```
 
-Start backend ที่ serve ทั้ง API และไฟล์ใน `dist`:
+หรือใช้ GitHub Actions auto-deploy: `npx firebase init hosting:github`
 
-```bash
-set NODE_ENV=production
-set SESSION_SECRET=replace-with-a-long-random-secret
-npm run server
-```
-
-บน Linux/macOS:
-
-```bash
-NODE_ENV=production SESSION_SECRET=replace-with-a-long-random-secret npm run server
-```
-
-ตัวแปรแนะนำสำหรับ production:
-
-```txt
-PORT=3000
-SESSION_SECRET=long-random-secret
-SQLITE_DB_PATH=/absolute/path/to/sena-one.sqlite
-UPLOAD_DIR=/absolute/path/to/uploads
-DEFAULT_ACCOUNT_PASSWORD=change-before-first-run
-MAX_UPLOAD_BYTES=10485760
-ADMIN_USERNAME=admin
-ADMIN_PHONE=admin
-ADMIN_FULL_NAME=Administrator
-ADMIN_PASSWORD=change-before-first-run
-```
-
-ควรตั้ง reverse proxy เช่น Nginx/Caddy ให้ใช้ HTTPS หน้า backend
-
-## Deploy พร้อมกันที่เดียว
-
-แนะนำให้ deploy เป็น service เดียวบน Render/Railway/Fly.io/VPS เพราะ backend serve ทั้ง API และ frontend จาก `dist` ได้อยู่แล้ว
-
-สำหรับ Render ใช้ไฟล์ `render.yaml` ได้เลย:
-
-1. Push repo ไป GitHub
-2. เข้า Render แล้วเลือก New Blueprint
-3. เลือก repo นี้
-4. ตั้งค่า `ADMIN_PASSWORD` ใน Render
-5. Deploy
-
-Render จะใช้:
-
-```txt
-Build command: npm ci && npm run build
-Start command: npm run server
-SQLite path: /var/data/sena-one.sqlite
-Uploads path: /var/data/uploads
-```
-
-ในโหมด deploy พร้อมกัน **ไม่ต้องตั้ง `VITE_API_BASE`** เพราะ frontend และ backend อยู่โดเมนเดียวกัน
-
-## Deploy Frontend on Netlify
-
-ใช้ Netlify สำหรับ frontend ได้ โดย backend SQLite ต้องรันแยกบน server ที่มี persistent disk เช่น VPS, Render, Railway หรือ Fly.io
-
-Netlify settings:
-
-```txt
-Build command: npm run build
-Publish directory: dist
-```
-
-ไฟล์ `netlify.toml` ตั้งค่า SPA redirect ไว้แล้ว
-
-ให้ตั้ง environment variable บน Netlify:
-
-```txt
-VITE_API_BASE=https://your-backend-domain.example.com
-```
-
-อย่าใส่ `VITE_API_BASE=https://sena-one.netlify.app` เพราะค่านี้ต้องเป็น URL ของ backend API ไม่ใช่ URL frontend
-
-จากนั้น backend ต้องเปิด HTTPS และตอบ API เช่น:
-
-```txt
-https://your-backend-domain.example.com/api/health
-```
-
-ฝั่ง backend ให้ตั้งค่า origin ของ Netlify เพื่อให้ cookie login ใช้ข้ามโดเมนได้:
-
-```txt
-FRONTEND_ORIGIN=https://sena-one.netlify.app
-```
-
-ไม่แนะนำให้วาง SQLite backend ลง Netlify Functions สำหรับข้อมูลจริง เพราะ function ไม่มี SQLite file storage แบบถาวรเหมือน server ปกติ
+Firebase web config (`apiKey` ฯลฯ) ไม่ใช่ความลับ ปลอดภัยที่จะ commit ได้ - การป้องกันข้อมูลทำผ่าน Security Rules ไม่ใช่การซ่อน config
 
 ## ฐานข้อมูลและไฟล์
 
-- SQLite database: `data/sena-one.sqlite`
-- Uploads: `data/uploads`
-- Seed เริ่มต้น: `public/pglite-seed/*.json`
-- `data/` ถูก ignore จาก git เพื่อไม่ให้ commit ฐานข้อมูลจริง
-- `public/pglite-seed/*.json` ถูก commit ไปกับ repo เพื่อให้ deploy ครั้งแรก seed SQLite ได้
-
-เมื่อ backend start ครั้งแรก ระบบจะสร้าง schema และ seed ข้อมูลเข้า SQLite ถ้ายังไม่มีข้อมูลตาม seed version
+- Firestore collections: `users`, `username_lookup`, `phone_lookup`, `rooms`, `tenants`, `contracts`, `invoices`, `payments`, `deposits`, `maintenance_requests`, `history_meter`, `notifications`, `bookings`, `app_settings`, `position_rent_rates`
+- ไฟล์อัปโหลด: Firebase Storage ภายใต้ prefix `room-images/`, `maintenance-images/`, `payment-slips/`
+- Seed เริ่มต้น: `public/pglite-seed/*.json` (ใช้ครั้งเดียวตอน `npm run migrate:firestore`)
 
 ## รหัสผ่าน seed users
 
-ค่าเริ่มต้นคือ:
-
-```txt
-sP@ssw0rd
-```
-
-สำหรับ production ให้ตั้ง `DEFAULT_ACCOUNT_PASSWORD` ก่อน start ครั้งแรก และควรเปลี่ยนรหัสผ่านผู้ใช้จริงหลังเข้าใช้งาน
+ค่าเริ่มต้นคือ `sP@ssw0rd` สำหรับทุกบัญชีที่ seed มา ควรเปลี่ยนรหัสผ่านผู้ใช้จริงหลังเข้าใช้งานครั้งแรก
 
 ## คำสั่งที่ใช้บ่อย
 
 ```bash
-npm run dev:all
-npm run server
 npm run dev
 npm run type-check
 npm run build
 npm run lint
+npm run migrate:firestore
+npm run deploy
+npm run deploy:functions
 ```
 
 บน Windows ถ้า PowerShell block `npm.ps1` ให้ใช้:
@@ -196,35 +105,37 @@ cmd /c npm run build
 
 ```txt
 sena-one/
-├─ server/
-│  ├─ database.js
-│  └─ index.js
+├─ functions/              # 2 Cloud Functions: admin reset/delete user (ต้อง Blaze plan)
 ├─ src/
 │  ├─ components/
 │  ├─ contexts/
 │  ├─ hooks/
 │  ├─ lib/
-│  │  ├─ pgliteClient.ts   # compatibility API client ชื่อเดิม แต่เรียก backend แล้ว
+│  │  ├─ firebase.ts       # Firebase app/auth/db/storage/functions singletons
+│  │  ├─ firestoreUtils.ts # fan-out join helpers (chunked `in` queries)
 │  │  ├─ exportInvoice.ts
 │  │  └─ utils.ts
 │  ├─ pages/
-│  ├─ services/
+│  ├─ services/            # เรียก Firestore/Auth/Storage SDK ตรง
 │  ├─ theme/
 │  └─ types/
 ├─ public/
-│  └─ pglite-seed/
-├─ data/                   # runtime only, ไม่ commit
-├─ package.json
+│  └─ pglite-seed/         # ข้อมูลสำหรับ seed ครั้งแรก
+├─ scripts/
+│  └─ migrate-to-firestore.ts  # seed script, รันครั้งเดียวแบบ local
+├─ firestore.rules
+├─ firestore.indexes.json
+├─ storage.rules
+├─ firebase.json
 └─ vite.config.ts
 ```
 
 ## หมายเหตุด้านความปลอดภัย
 
-- อย่า commit `.env`, `data/`, database จริง หรือไฟล์ upload จริง
-- ตั้ง `SESSION_SECRET` เป็นค่าสุ่มยาวก่อน production
-- ใช้ HTTPS เสมอ
-- backup `data/sena-one.sqlite` และ `data/uploads` เป็นประจำ
+- อย่า commit `.env`, `service-account.json` (ทั้งสองไฟล์ถูก gitignore ไว้แล้ว)
+- Security Rules (`firestore.rules`, `storage.rules`) คือชั้นป้องกันข้อมูลหลัก ไม่ใช่ Firebase web config
 - หลัง deploy ครั้งแรก ให้เปลี่ยนรหัสผ่าน default ของผู้ใช้ทุกคน
+- role ของผู้ใช้เก็บใน field `role` ของ document `users/{uid}` (ไม่ใช้ custom claims เพราะเลี่ยงการใช้ Cloud Functions/Admin SDK ยกเว้น 2 ฟังก์ชัน admin reset/delete user)
 
 ## License
 

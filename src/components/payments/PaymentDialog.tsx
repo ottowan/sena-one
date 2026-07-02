@@ -15,6 +15,7 @@ import { Field } from '../ui/field';
 import { NativeSelectField, NativeSelectRoot } from '../ui/native-select';
 import { LuUpload, LuX } from 'react-icons/lu';
 import { useCreatePayment } from '../../hooks/usePayments';
+import { STORAGE_ENABLED } from '../../lib/firebase';
 import { PaymentMethod, type Invoice } from '../../types';
 
 interface PaymentDialogProps {
@@ -174,16 +175,19 @@ export const PaymentDialog: React.FC<PaymentDialogProps> = ({
                                         borderRadius="md"
                                         p={6}
                                         textAlign="center"
-                                        cursor="pointer"
-                                        onClick={() => document.getElementById('slip-upload')?.click()}
-                                        _hover={{ borderColor: 'blue.500', bg: 'gray.50' }}
+                                        cursor={STORAGE_ENABLED ? 'pointer' : 'not-allowed'}
+                                        opacity={STORAGE_ENABLED ? 1 : 0.5}
+                                        onClick={() => STORAGE_ENABLED && document.getElementById('slip-upload')?.click()}
+                                        _hover={STORAGE_ENABLED ? { borderColor: 'blue.500', bg: 'gray.50' } : undefined}
                                     >
                                         <VStack gap={2}>
                                             <Icon fontSize="2xl" color="gray.400">
                                                 <LuUpload />
                                             </Icon>
                                             <Text fontSize="sm" color="gray.600">
-                                                คลิกเพื่ออัปโหลดรูปภาพ
+                                                {STORAGE_ENABLED
+                                                    ? 'คลิกเพื่ออัปโหลดรูปภาพ'
+                                                    : 'อัปโหลดรูปภาพยังไม่เปิดใช้งาน (รอเปิด Firebase Storage)'}
                                             </Text>
                                         </VStack>
                                         <input
@@ -191,6 +195,7 @@ export const PaymentDialog: React.FC<PaymentDialogProps> = ({
                                             type="file"
                                             accept="image/*"
                                             hidden
+                                            disabled={!STORAGE_ENABLED}
                                             onChange={handleFileChange}
                                         />
                                     </Box>

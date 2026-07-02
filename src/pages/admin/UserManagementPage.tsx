@@ -13,7 +13,9 @@ import {
     Input,
 } from '@chakra-ui/react';
 import { LuUsers, LuSearch, LuShield, LuPencil } from 'react-icons/lu';
-import { pgliteClient } from '../../lib/pgliteClient';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
+import { withId } from '../../lib/firestoreUtils';
 import type { Profile, UserRole } from '../../types';
 import { UserRole as UserRoleEnum } from '../../types';
 import { formatDate } from '../../lib/utils';
@@ -64,13 +66,8 @@ export const UserManagementPage: React.FC = () => {
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const { data, error } = await pgliteClient
-                .from('users')
-                .select('id, username, phone, full_name, role, created_at, updated_at')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-            setUsers(data || []);
+            const snap = await getDocs(query(collection(db, 'users'), orderBy('created_at', 'desc')));
+            setUsers(snap.docs.map((d) => withId<Profile>(d)));
         } catch (error: any) {
             toaster.create({
                 title: 'เกิดข้อผิดพลาด',

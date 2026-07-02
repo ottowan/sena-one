@@ -1,4 +1,6 @@
-import { pgliteClient } from '../lib/pgliteClient';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
 import type { UserRole } from '../types';
 
 export interface CustomUser {
@@ -8,118 +10,75 @@ export interface CustomUser {
     role: UserRole;
 }
 
-const SESSION_KEY = 'sena_user_session';
+export function normalizePhone(value: string | null | undefined): string {
+    return String(value || '').replace(/\D/g, '');
+}
+
+async function resolveLoginEmail(loginInput: string): Promise<string | null> {
+    const usernameDoc = await getDoc(doc(db, 'username_lookup', loginInput));
+    if (usernameDoc.exists()) {
+        return usernameDoc.data().email as string;
+    }
+
+    const normalizedPhone = normalizePhone(loginInput);
+    if (normalizedPhone) {
+        const phoneDoc = await getDoc(doc(db, 'phone_lookup', normalizedPhone));
+        if (phoneDoc.exists()) {
+            return phoneDoc.data().email as string;
+        }
+    }
+
+    return null;
+}
+
+function userFromDoc(uid: string, data: Record<string, any>): CustomUser {
+    return {
+        id: uid,
+        phone: data.phone,
+        full_name: data.full_name,
+        role: data.role,
+    };
+}
 
 export const authService = {
-    warmUp: async (): Promise<void> => {
+    // Login with username (e.g. sena301) or phone number, resolved to the
+    // account's synthetic Firebase Auth email via the lookup collections.
+    login: async (loginInput: string, password: string): Promise<{ user?: CustomUser; error?: string }> => {
         try {
-            await pgliteClient.initialize();
-        } catch (error) {
-            console.error('Database warm-up error:', error);
-        }
-    },
-
-    // Login with username (room number format: sena301) and password
-    login: async (username: string, password: string): Promise<{ user?: CustomUser; error?: string }> => {
-        try {
-            const { data, error } = await pgliteClient
-                .rpc('verify_password', {
-                    login_input: username,
-                    password_input: password
-                });
-
-            if (error) throw error;
-
-            if (!data || data.length === 0) {
+            const email = await resolveLoginEmail(loginInput.trim());
+            if (!email) {
                 return { error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' };
             }
 
-            const userData = data[0];
-            const user: CustomUser = {
-                id: userData.user_id,
-                phone: userData.user_phone,
-                full_name: userData.user_name,
-                role: userData.user_role
-            };
+            const credential = await signInWithEmailAndPassword(auth, email, password);
+            const userDoc = await getDoc(doc(db, 'users', credential.user.uid));
+            if (!userDoc.exists()) {
+                await signOut(auth);
+                return { error: 'ไม่พบข้อมูลผู้ใช้' };
+            }
 
-            // Save to localStorage
-            localStorage.setItem(SESSION_KEY, JSON.stringify(user));
-
-            return { user };
+            return { user: userFromDoc(credential.user.uid, userDoc.data()) };
         } catch (error: any) {
             console.error('Login error:', error);
+            if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+                return { error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' };
+            }
             return { error: error.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ' };
         }
     },
 
-    // Logout
     logout: async () => {
-        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => undefined);
-        localStorage.removeItem(SESSION_KEY);
+        await signOut(auth);
     },
 
-    // Get current user from localStorage
+    // Reads the current session's user profile from Firestore. Used on
+    // mount before onAuthStateChanged's own doc read settles, and by code
+    // that needs a one-off fresh copy of the current user.
     getCurrentUser: async (): Promise<CustomUser | null> => {
-        try {
-            const { data } = await pgliteClient.auth.getUser();
-            if (data.user) {
-                localStorage.setItem(SESSION_KEY, JSON.stringify(data.user));
-                return data.user;
-            }
-
-            const userStr = localStorage.getItem(SESSION_KEY);
-            if (!userStr) return null;
-            const cached = JSON.parse(userStr);
-            return cached || null;
-        } catch (error) {
-            console.error('Error getting current user:', error);
-            return null;
-        }
+        const fbUser = auth.currentUser;
+        if (!fbUser) return null;
+        const userDoc = await getDoc(doc(db, 'users', fbUser.uid));
+        if (!userDoc.exists()) return null;
+        return userFromDoc(fbUser.uid, userDoc.data());
     },
-
-    createUser: async (
-        phone: string,
-        password: string,
-        fullName: string,
-        role: UserRole = 'tenant' as UserRole
-    ): Promise<{ userId?: string; error?: string }> => {
-        try {
-            const { data, error } = await pgliteClient
-                .rpc('create_user', {
-                    phone_input: phone,
-                    password_input: password,
-                    full_name_input: fullName,
-                    role_input: role
-                });
-
-            if (error) throw error;
-
-            return { userId: data };
-        } catch (error: any) {
-            console.error('Create user error:', error);
-            return { error: error.message || 'เกิดข้อผิดพลาดในการสร้างผู้ใช้' };
-        }
-    },
-
-    // Update user password
-    updatePassword: async (userId: string, newPassword: string): Promise<{ error?: string }> => {
-        try {
-            const { error } = await pgliteClient
-                .from('users')
-                .update({
-                    password_hash: pgliteClient.rpc('crypt', {
-                        password: newPassword,
-                        salt: pgliteClient.rpc('gen_salt', { type: 'bf' })
-                    })
-                })
-                .eq('id', userId);
-
-            if (error) throw error;
-
-            return {};
-        } catch (error: any) {
-            console.error('Update password error:', error);
-            return { error: error.message || 'เกิดข้อผิดพลาดในการเปลี่ยนรหัสผ่าน' };
-        }
-    }
 };

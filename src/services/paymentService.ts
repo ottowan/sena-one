@@ -1,76 +1,49 @@
-import { pgliteClient } from '../lib/pgliteClient';
+import { collection, doc, getDoc, getDocs, orderBy, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { auth, db, storage } from '../lib/firebase';
+import { nowIso, withId } from '../lib/firestoreUtils';
 import type { Payment, PaymentFormData } from '../types';
 
 export const paymentService = {
-    // Record a new payment
-    createPayment: async (
-        paymentData: PaymentFormData,
-        slipFile?: File
-    ): Promise<Payment> => {
+    createPayment: async (paymentData: PaymentFormData, slipFile?: File): Promise<Payment> => {
         let receiptImageUrl = '';
 
-        // 1. Upload slip image if provided
         if (slipFile) {
-            // Check if bucket exists, if not we might fail. User should have created 'payment-slips'
             const fileExt = slipFile.name.split('.').pop();
             const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-            const filePath = `${fileName}`;
-
-            const { error: uploadError } = await pgliteClient.storage
-                .from('payment-slips')
-                .upload(filePath, slipFile);
-
-            if (uploadError) {
-                console.error('Error uploading slip:', uploadError);
-                throw new Error('ไม่สามารถอัปโหลดสลิปได้: ' + uploadError.message);
-            }
-
-            const { data: { publicUrl } } = pgliteClient.storage
-                .from('payment-slips')
-                .getPublicUrl(filePath);
-
-            receiptImageUrl = publicUrl;
+            const storageRef = ref(storage, `payment-slips/${fileName}`);
+            await uploadBytes(storageRef, slipFile);
+            receiptImageUrl = await getDownloadURL(storageRef);
         }
 
-        // 2. Create payment record
-        const { data, error } = await pgliteClient
-            .from('payments')
-            .insert({
-                invoice_id: paymentData.invoice_id,
-                amount: paymentData.amount,
-                payment_method: paymentData.payment_method,
-                payment_date: paymentData.payment_date,
-                notes: paymentData.notes,
-                receipt_image_url: receiptImageUrl,
-                created_by: (await pgliteClient.auth.getUser()).data.user?.id
-            })
-            .select()
-            .single();
+        const invoiceSnap = await getDoc(doc(db, 'invoices', paymentData.invoice_id));
+        if (!invoiceSnap.exists()) throw new Error('Invoice not found');
+        const invoice = invoiceSnap.data();
 
-        if (error) throw error;
+        const paymentRef = doc(collection(db, 'payments'));
+        const payload = {
+            invoice_id: paymentData.invoice_id,
+            amount: paymentData.amount,
+            payment_method: paymentData.payment_method,
+            payment_date: paymentData.payment_date,
+            notes: paymentData.notes,
+            receipt_image_url: receiptImageUrl,
+            created_by: auth.currentUser?.uid ?? null,
+            tenant_uid: invoice.tenant_uid ?? null,
+            room_id: invoice.room_id ?? null,
+            created_at: nowIso(),
+        };
+        await setDoc(paymentRef, payload);
 
-        // 3. Update invoice status to 'paid' if full amount (or logic could be partial, but let's assume full for now)
-        // Check invoice total first? For now, we just mark as paid if payment is recorded.
-        // Or should we let the user decide? The requirement implies simple status tracking.
-        // Let's safe-guard: Update invoice status to 'paid'.
+        await updateDoc(doc(db, 'invoices', paymentData.invoice_id), { status: 'paid' });
 
-        await pgliteClient
-            .from('invoices')
-            .update({ status: 'paid' })
-            .eq('id', paymentData.invoice_id);
-
-        return data as Payment;
+        return { id: paymentRef.id, ...payload } as unknown as Payment;
     },
 
-    // Get payments for an invoice
     getPaymentsByInvoiceId: async (invoiceId: string): Promise<Payment[]> => {
-        const { data, error } = await pgliteClient
-            .from('payments')
-            .select('*')
-            .eq('invoice_id', invoiceId)
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        return data as Payment[];
-    }
+        const snap = await getDocs(
+            query(collection(db, 'payments'), where('invoice_id', '==', invoiceId), orderBy('created_at', 'desc'))
+        );
+        return snap.docs.map((d) => withId<Payment>(d));
+    },
 };
