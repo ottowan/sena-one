@@ -62,15 +62,28 @@ Frontend: `http://localhost:5173` (เชื่อมต่อ Firebase project 
 
 ## Production build + Deploy
 
-```bash
-npm run build
-npm run deploy            # deploy hosting + firestore + storage
-npm run deploy:functions  # deploy 2 cloud functions (ต้องมี Blaze plan)
+Frontend host: **Netlify** (auto-deploy จาก GitHub `main` branch อยู่แล้ว - ดู `netlify.toml`)
+Backend: Firestore/Auth/Storage/Functions บน Firebase (ตามข้างบน)
+
+Netlify ต้องตั้งค่า environment variables ต่อไปนี้ใน Netlify dashboard (Site settings → Environment variables) มิฉะนั้น build จะฝังค่า Firebase config ว่างเปล่าเข้าไปและได้ error `auth/invalid-api-key` ตอนใช้งานจริง:
+
+```txt
+VITE_FIREBASE_API_KEY
+VITE_FIREBASE_AUTH_DOMAIN
+VITE_FIREBASE_PROJECT_ID
+VITE_FIREBASE_STORAGE_BUCKET
+VITE_FIREBASE_MESSAGING_SENDER_ID
+VITE_FIREBASE_APP_ID
 ```
 
-หรือใช้ GitHub Actions auto-deploy: `npx firebase init hosting:github`
+(ค่าดูได้จาก Firebase Console > Project settings > General > Your apps - ไม่ใช่ความลับ ปลอดภัยที่จะตั้งใน Netlify ได้ การป้องกันข้อมูลจริงทำผ่าน Firestore/Storage Security Rules ไม่ใช่การซ่อน config นี้)
 
-Firebase web config (`apiKey` ฯลฯ) ไม่ใช่ความลับ ปลอดภัยที่จะ commit ได้ - การป้องกันข้อมูลทำผ่าน Security Rules ไม่ใช่การซ่อน config
+Firestore rules/indexes/Storage rules และ Cloud Functions ต้อง deploy แยกจาก Netlify (Netlify deploy แค่ frontend):
+
+```bash
+npx firebase deploy --only firestore:rules,firestore:indexes,storage --project sena-one
+npm run deploy:functions  # ต้องมี Blaze plan
+```
 
 ## ฐานข้อมูลและไฟล์
 
