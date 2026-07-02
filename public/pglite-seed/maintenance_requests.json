@@ -1,0 +1,16 @@
+[
+  {
+    "id": "e210c2f0-94eb-47c7-aae1-4f460b39ceeb",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "tenant_id": "1c378649-dd6c-4151-b9ea-a6c710971b29",
+    "title": "น้ำรั่ว",
+    "description": "ท่อน้ำในห้องน้ำมัน้ำซึม",
+    "images": [],
+    "status": "completed",
+    "priority": "medium",
+    "assigned_to": null,
+    "created_at": "2025-12-18T02:16:20.778038+00:00",
+    "updated_at": "2026-07-01T14:11:03.748Z",
+    "completed_at": null
+  }
+]

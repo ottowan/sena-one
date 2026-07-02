@@ -39,10 +39,10 @@ function buildInvoicePayload(
     const finalAdditionalCharges = [...(invoice.additional_charges || [])];
 
     if (commonFee > 0) {
-        finalAdditionalCharges.push({ name: 'เธเนเธฒเธชเนเธงเธเธเธฅเธฒเธ', amount: commonFee });
+        finalAdditionalCharges.push({ name: 'ค่าส่วนกลาง', amount: commonFee });
     }
     if (maintenanceFee > 0) {
-        finalAdditionalCharges.push({ name: 'เธเนเธฒเธเธณเธฃเธธเธเธกเธดเน€เธ•เธญเธฃเนเธเนเธณ', amount: maintenanceFee });
+        finalAdditionalCharges.push({ name: 'ค่าบำรุงมิเตอร์น้ำ', amount: maintenanceFee });
     }
 
     const additionalTotal = finalAdditionalCharges.reduce((sum, item) => sum + (Number(item.amount) || 0), 0) || 0;
@@ -88,6 +88,18 @@ async function getInvoiceSettings() {
 }
 
 export const invoiceService = {
+    getLatestInvoiceMonth: async (): Promise<string | null> => {
+        const { data, error } = await pgliteClient
+            .from('invoices')
+            .select('billing_month')
+            .order('billing_month', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+        if (error) throw error;
+        return data?.billing_month ? String(data.billing_month).substring(0, 7) : null;
+    },
+
     // Get all invoices
     getInvoices: async (
         searchTerm?: string,

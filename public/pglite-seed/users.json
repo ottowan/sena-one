@@ -1,0 +1,242 @@
+[
+  {
+    "id": "5e11c446-ae49-4b22-9bcb-3aee433abe72",
+    "phone": "0879020640",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "admin sena1",
+    "role": "admin",
+    "created_at": "2025-12-13T07:55:02.062285+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": null
+  },
+  {
+    "id": "38be8a77-d54d-4430-bd83-a7bb7c0522f3",
+    "phone": "0860526132",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นายวีรพงษ์ จุลภาพ",
+    "role": "tenant",
+    "created_at": "2025-12-16T15:18:14.326075+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena302"
+  },
+  {
+    "id": "04886b9c-eae0-44e3-a5e5-01decb859ebe",
+    "phone": "0615394438",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "น.ส.ประนอม อาจหาร",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:23:35.156521+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena307"
+  },
+  {
+    "id": "06352f86-895f-4a80-ab39-4eea9fe1460b",
+    "phone": "0954894816",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "น.ส.กรรนิการ์ ชัยเจริญ",
+    "role": "tenant",
+    "created_at": "2025-12-17T07:52:21.592133+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena303"
+  },
+  {
+    "id": "9b7ef930-018e-45dc-980c-fb60beab8b14",
+    "phone": "0943345596",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "น.ส.มนัสนันท์ พรมอยู่",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:15:42.783055+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena304"
+  },
+  {
+    "id": "f4f8f6fc-65ba-4aff-a050-f083832f6579",
+    "phone": "0834419550",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นายณฐนน ภูมามอบ",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:24:44.169234+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena310"
+  },
+  {
+    "id": "f57c092f-e54c-4b02-b0da-7abdb93347bf",
+    "phone": "0986199441",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "น.ส.ณัชชาภัทร พวงแก้ว",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:16:16.917969+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena306"
+  },
+  {
+    "id": "fe8d8c50-6ba9-4dff-aa1d-c3c94e75ade0",
+    "phone": "0861952149",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "น.ส.ภรทิวา มาลีชัย",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:24:17.568515+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena309"
+  },
+  {
+    "id": "a2730085-d632-4f51-9db2-af0e3ee6aa3d",
+    "phone": "0899437478",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นายณัฐ ตรียินดี",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:25:09.710079+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena311"
+  },
+  {
+    "id": "169b91c7-cf1f-4cc6-9267-f6277c929db2",
+    "phone": "0813688281",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นางสาวผุสชา เรืองกูล",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:51:57.977943+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena325"
+  },
+  {
+    "id": "cac70631-f13c-4e22-8ab1-bba7efa7a53e",
+    "phone": "0880880344",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นายเจนวิทย์ นิตยพลสิทธิ์",
+    "role": "tenant",
+    "created_at": "2025-12-17T09:02:10.457705+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena313"
+  },
+  {
+    "id": "fa4883f3-4e84-4ba1-bd70-4a397406982c",
+    "phone": "0642514955",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "น.ส.ณัฐพร ยันต์วิเศษ",
+    "role": "tenant",
+    "created_at": "2025-12-17T09:05:53.769181+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena315"
+  },
+  {
+    "id": "4bd53270-241f-494b-bc94-8aa4a30d3124",
+    "phone": "0634795391",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นายวิทยา จิระโต",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:27:50.684027+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena316"
+  },
+  {
+    "id": "3727d223-4b13-43a5-b2c7-d78fa3492d89",
+    "phone": "0938364476",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นางสาวพรรวินท์ พรสัจจะนนท์",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:48:53.838836+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena318"
+  },
+  {
+    "id": "92e8fd41-3608-42d5-a609-9da03f196200",
+    "phone": "0910672489",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "ว่าที่ร.อ.คเณศวร บุตรตาคำ",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:50:00.730722+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena320"
+  },
+  {
+    "id": "7279a259-4a3a-491d-866a-d053a7f27254",
+    "phone": "0988366140",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นายนนทภู ประพิมพา",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:50:27.996538+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena321"
+  },
+  {
+    "id": "98e77c88-6af9-48f4-a905-1eeb4e5d67f0",
+    "phone": "0619049009",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นางสาวอินทรา พหลสิทธิวงศ์",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:50:54.248537+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena322"
+  },
+  {
+    "id": "b22117a8-80b1-4d5e-9e1d-12b4a0dbb307",
+    "phone": "0844482077",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "นางสาวหนูคิม ศรีบุรินทร์",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:51:25.522273+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena323"
+  },
+  {
+    "id": "317eb918-f32f-4323-997f-5f18ab97cc67",
+    "phone": "0806307828",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "จ.ส.อ.ประพันธ์ สุทธหลวง",
+    "role": "tenant",
+    "created_at": "2025-12-17T08:52:37.523246+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena330"
+  },
+  {
+    "id": "325c4f34-8e5e-44a7-bf25-f8700b73e168",
+    "phone": "0994268529",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "น.ส.กมลววรรณ บรรจุงปรุ",
+    "role": "tenant",
+    "created_at": "2026-06-01T09:26:41.55111+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": null
+  },
+  {
+    "id": "eaa21ab1-31f0-446b-a056-2f0bb0ef229a",
+    "phone": "0913061050",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "ปริญญา  บำรุงชู",
+    "role": "tenant",
+    "created_at": "2025-12-14T15:40:03.602216+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "sena301"
+  },
+  {
+    "id": "e8dbaf38-7421-49d3-b0d0-8e2b256d2a8c",
+    "phone": "0000000000",
+    "password_hash": "$2b$06$2olJWZIq3jF71HM0ZPsbL.4PWgx3Yz2Q9PMT2dkpD3fLVmsKvAHtu",
+    "full_name": "ผู้ดูแลระบบ",
+    "role": "admin",
+    "created_at": "2025-12-28T03:03:58.980573+00:00",
+    "updated_at": "2026-07-01T15:30:03.385Z",
+    "username": "admin"
+  },
+  {
+    "id": "1be38ca3-ac1b-4a47-bc12-32484b3ea404",
+    "phone": "0984615156",
+    "password_hash": "$2b$06$GMu4wZmqXJ6Otqt3RM0ODeaWXdMATXUVZVxNU053JjWZA3IdnNoOu",
+    "full_name": "น.ส.ศิริลักษณ์  สุราวรรณ์",
+    "role": "tenant",
+    "created_at": "2026-07-01T15:39:38.246Z",
+    "updated_at": "2026-07-01T15:39:38.246Z",
+    "username": null
+  },
+  {
+    "id": "7cc8c08a-a876-402e-8144-ea63704dca32",
+    "phone": "0947929566",
+    "password_hash": "$2b$06$e9ehnhOEqdJthh7lF5GM8OLRZofbW1LAN5wGtEwK.SUMiqMO5lzOe",
+    "full_name": "นายกฤษณะ  โจทย์จันทร์",
+    "role": "tenant",
+    "created_at": "2026-07-01T15:41:05.233Z",
+    "updated_at": "2026-07-01T15:41:05.233Z",
+    "username": null
+  }
+]

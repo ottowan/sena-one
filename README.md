@@ -160,7 +160,7 @@ FRONTEND_ORIGIN=https://sena-one.netlify.app
 - Uploads: `data/uploads`
 - Seed เริ่มต้น: `public/pglite-seed/*.json`
 - `data/` ถูก ignore จาก git เพื่อไม่ให้ commit ฐานข้อมูลจริง
-- `public/pglite-seed/*.json` ถูก ignore จาก git เพื่อป้องกันข้อมูล seed จริงหลุด
+- `public/pglite-seed/*.json` ถูก commit ไปกับ repo เพื่อให้ deploy ครั้งแรก seed SQLite ได้
 
 เมื่อ backend start ครั้งแรก ระบบจะสร้าง schema และ seed ข้อมูลเข้า SQLite ถ้ายังไม่มีข้อมูลตาม seed version
 

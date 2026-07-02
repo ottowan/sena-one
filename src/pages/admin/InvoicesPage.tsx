@@ -14,7 +14,7 @@ import { LuPlus, LuSearch, LuFileText, LuDownload, LuFiles, LuCalendar, LuFileSp
 import { exportMonthlyInvoices, exportRoomInvoices } from '../../lib/exportInvoice';
 import { exportService } from '../../services/exportService';
 import { toaster } from '../../components/ui/toaster';
-import { useInvoices, useDeleteInvoice } from '../../hooks/useInvoices';
+import { useInvoices, useDeleteInvoice, useLatestInvoiceMonth } from '../../hooks/useInvoices';
 import { InvoiceCard } from '../../components/invoices/InvoiceCard';
 import { InvoiceTable } from '../../components/invoices/InvoiceTable';
 import { InvoiceFormDialog } from '../../components/invoices/InvoiceFormDialog';
@@ -33,7 +33,7 @@ export const InvoicesPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('');
-    const [monthFilter, setMonthFilter] = useState<string>('');
+    const [monthFilter, setMonthFilter] = useState<string | undefined>(undefined);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
@@ -51,14 +51,22 @@ export const InvoicesPage: React.FC = () => {
         return () => window.clearTimeout(timer);
     }, [searchTerm]);
 
+    const { data: latestInvoiceMonth, isLoading: isLatestMonthLoading } = useLatestInvoiceMonth();
+    const effectiveMonthFilter = monthFilter === undefined ? latestInvoiceMonth : monthFilter;
+
     const { data: invoices, isLoading } = useInvoices({
         searchTerm: debouncedSearchTerm || undefined,
         status: statusFilter || undefined,
-        month: monthFilter || undefined,
+        month: effectiveMonthFilter || undefined,
+        enabled: monthFilter !== undefined || latestInvoiceMonth !== undefined,
     });
     const selectedInvoiceSet = useMemo(() => new Set(selectedInvoices), [selectedInvoices]);
 
     const deleteInvoice = useDeleteInvoice();
+
+    useEffect(() => {
+        setSelectedInvoices([]);
+    }, [debouncedSearchTerm, statusFilter, effectiveMonthFilter]);
 
     const handleView = (invoice: Invoice) => {
         setSelectedInvoice(invoice);
@@ -117,7 +125,7 @@ export const InvoicesPage: React.FC = () => {
     const handleExport = async () => {
         try {
             // If no month selected, use current month
-            let exportMonth = monthFilter;
+            let exportMonth = effectiveMonthFilter || '';
             if (!exportMonth) {
                 const now = new Date();
                 exportMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -210,9 +218,9 @@ export const InvoicesPage: React.FC = () => {
                             <Icon mr={2}><LuFileSpreadsheet /></Icon>
                             Export Excel
                         </Button>
-                        {monthFilter && (
+                        {effectiveMonthFilter && (
                             <Text fontSize="sm" color="gray.600">
-                                (เดือน {new Date(monthFilter + '-01').toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })})
+                                (เดือน {new Date(effectiveMonthFilter + '-01').toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })})
                             </Text>
                         )}
                         <Button colorPalette="blue" variant="subtle" onClick={() => setBulkDialogOpen(true)}>
@@ -271,7 +279,7 @@ export const InvoicesPage: React.FC = () => {
 
                                 <Input
                                     type="month"
-                                    value={monthFilter}
+                                    value={effectiveMonthFilter || ''}
                                     onChange={(e) => setMonthFilter(e.target.value)}
                                 />
                             </Grid>
@@ -288,7 +296,7 @@ export const InvoicesPage: React.FC = () => {
                 </Card.Root>
 
                 {/* Invoice List */}
-                {isLoading ? (
+                {isLatestMonthLoading || isLoading ? (
                     <Box p={8} textAlign="center">
                         <Text color="gray.500">กำลังโหลด...</Text>
                     </Box>

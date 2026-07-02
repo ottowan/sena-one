@@ -173,14 +173,14 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
                 }))
             );
             toaster.create({
-                title: `เธชเธฃเนเธฒเธเนเธเนเธเนเธเธซเธเธตเนเธชเธณเน€เธฃเนเธ ${selectedRows.length} เธฃเธฒเธขเธเธฒเธฃ`,
+                title: `สร้างใบแจ้งหนี้สำเร็จ ${selectedRows.length} รายการ`,
                 type: 'success'
             });
             onClose();
             await queryClient.invalidateQueries({ queryKey: ['invoices'] });
         } catch (error) {
             console.error('Bulk invoice create failed:', error);
-            toaster.create({ title: 'เน€เธเธดเธ”เธเนเธญเธเธดเธ”เธเธฅเธฒเธ”เนเธเธเธฒเธฃเธชเธฃเนเธฒเธเนเธเนเธเนเธเธซเธเธตเน', type: 'error' });
+            toaster.create({ title: 'เกิดข้อผิดพลาดในการสร้างใบแจ้งหนี้', type: 'error' });
         } finally {
             setIsLoading(false);
         }

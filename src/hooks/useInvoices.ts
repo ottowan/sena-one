@@ -7,14 +7,26 @@ interface UseInvoicesOptions {
     searchTerm?: string;
     status?: string;
     month?: string;
+    enabled?: boolean;
 }
 
 export const useInvoices = (options: UseInvoicesOptions = {}) => {
+    const { enabled = true, ...filters } = options;
+
     return useQuery({
-        queryKey: ['invoices', options],
-        queryFn: () => invoiceService.getInvoices(options.searchTerm, options.status, options.month),
+        queryKey: ['invoices', filters],
+        queryFn: () => invoiceService.getInvoices(filters.searchTerm, filters.status, filters.month),
+        enabled,
         placeholderData: keepPreviousData,
         staleTime: 30_000,
+    });
+};
+
+export const useLatestInvoiceMonth = () => {
+    return useQuery({
+        queryKey: ['invoices', 'latest-month'],
+        queryFn: () => invoiceService.getLatestInvoiceMonth(),
+        staleTime: 5 * 60_000,
     });
 };
 

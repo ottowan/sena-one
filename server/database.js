@@ -221,8 +221,24 @@ export function initializeDatabase() {
         CREATE INDEX IF NOT EXISTS idx_maintenance_requests_status ON maintenance_requests(status);
     `);
 
+    let seededRows = 0;
+    for (const table of tables) {
+        const file = path.join(seedDir, `${table}.json`);
+        if (!fs.existsSync(file)) continue;
+        const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
+        seededRows += rows.length;
+    }
+
     const meta = db.prepare('SELECT value FROM _meta WHERE key = ?').get('seed_version');
-    if (meta?.value === SEED_VERSION) {
+    const hasSeededData = Number(db.prepare('SELECT COUNT(*) AS count FROM rooms').get()?.count || 0) > 0;
+    if (meta?.value === SEED_VERSION && hasSeededData) {
+        resetAllUserPasswordsIfNeeded();
+        ensureBootstrapAdmin();
+        return;
+    }
+
+    if (seededRows === 0) {
+        console.warn(`No seed rows found in ${seedDir}; database will retry seeding on next start.`);
         resetAllUserPasswordsIfNeeded();
         ensureBootstrapAdmin();
         return;
@@ -234,8 +250,11 @@ export function initializeDatabase() {
             const file = path.join(seedDir, `${table}.json`);
             if (!fs.existsSync(file)) continue;
             const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
-            if (rows.length) insertRows(table, rows, true);
+            if (rows.length) {
+                insertRows(table, rows, true);
+            }
         }
+
         db.prepare(`
             INSERT INTO _meta (key, value) VALUES ('seed_version', ?)
             ON CONFLICT(key) DO UPDATE SET value = excluded.value

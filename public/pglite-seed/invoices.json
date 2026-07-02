@@ -1,0 +1,4187 @@
+[
+  {
+    "id": "2e3f4eb6-9b3f-4448-8751-d681b5979603",
+    "contract_id": "49248155-e2b8-4eef-8d89-4357f0db4638",
+    "tenant_id": "1c378649-dd6c-4151-b9ea-a6c710971b29",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "billing_month": "2026-04-01",
+    "rent_amount": 2500,
+    "water_usage": 64,
+    "water_cost": 1024,
+    "water_meter_last": 2200,
+    "water_meter_current": 2264,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 300
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 3844,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:00.715062+00:00",
+    "updated_at": "2026-07-01T13:51:58.393Z"
+  },
+  {
+    "id": "d3bafeba-90ff-4009-b159-4605a5397230",
+    "contract_id": "840c82d3-5867-4239-ae5e-13ec1597541d",
+    "tenant_id": "c1d67292-f591-4641-b9a8-f83b26641bfa",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 5,
+    "water_cost": 80,
+    "water_meter_last": 2461,
+    "water_meter_current": 2466,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1700,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:02.00719+00:00",
+    "updated_at": "2026-07-01T13:51:58.468Z"
+  },
+  {
+    "id": "6923e286-91f2-4042-aab2-7844aeb3304d",
+    "contract_id": "7ba3420b-55b5-4412-b6a0-95fef5e2a815",
+    "tenant_id": "63e471ea-a5a4-4743-816e-4b64e4847f4d",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 9,
+    "water_cost": 144,
+    "water_meter_last": 1184,
+    "water_meter_current": 1193,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1764,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:03.044448+00:00",
+    "updated_at": "2026-07-01T13:51:58.535Z"
+  },
+  {
+    "id": "2d6bcbed-f3ca-4078-858e-f2f479fc3a49",
+    "contract_id": "1719a33c-b8af-4d6f-bff8-6b98d3bf84cd",
+    "tenant_id": "7a0769ec-8ece-41f3-aa34-be03b70fe776",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 11,
+    "water_cost": 176,
+    "water_meter_last": 1217,
+    "water_meter_current": 1228,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1796,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:04.13238+00:00",
+    "updated_at": "2026-07-01T13:51:58.610Z"
+  },
+  {
+    "id": "76b00c3b-7422-4382-99a1-1c090601c0a5",
+    "contract_id": "d2619307-6b7d-4d54-9e92-b3251d4f0f71",
+    "tenant_id": "0f31eb2f-a4a4-4994-9915-d185fd905fa8",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 2323,
+    "water_meter_current": 2323,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:05.188533+00:00",
+    "updated_at": "2026-07-01T13:51:58.674Z"
+  },
+  {
+    "id": "3b632818-b713-4de1-984d-dad80629b40e",
+    "contract_id": "ebb507d2-e4a8-457a-9e0e-5403af49c0fa",
+    "tenant_id": "b531e081-fefc-4ec7-a5f9-b822854a9ee7",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 3,
+    "water_meter_current": 3,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:06.314519+00:00",
+    "updated_at": "2026-07-01T13:51:58.735Z"
+  },
+  {
+    "id": "15c8723b-9fdb-4a75-81a6-1585976c0249",
+    "contract_id": "d1aba7d4-a179-4364-8411-8f51bb936d4e",
+    "tenant_id": "b0631776-c085-487b-b149-53b22fcac7e3",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1923,
+    "water_meter_current": 1923,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:07.356623+00:00",
+    "updated_at": "2026-07-01T13:51:58.793Z"
+  },
+  {
+    "id": "c022bb46-ac17-4cc0-a0c3-6cd364110310",
+    "contract_id": "94381c5d-20bc-4b87-9d47-e97a57b86448",
+    "tenant_id": "1e5a963f-62ee-484c-8f54-4d3b12c994ea",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1098,
+    "water_meter_current": 1098,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:08.413747+00:00",
+    "updated_at": "2026-07-01T13:51:58.883Z"
+  },
+  {
+    "id": "2260c5e8-23e6-4a66-8d34-ff4546a25d04",
+    "contract_id": "bc88f648-f4c9-4405-9762-b34de8a06f5f",
+    "tenant_id": "6a04638f-a97f-47e5-a514-fa7ea7aeb055",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 2,
+    "water_cost": 32,
+    "water_meter_last": 1465,
+    "water_meter_current": 1467,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1652,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:09.588941+00:00",
+    "updated_at": "2026-07-01T13:51:58.959Z"
+  },
+  {
+    "id": "827b35c9-ffab-4275-baf9-4c8bd5b936b7",
+    "contract_id": "41ac4d57-04fc-4a3f-8234-3285f8f8144f",
+    "tenant_id": "0be26eb8-7e36-496a-be65-31627e42dd80",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 4,
+    "water_cost": 64,
+    "water_meter_last": 1532,
+    "water_meter_current": 1536,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1684,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:10.608483+00:00",
+    "updated_at": "2026-07-01T13:51:59.035Z"
+  },
+  {
+    "id": "70186305-329d-401d-8893-26d429fe08ce",
+    "contract_id": "201f15f4-0bd6-4710-ae58-0a060b1b3e7f",
+    "tenant_id": "b77e7423-5809-4f38-bf0f-1293aaac3336",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 8,
+    "water_cost": 128,
+    "water_meter_last": 2011,
+    "water_meter_current": 2019,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1748,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:11.640791+00:00",
+    "updated_at": "2026-07-01T13:51:59.098Z"
+  },
+  {
+    "id": "7843752c-42fe-4d3d-8d0a-adbe29369805",
+    "contract_id": "d36ca219-8951-4cbb-a49e-627ccdd09097",
+    "tenant_id": "d1feaa67-0377-4624-b09a-e9dc2debf55f",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1700,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1085,
+    "water_meter_current": 1085,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1970,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:12.772954+00:00",
+    "updated_at": "2026-07-01T13:51:59.175Z"
+  },
+  {
+    "id": "1e5b6aba-c91e-4eb7-96b5-b41dc2ff8ff7",
+    "contract_id": "ed6d0336-a223-4ee3-9eaf-0b78bff2c8f6",
+    "tenant_id": "2f0f6035-8d8f-477b-bfd8-424e48ed56f0",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1700,
+    "water_usage": 5,
+    "water_cost": 80,
+    "water_meter_last": 1293,
+    "water_meter_current": 1298,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2050,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:13.894446+00:00",
+    "updated_at": "2026-07-01T13:51:59.237Z"
+  },
+  {
+    "id": "4ffdfb97-289f-41f9-9e18-870c985099ec",
+    "contract_id": "951a197d-4221-43fc-955c-233ab9b1e214",
+    "tenant_id": "9c530350-885c-488b-a553-11cc5ac78e43",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1412,
+    "water_meter_current": 1412,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:14.916141+00:00",
+    "updated_at": "2026-07-01T13:51:59.297Z"
+  },
+  {
+    "id": "bc46d870-a896-49ac-9fd9-49a6e4f943ad",
+    "contract_id": "a5289de8-e707-446d-9169-784c6d54f10f",
+    "tenant_id": "31a9388a-4b10-4cf5-9833-8ad9ce1a79e2",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 1,
+    "water_cost": 16,
+    "water_meter_last": 1342,
+    "water_meter_current": 1343,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1636,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:15.94395+00:00",
+    "updated_at": "2026-07-01T13:51:59.356Z"
+  },
+  {
+    "id": "0bdd224c-8867-46ea-903b-fb7eb42831aa",
+    "contract_id": "28255672-d37c-401e-b235-508280cc4a01",
+    "tenant_id": "89ec3b4f-a131-473b-84f6-a46934046f7e",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 582,
+    "water_meter_current": 582,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:16.90259+00:00",
+    "updated_at": "2026-07-01T13:51:59.428Z"
+  },
+  {
+    "id": "ba3b7784-f675-4566-b611-5238c9c5e1ff",
+    "contract_id": "3252cb5a-41ea-40ba-905d-37482bf3acd9",
+    "tenant_id": "b032593e-4a90-4b53-bc0d-f505fe3c2aec",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1424,
+    "water_meter_current": 1424,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:17.887035+00:00",
+    "updated_at": "2026-07-01T13:51:59.488Z"
+  },
+  {
+    "id": "5720f19d-3dbb-4372-9426-12a209d31029",
+    "contract_id": "fd705eeb-4515-40f0-af7d-55889b6a49ec",
+    "tenant_id": "0486c2e9-142a-4fbe-a4d2-ecbd0eb0b4d0",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 563,
+    "water_meter_current": 563,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:18.938023+00:00",
+    "updated_at": "2026-07-01T13:51:59.551Z"
+  },
+  {
+    "id": "c99a1108-77ac-40ad-a397-58ba06f8630e",
+    "contract_id": "0cb79c10-2881-412e-bfb2-023258b100ea",
+    "tenant_id": "d05c4e0e-1991-4b7a-ab04-35e8aadb7d81",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "billing_month": "2026-04-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1244,
+    "water_meter_current": 1244,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-05-05",
+    "status": "pending",
+    "created_at": "2026-04-30T14:07:19.980374+00:00",
+    "updated_at": "2026-07-01T13:51:59.617Z"
+  },
+  {
+    "id": "9696122e-bef1-4860-adba-1728f1ff0d81",
+    "contract_id": "49248155-e2b8-4eef-8d89-4357f0db4638",
+    "tenant_id": "1c378649-dd6c-4151-b9ea-a6c710971b29",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "billing_month": "2025-12-01",
+    "rent_amount": 2500,
+    "water_usage": 24,
+    "water_cost": 384,
+    "water_meter_last": 2108,
+    "water_meter_current": 2132,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 300
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 3204,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:39.986363+00:00",
+    "updated_at": "2026-07-01T13:51:59.694Z"
+  },
+  {
+    "id": "25487ff7-24d2-48b3-b8ea-6b2af8efe188",
+    "contract_id": "840c82d3-5867-4239-ae5e-13ec1597541d",
+    "tenant_id": "c1d67292-f591-4641-b9a8-f83b26641bfa",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 7,
+    "water_cost": 112,
+    "water_meter_last": 2428,
+    "water_meter_current": 2435,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1732,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:40.890877+00:00",
+    "updated_at": "2026-07-01T13:51:59.756Z"
+  },
+  {
+    "id": "6cdc215b-5c2a-42c1-a572-809e5e36d8aa",
+    "contract_id": "7ba3420b-55b5-4412-b6a0-95fef5e2a815",
+    "tenant_id": "63e471ea-a5a4-4743-816e-4b64e4847f4d",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 4,
+    "water_cost": 64,
+    "water_meter_last": 1156,
+    "water_meter_current": 1160,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1684,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:41.921296+00:00",
+    "updated_at": "2026-07-01T13:51:59.817Z"
+  },
+  {
+    "id": "db81ce78-2181-4cc7-9bbc-875a7019fc89",
+    "contract_id": "1719a33c-b8af-4d6f-bff8-6b98d3bf84cd",
+    "tenant_id": "7a0769ec-8ece-41f3-aa34-be03b70fe776",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1186,
+    "water_meter_current": 1186,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:42.942054+00:00",
+    "updated_at": "2026-07-01T13:51:59.878Z"
+  },
+  {
+    "id": "b3f3302c-80a9-4817-b72b-05732dcf9d5f",
+    "contract_id": "d2619307-6b7d-4d54-9e92-b3251d4f0f71",
+    "tenant_id": "0f31eb2f-a4a4-4994-9915-d185fd905fa8",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 19,
+    "water_cost": 304,
+    "water_meter_last": 2250,
+    "water_meter_current": 2269,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1924,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:43.960739+00:00",
+    "updated_at": "2026-07-01T13:51:59.954Z"
+  },
+  {
+    "id": "340e0115-f7a9-4357-baf1-3f84cbbc6f64",
+    "contract_id": "ebb507d2-e4a8-457a-9e0e-5403af49c0fa",
+    "tenant_id": "b531e081-fefc-4ec7-a5f9-b822854a9ee7",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 3,
+    "water_meter_current": 3,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:44.984664+00:00",
+    "updated_at": "2026-07-01T13:52:00.017Z"
+  },
+  {
+    "id": "0abee874-9475-4336-8b24-49a39cc88b3a",
+    "contract_id": "d1aba7d4-a179-4364-8411-8f51bb936d4e",
+    "tenant_id": "b0631776-c085-487b-b149-53b22fcac7e3",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 8,
+    "water_cost": 128,
+    "water_meter_last": 1898,
+    "water_meter_current": 1906,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1748,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:46.00989+00:00",
+    "updated_at": "2026-07-01T13:52:00.098Z"
+  },
+  {
+    "id": "fde66dcd-eb8f-4c02-9a67-3ea54c6b2c78",
+    "contract_id": "94381c5d-20bc-4b87-9d47-e97a57b86448",
+    "tenant_id": "1e5a963f-62ee-484c-8f54-4d3b12c994ea",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1098,
+    "water_meter_current": 1098,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:47.037102+00:00",
+    "updated_at": "2026-07-01T13:52:00.169Z"
+  },
+  {
+    "id": "d730f954-1d10-4feb-9936-e0f7f485db18",
+    "contract_id": "bc88f648-f4c9-4405-9762-b34de8a06f5f",
+    "tenant_id": "6a04638f-a97f-47e5-a514-fa7ea7aeb055",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 3,
+    "water_cost": 48,
+    "water_meter_last": 1453,
+    "water_meter_current": 1456,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1668,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:47.955469+00:00",
+    "updated_at": "2026-07-01T13:52:00.252Z"
+  },
+  {
+    "id": "64fd043f-784b-48b5-a1b7-b922e4799daa",
+    "contract_id": "41ac4d57-04fc-4a3f-8234-3285f8f8144f",
+    "tenant_id": "0be26eb8-7e36-496a-be65-31627e42dd80",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 3,
+    "water_cost": 48,
+    "water_meter_last": 1515,
+    "water_meter_current": 1518,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1668,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:49.176607+00:00",
+    "updated_at": "2026-07-01T13:52:00.318Z"
+  },
+  {
+    "id": "36341ecd-7afe-48ff-b265-12fed66c13c2",
+    "contract_id": "201f15f4-0bd6-4710-ae58-0a060b1b3e7f",
+    "tenant_id": "b77e7423-5809-4f38-bf0f-1293aaac3336",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 6,
+    "water_cost": 96,
+    "water_meter_last": 1981,
+    "water_meter_current": 1987,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1716,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:50.203979+00:00",
+    "updated_at": "2026-07-01T13:52:00.385Z"
+  },
+  {
+    "id": "f82cb19a-7576-4151-a95e-41432f46e7d7",
+    "contract_id": "d36ca219-8951-4cbb-a49e-627ccdd09097",
+    "tenant_id": "d1feaa67-0377-4624-b09a-e9dc2debf55f",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1700,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1043,
+    "water_meter_current": 1043,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1970,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:51.233127+00:00",
+    "updated_at": "2026-07-01T13:52:00.472Z"
+  },
+  {
+    "id": "8e0d9657-3636-41cb-9f0d-f5c2ce17dff0",
+    "contract_id": "ed6d0336-a223-4ee3-9eaf-0b78bff2c8f6",
+    "tenant_id": "2f0f6035-8d8f-477b-bfd8-424e48ed56f0",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1700,
+    "water_usage": 4,
+    "water_cost": 64,
+    "water_meter_last": 1289,
+    "water_meter_current": 1293,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2034,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:52.257187+00:00",
+    "updated_at": "2026-07-01T13:52:00.577Z"
+  },
+  {
+    "id": "262ae939-bbe9-46b5-972f-16e53daadb1b",
+    "contract_id": "951a197d-4221-43fc-955c-233ab9b1e214",
+    "tenant_id": "9c530350-885c-488b-a553-11cc5ac78e43",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 7,
+    "water_cost": 112,
+    "water_meter_last": 1393,
+    "water_meter_current": 1400,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1732,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:53.113904+00:00",
+    "updated_at": "2026-07-01T13:52:00.647Z"
+  },
+  {
+    "id": "25273c7c-0c11-49bb-a4d6-abe39289f73c",
+    "contract_id": "a5289de8-e707-446d-9169-784c6d54f10f",
+    "tenant_id": "31a9388a-4b10-4cf5-9833-8ad9ce1a79e2",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 2,
+    "water_cost": 32,
+    "water_meter_last": 1336,
+    "water_meter_current": 1338,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1652,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:54.096377+00:00",
+    "updated_at": "2026-07-01T13:52:00.724Z"
+  },
+  {
+    "id": "79742bcd-5a3d-4b44-8c1d-94938a890d52",
+    "contract_id": "28255672-d37c-401e-b235-508280cc4a01",
+    "tenant_id": "89ec3b4f-a131-473b-84f6-a46934046f7e",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 11,
+    "water_cost": 176,
+    "water_meter_last": 553,
+    "water_meter_current": 564,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1796,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:55.130562+00:00",
+    "updated_at": "2026-07-01T13:52:00.790Z"
+  },
+  {
+    "id": "4084e152-8574-4745-bd56-1aac2c2d20c8",
+    "contract_id": "3252cb5a-41ea-40ba-905d-37482bf3acd9",
+    "tenant_id": "b032593e-4a90-4b53-bc0d-f505fe3c2aec",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 8,
+    "water_cost": 128,
+    "water_meter_last": 1403,
+    "water_meter_current": 1411,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1748,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:56.041053+00:00",
+    "updated_at": "2026-07-01T13:52:00.856Z"
+  },
+  {
+    "id": "2abe1912-5557-4c07-a184-c76dfdbf1e83",
+    "contract_id": "fd705eeb-4515-40f0-af7d-55889b6a49ec",
+    "tenant_id": "0486c2e9-142a-4fbe-a4d2-ecbd0eb0b4d0",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 11,
+    "water_cost": 176,
+    "water_meter_last": 520,
+    "water_meter_current": 531,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1796,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:57.061128+00:00",
+    "updated_at": "2026-07-01T13:52:00.938Z"
+  },
+  {
+    "id": "a2304755-e298-49de-b231-e133470a23d4",
+    "contract_id": "0cb79c10-2881-412e-bfb2-023258b100ea",
+    "tenant_id": "d05c4e0e-1991-4b7a-ab04-35e8aadb7d81",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "billing_month": "2025-12-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1232,
+    "water_meter_current": 1232,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-01-04",
+    "status": "pending",
+    "created_at": "2025-12-29T17:03:58.095257+00:00",
+    "updated_at": "2026-07-01T13:52:01.003Z"
+  },
+  {
+    "id": "2a397036-3158-427e-9725-b3df0acd498b",
+    "contract_id": "49248155-e2b8-4eef-8d89-4357f0db4638",
+    "tenant_id": "1c378649-dd6c-4151-b9ea-a6c710971b29",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "billing_month": "2026-01-01",
+    "rent_amount": 2500,
+    "water_usage": 28,
+    "water_cost": 448,
+    "water_meter_last": 2132,
+    "water_meter_current": 2160,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 300
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 3268,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:10.601566+00:00",
+    "updated_at": "2026-07-01T13:52:01.069Z"
+  },
+  {
+    "id": "49bd36bb-b6fc-448f-9cf5-5ab956e56f26",
+    "contract_id": "840c82d3-5867-4239-ae5e-13ec1597541d",
+    "tenant_id": "c1d67292-f591-4641-b9a8-f83b26641bfa",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 10,
+    "water_cost": 160,
+    "water_meter_last": 2435,
+    "water_meter_current": 2445,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1780,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:12.120165+00:00",
+    "updated_at": "2026-07-01T13:52:01.134Z"
+  },
+  {
+    "id": "063d9942-2fc0-4f10-a5c9-e124fbdb0a41",
+    "contract_id": "7ba3420b-55b5-4412-b6a0-95fef5e2a815",
+    "tenant_id": "63e471ea-a5a4-4743-816e-4b64e4847f4d",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 9,
+    "water_cost": 144,
+    "water_meter_last": 1160,
+    "water_meter_current": 1169,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1764,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:13.762324+00:00",
+    "updated_at": "2026-07-01T13:52:01.212Z"
+  },
+  {
+    "id": "35de39cf-6fb0-4b49-a163-87a839e3659f",
+    "contract_id": "1719a33c-b8af-4d6f-bff8-6b98d3bf84cd",
+    "tenant_id": "7a0769ec-8ece-41f3-aa34-be03b70fe776",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 15,
+    "water_cost": 240,
+    "water_meter_last": 1186,
+    "water_meter_current": 1201,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1860,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:15.250149+00:00",
+    "updated_at": "2026-07-01T13:52:01.279Z"
+  },
+  {
+    "id": "b6ef2145-5890-4878-a3ec-fc246d3116b7",
+    "contract_id": "d2619307-6b7d-4d54-9e92-b3251d4f0f71",
+    "tenant_id": "0f31eb2f-a4a4-4994-9915-d185fd905fa8",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 16,
+    "water_cost": 256,
+    "water_meter_last": 2269,
+    "water_meter_current": 2285,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1876,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:16.737648+00:00",
+    "updated_at": "2026-07-01T13:52:01.346Z"
+  },
+  {
+    "id": "eee1b0ef-67fa-4d63-be32-cff05c5f0245",
+    "contract_id": "ebb507d2-e4a8-457a-9e0e-5403af49c0fa",
+    "tenant_id": "b531e081-fefc-4ec7-a5f9-b822854a9ee7",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 3,
+    "water_meter_current": 3,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:18.270327+00:00",
+    "updated_at": "2026-07-01T13:52:01.415Z"
+  },
+  {
+    "id": "207b792f-c300-4d1a-ba84-8b80a1f47162",
+    "contract_id": "d1aba7d4-a179-4364-8411-8f51bb936d4e",
+    "tenant_id": "b0631776-c085-487b-b149-53b22fcac7e3",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 7,
+    "water_cost": 112,
+    "water_meter_last": 1906,
+    "water_meter_current": 1913,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1732,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:19.812294+00:00",
+    "updated_at": "2026-07-01T13:52:01.495Z"
+  },
+  {
+    "id": "66adf08e-5125-4914-9279-b357f17439af",
+    "contract_id": "94381c5d-20bc-4b87-9d47-e97a57b86448",
+    "tenant_id": "1e5a963f-62ee-484c-8f54-4d3b12c994ea",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1098,
+    "water_meter_current": 1098,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:21.346115+00:00",
+    "updated_at": "2026-07-01T13:52:01.560Z"
+  },
+  {
+    "id": "a4e0479a-5eac-4a29-9e02-01c2a2081a44",
+    "contract_id": "bc88f648-f4c9-4405-9762-b34de8a06f5f",
+    "tenant_id": "6a04638f-a97f-47e5-a514-fa7ea7aeb055",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 4,
+    "water_cost": 64,
+    "water_meter_last": 1456,
+    "water_meter_current": 1460,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1684,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:22.793395+00:00",
+    "updated_at": "2026-07-01T13:52:01.623Z"
+  },
+  {
+    "id": "56cf510c-0ad9-48ec-9bb3-2c8d9fd8adf3",
+    "contract_id": "41ac4d57-04fc-4a3f-8234-3285f8f8144f",
+    "tenant_id": "0be26eb8-7e36-496a-be65-31627e42dd80",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 3,
+    "water_cost": 48,
+    "water_meter_last": 1518,
+    "water_meter_current": 1521,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1668,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:24.359187+00:00",
+    "updated_at": "2026-07-01T13:52:01.689Z"
+  },
+  {
+    "id": "420f6065-9d9d-4ca0-8b3b-f28d0aff4855",
+    "contract_id": "201f15f4-0bd6-4710-ae58-0a060b1b3e7f",
+    "tenant_id": "b77e7423-5809-4f38-bf0f-1293aaac3336",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 8,
+    "water_cost": 128,
+    "water_meter_last": 1987,
+    "water_meter_current": 1995,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1748,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:25.853394+00:00",
+    "updated_at": "2026-07-01T13:52:01.757Z"
+  },
+  {
+    "id": "82be596e-5b56-43ad-aa96-120b00acf6f6",
+    "contract_id": "d36ca219-8951-4cbb-a49e-627ccdd09097",
+    "tenant_id": "d1feaa67-0377-4624-b09a-e9dc2debf55f",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1700,
+    "water_usage": 27,
+    "water_cost": 432,
+    "water_meter_last": 1043,
+    "water_meter_current": 1070,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2402,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:27.390113+00:00",
+    "updated_at": "2026-07-01T13:52:01.817Z"
+  },
+  {
+    "id": "1fb2c09b-a247-4c31-b2ad-6dde11ea4826",
+    "contract_id": "ed6d0336-a223-4ee3-9eaf-0b78bff2c8f6",
+    "tenant_id": "2f0f6035-8d8f-477b-bfd8-424e48ed56f0",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1700,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1293,
+    "water_meter_current": 1293,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1970,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:29.020093+00:00",
+    "updated_at": "2026-07-01T13:52:01.877Z"
+  },
+  {
+    "id": "4f2cc435-0b3a-4cbb-9b6e-99f7a8c3ed14",
+    "contract_id": "951a197d-4221-43fc-955c-233ab9b1e214",
+    "tenant_id": "9c530350-885c-488b-a553-11cc5ac78e43",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 7,
+    "water_cost": 112,
+    "water_meter_last": 1400,
+    "water_meter_current": 1407,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1732,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:30.590387+00:00",
+    "updated_at": "2026-07-01T13:52:01.935Z"
+  },
+  {
+    "id": "d1360aec-8040-439c-a988-925bc771ddfa",
+    "contract_id": "a5289de8-e707-446d-9169-784c6d54f10f",
+    "tenant_id": "31a9388a-4b10-4cf5-9833-8ad9ce1a79e2",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 1,
+    "water_cost": 16,
+    "water_meter_last": 1338,
+    "water_meter_current": 1339,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1636,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:32.093064+00:00",
+    "updated_at": "2026-07-01T13:52:02.011Z"
+  },
+  {
+    "id": "fdc00fa7-8b2d-4605-88bc-290c011fc987",
+    "contract_id": "28255672-d37c-401e-b235-508280cc4a01",
+    "tenant_id": "89ec3b4f-a131-473b-84f6-a46934046f7e",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 564,
+    "water_meter_current": 564,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:33.632814+00:00",
+    "updated_at": "2026-07-01T13:52:02.071Z"
+  },
+  {
+    "id": "e46f6aa3-dfa1-4728-a30d-c4d4f188d117",
+    "contract_id": "3252cb5a-41ea-40ba-905d-37482bf3acd9",
+    "tenant_id": "b032593e-4a90-4b53-bc0d-f505fe3c2aec",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1411,
+    "water_meter_current": 1411,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:35.178866+00:00",
+    "updated_at": "2026-07-01T13:52:02.131Z"
+  },
+  {
+    "id": "823ef9aa-9795-4db6-86a8-8b42601f557e",
+    "contract_id": "fd705eeb-4515-40f0-af7d-55889b6a49ec",
+    "tenant_id": "0486c2e9-142a-4fbe-a4d2-ecbd0eb0b4d0",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 10,
+    "water_cost": 160,
+    "water_meter_last": 531,
+    "water_meter_current": 541,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1780,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:36.707135+00:00",
+    "updated_at": "2026-07-01T13:52:02.204Z"
+  },
+  {
+    "id": "8684b82d-7645-4b77-8fd6-bc20b70c9006",
+    "contract_id": "0cb79c10-2881-412e-bfb2-023258b100ea",
+    "tenant_id": "d05c4e0e-1991-4b7a-ab04-35e8aadb7d81",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "billing_month": "2026-01-01",
+    "rent_amount": 1400,
+    "water_usage": 12,
+    "water_cost": 192,
+    "water_meter_last": 1232,
+    "water_meter_current": 1244,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1812,
+    "due_date": "2026-02-05",
+    "status": "pending",
+    "created_at": "2026-02-02T13:39:38.457962+00:00",
+    "updated_at": "2026-07-01T13:52:02.264Z"
+  },
+  {
+    "id": "7e3a0a90-92cd-417b-a153-ca8b693d7dc6",
+    "contract_id": "49248155-e2b8-4eef-8d89-4357f0db4638",
+    "tenant_id": "1c378649-dd6c-4151-b9ea-a6c710971b29",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "billing_month": "2026-05-01",
+    "rent_amount": 2500,
+    "water_usage": 20,
+    "water_cost": 320,
+    "water_meter_last": 2264,
+    "water_meter_current": 2284,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 300
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 3140,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:46.498503+00:00",
+    "updated_at": "2026-07-01T13:52:02.324Z"
+  },
+  {
+    "id": "af35fbc9-59c4-4665-b555-00ccee06c07e",
+    "contract_id": "7ba3420b-55b5-4412-b6a0-95fef5e2a815",
+    "tenant_id": "63e471ea-a5a4-4743-816e-4b64e4847f4d",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 9,
+    "water_cost": 144,
+    "water_meter_last": 1193,
+    "water_meter_current": 1202,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1764,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:47.665096+00:00",
+    "updated_at": "2026-07-01T13:52:02.384Z"
+  },
+  {
+    "id": "52111f0d-cc2c-4711-8b87-e741879d674b",
+    "contract_id": "d2619307-6b7d-4d54-9e92-b3251d4f0f71",
+    "tenant_id": "0f31eb2f-a4a4-4994-9915-d185fd905fa8",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 30,
+    "water_cost": 480,
+    "water_meter_last": 2323,
+    "water_meter_current": 2353,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2100,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:48.763337+00:00",
+    "updated_at": "2026-07-01T13:52:02.454Z"
+  },
+  {
+    "id": "2059a22e-ff32-4011-886f-c0c8acf1b145",
+    "contract_id": "d1aba7d4-a179-4364-8411-8f51bb936d4e",
+    "tenant_id": "b0631776-c085-487b-b149-53b22fcac7e3",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 12,
+    "water_cost": 192,
+    "water_meter_last": 1923,
+    "water_meter_current": 1935,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1812,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:49.858446+00:00",
+    "updated_at": "2026-07-01T13:52:02.513Z"
+  },
+  {
+    "id": "1520c9b6-11c3-448a-a3f4-2613e4e070ca",
+    "contract_id": "bc88f648-f4c9-4405-9762-b34de8a06f5f",
+    "tenant_id": "6a04638f-a97f-47e5-a514-fa7ea7aeb055",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 3,
+    "water_cost": 48,
+    "water_meter_last": 1467,
+    "water_meter_current": 1470,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1668,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:50.945724+00:00",
+    "updated_at": "2026-07-01T13:52:02.573Z"
+  },
+  {
+    "id": "30765cb1-5500-44a6-abba-75da415ce9f2",
+    "contract_id": "201f15f4-0bd6-4710-ae58-0a060b1b3e7f",
+    "tenant_id": "b77e7423-5809-4f38-bf0f-1293aaac3336",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 9,
+    "water_cost": 144,
+    "water_meter_last": 2019,
+    "water_meter_current": 2028,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1764,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:52.11251+00:00",
+    "updated_at": "2026-07-01T13:52:02.634Z"
+  },
+  {
+    "id": "c8a11b1f-25d4-456b-852d-0e5a3b82cd3e",
+    "contract_id": "ed6d0336-a223-4ee3-9eaf-0b78bff2c8f6",
+    "tenant_id": "2f0f6035-8d8f-477b-bfd8-424e48ed56f0",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1700,
+    "water_usage": 6,
+    "water_cost": 96,
+    "water_meter_last": 1298,
+    "water_meter_current": 1304,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2066,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:53.222311+00:00",
+    "updated_at": "2026-07-01T13:52:02.715Z"
+  },
+  {
+    "id": "1c23132e-e88b-4017-8752-a8041cdcaf53",
+    "contract_id": "a5289de8-e707-446d-9169-784c6d54f10f",
+    "tenant_id": "31a9388a-4b10-4cf5-9833-8ad9ce1a79e2",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 1,
+    "water_cost": 16,
+    "water_meter_last": 1343,
+    "water_meter_current": 1344,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1636,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:54.28977+00:00",
+    "updated_at": "2026-07-01T13:52:02.787Z"
+  },
+  {
+    "id": "0ac6f55a-4268-4881-85e0-45615a5f74bc",
+    "contract_id": "3252cb5a-41ea-40ba-905d-37482bf3acd9",
+    "tenant_id": "b032593e-4a90-4b53-bc0d-f505fe3c2aec",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 23,
+    "water_cost": 368,
+    "water_meter_last": 1424,
+    "water_meter_current": 1447,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1988,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:55.369776+00:00",
+    "updated_at": "2026-07-01T13:52:02.849Z"
+  },
+  {
+    "id": "152e46c0-e8db-4f2d-b430-7fad942cded3",
+    "contract_id": "21acc15d-aa02-441d-9e51-300843af0a83",
+    "tenant_id": "6e35e183-2bfd-4136-8625-17f422f76d41",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1141,
+    "water_meter_current": 1141,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:56.456127+00:00",
+    "updated_at": "2026-07-01T13:52:02.916Z"
+  },
+  {
+    "id": "0cd3af84-1d8b-4f51-9528-c296f5db0cc5",
+    "contract_id": "840c82d3-5867-4239-ae5e-13ec1597541d",
+    "tenant_id": "c1d67292-f591-4641-b9a8-f83b26641bfa",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 5,
+    "water_cost": 80,
+    "water_meter_last": 2466,
+    "water_meter_current": 2471,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1700,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:47.079528+00:00",
+    "updated_at": "2026-07-01T13:52:02.995Z"
+  },
+  {
+    "id": "32c44804-920e-440f-bf0d-38242682cafb",
+    "contract_id": "1719a33c-b8af-4d6f-bff8-6b98d3bf84cd",
+    "tenant_id": "7a0769ec-8ece-41f3-aa34-be03b70fe776",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 8,
+    "water_cost": 128,
+    "water_meter_last": 1228,
+    "water_meter_current": 1236,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1748,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:48.216385+00:00",
+    "updated_at": "2026-07-01T13:52:03.059Z"
+  },
+  {
+    "id": "4d00c141-a7b0-439d-9837-7fdd704a9c68",
+    "contract_id": "ebb507d2-e4a8-457a-9e0e-5403af49c0fa",
+    "tenant_id": "b531e081-fefc-4ec7-a5f9-b822854a9ee7",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 3,
+    "water_meter_current": 3,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:49.300254+00:00",
+    "updated_at": "2026-07-01T13:52:03.127Z"
+  },
+  {
+    "id": "b102c273-36e7-4c51-b9a5-99fb591dc04b",
+    "contract_id": "94381c5d-20bc-4b87-9d47-e97a57b86448",
+    "tenant_id": "1e5a963f-62ee-484c-8f54-4d3b12c994ea",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1098,
+    "water_meter_current": 1098,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:50.407998+00:00",
+    "updated_at": "2026-07-01T13:52:03.190Z"
+  },
+  {
+    "id": "f6f62675-eae9-4c46-b999-d27502d6a954",
+    "contract_id": "41ac4d57-04fc-4a3f-8234-3285f8f8144f",
+    "tenant_id": "0be26eb8-7e36-496a-be65-31627e42dd80",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 3,
+    "water_cost": 48,
+    "water_meter_last": 1536,
+    "water_meter_current": 1539,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1668,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:51.501921+00:00",
+    "updated_at": "2026-07-01T13:52:03.268Z"
+  },
+  {
+    "id": "c0103b5d-c79c-43db-9f06-84e6750eeb6d",
+    "contract_id": "d36ca219-8951-4cbb-a49e-627ccdd09097",
+    "tenant_id": "d1feaa67-0377-4624-b09a-e9dc2debf55f",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1700,
+    "water_usage": 45,
+    "water_cost": 720,
+    "water_meter_last": 1085,
+    "water_meter_current": 1130,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2690,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:52.673442+00:00",
+    "updated_at": "2026-07-01T13:52:03.330Z"
+  },
+  {
+    "id": "2808c039-3537-4351-9545-7574f59f6be5",
+    "contract_id": "951a197d-4221-43fc-955c-233ab9b1e214",
+    "tenant_id": "9c530350-885c-488b-a553-11cc5ac78e43",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 22,
+    "water_cost": 352,
+    "water_meter_last": 1412,
+    "water_meter_current": 1434,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1972,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:53.757345+00:00",
+    "updated_at": "2026-07-01T13:52:03.391Z"
+  },
+  {
+    "id": "00a68d2d-12e9-4d68-9152-547eb6f48f08",
+    "contract_id": "28255672-d37c-401e-b235-508280cc4a01",
+    "tenant_id": "89ec3b4f-a131-473b-84f6-a46934046f7e",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 582,
+    "water_meter_current": 582,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:54.835348+00:00",
+    "updated_at": "2026-07-01T13:52:03.452Z"
+  },
+  {
+    "id": "bdb4cf88-a5ec-48e9-87d0-9e0f3de70712",
+    "contract_id": "fd705eeb-4515-40f0-af7d-55889b6a49ec",
+    "tenant_id": "0486c2e9-142a-4fbe-a4d2-ecbd0eb0b4d0",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 16,
+    "water_cost": 256,
+    "water_meter_last": 563,
+    "water_meter_current": 579,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1876,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:55.918841+00:00",
+    "updated_at": "2026-07-01T13:52:03.530Z"
+  },
+  {
+    "id": "1375706d-3edb-4125-8ef8-a488f8d8499a",
+    "contract_id": "0cb79c10-2881-412e-bfb2-023258b100ea",
+    "tenant_id": "d05c4e0e-1991-4b7a-ab04-35e8aadb7d81",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "billing_month": "2026-05-01",
+    "rent_amount": 1400,
+    "water_usage": 25,
+    "water_cost": 400,
+    "water_meter_last": 1244,
+    "water_meter_current": 1269,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2020,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-06-01T09:06:57.013471+00:00",
+    "updated_at": "2026-07-01T13:52:03.592Z"
+  },
+  {
+    "id": "b2b50be4-a18c-41fa-8f65-43abd6d06414",
+    "contract_id": "49248155-e2b8-4eef-8d89-4357f0db4638",
+    "tenant_id": "1c378649-dd6c-4151-b9ea-a6c710971b29",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "billing_month": "2026-02-01",
+    "rent_amount": 2500,
+    "water_usage": 20,
+    "water_cost": 320,
+    "water_meter_last": 2160,
+    "water_meter_current": 2180,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 300
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 3140,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:29.891658+00:00",
+    "updated_at": "2026-07-01T13:52:03.653Z"
+  },
+  {
+    "id": "a4f2527d-d13a-4dc9-b3cd-1ebb6167910f",
+    "contract_id": "840c82d3-5867-4239-ae5e-13ec1597541d",
+    "tenant_id": "c1d67292-f591-4641-b9a8-f83b26641bfa",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 7,
+    "water_cost": 112,
+    "water_meter_last": 2445,
+    "water_meter_current": 2452,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1732,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:30.637906+00:00",
+    "updated_at": "2026-07-01T13:52:03.717Z"
+  },
+  {
+    "id": "00a91436-0288-4914-b4ef-309464bfba4e",
+    "contract_id": "7ba3420b-55b5-4412-b6a0-95fef5e2a815",
+    "tenant_id": "63e471ea-a5a4-4743-816e-4b64e4847f4d",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 7,
+    "water_cost": 112,
+    "water_meter_last": 1169,
+    "water_meter_current": 1176,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1732,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:31.323838+00:00",
+    "updated_at": "2026-07-01T13:52:03.795Z"
+  },
+  {
+    "id": "8410506a-39a6-4269-b7e9-e4392cac3ec2",
+    "contract_id": "1719a33c-b8af-4d6f-bff8-6b98d3bf84cd",
+    "tenant_id": "7a0769ec-8ece-41f3-aa34-be03b70fe776",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1201,
+    "water_meter_current": 1201,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:32.001854+00:00",
+    "updated_at": "2026-07-01T13:52:03.858Z"
+  },
+  {
+    "id": "d89ac25a-bd03-42e2-86b5-7d6311c7c6d3",
+    "contract_id": "d2619307-6b7d-4d54-9e92-b3251d4f0f71",
+    "tenant_id": "0f31eb2f-a4a4-4994-9915-d185fd905fa8",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 19,
+    "water_cost": 304,
+    "water_meter_last": 2285,
+    "water_meter_current": 2304,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1924,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:32.763016+00:00",
+    "updated_at": "2026-07-01T13:52:03.919Z"
+  },
+  {
+    "id": "b0996a30-4b96-42d4-aeb6-b5fd46a03786",
+    "contract_id": "ebb507d2-e4a8-457a-9e0e-5403af49c0fa",
+    "tenant_id": "b531e081-fefc-4ec7-a5f9-b822854a9ee7",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 3,
+    "water_meter_current": 3,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:33.453683+00:00",
+    "updated_at": "2026-07-01T13:52:03.983Z"
+  },
+  {
+    "id": "cd5ab16f-96b1-4640-8d6c-15c730fd6b70",
+    "contract_id": "d1aba7d4-a179-4364-8411-8f51bb936d4e",
+    "tenant_id": "b0631776-c085-487b-b149-53b22fcac7e3",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1913,
+    "water_meter_current": 1913,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:34.145379+00:00",
+    "updated_at": "2026-07-01T13:52:04.061Z"
+  },
+  {
+    "id": "8b725314-1e0e-4a41-8f10-ddcd1a54ee37",
+    "contract_id": "94381c5d-20bc-4b87-9d47-e97a57b86448",
+    "tenant_id": "1e5a963f-62ee-484c-8f54-4d3b12c994ea",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1098,
+    "water_meter_current": 1098,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:34.863684+00:00",
+    "updated_at": "2026-07-01T13:52:04.123Z"
+  },
+  {
+    "id": "18e4c0d2-ffca-465c-a2df-241920f8b836",
+    "contract_id": "bc88f648-f4c9-4405-9762-b34de8a06f5f",
+    "tenant_id": "6a04638f-a97f-47e5-a514-fa7ea7aeb055",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 2,
+    "water_cost": 32,
+    "water_meter_last": 1460,
+    "water_meter_current": 1462,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1652,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:35.597796+00:00",
+    "updated_at": "2026-07-01T13:52:04.184Z"
+  },
+  {
+    "id": "f02b6819-e591-4146-b61d-d8991482a744",
+    "contract_id": "41ac4d57-04fc-4a3f-8234-3285f8f8144f",
+    "tenant_id": "0be26eb8-7e36-496a-be65-31627e42dd80",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 5,
+    "water_cost": 80,
+    "water_meter_last": 1521,
+    "water_meter_current": 1526,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1700,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:36.329446+00:00",
+    "updated_at": "2026-07-01T13:52:04.246Z"
+  },
+  {
+    "id": "5a61d657-598f-4d9d-ab35-91f3f00ec61f",
+    "contract_id": "201f15f4-0bd6-4710-ae58-0a060b1b3e7f",
+    "tenant_id": "b77e7423-5809-4f38-bf0f-1293aaac3336",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 9,
+    "water_cost": 144,
+    "water_meter_last": 1995,
+    "water_meter_current": 2004,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1764,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:37.040322+00:00",
+    "updated_at": "2026-07-01T13:52:04.319Z"
+  },
+  {
+    "id": "95318553-5d4c-460a-95fd-598a14fb3291",
+    "contract_id": "d36ca219-8951-4cbb-a49e-627ccdd09097",
+    "tenant_id": "d1feaa67-0377-4624-b09a-e9dc2debf55f",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1700,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1070,
+    "water_meter_current": 1070,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1970,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:37.813912+00:00",
+    "updated_at": "2026-07-01T13:52:04.379Z"
+  },
+  {
+    "id": "386136d5-70bb-4764-a899-63d5633cb5b4",
+    "contract_id": "ed6d0336-a223-4ee3-9eaf-0b78bff2c8f6",
+    "tenant_id": "2f0f6035-8d8f-477b-bfd8-424e48ed56f0",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1700,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1293,
+    "water_meter_current": 1293,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1970,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:38.543048+00:00",
+    "updated_at": "2026-07-01T13:52:04.440Z"
+  },
+  {
+    "id": "da4fb08f-5b95-4a30-92b0-88505d7f1a2d",
+    "contract_id": "951a197d-4221-43fc-955c-233ab9b1e214",
+    "tenant_id": "9c530350-885c-488b-a553-11cc5ac78e43",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 5,
+    "water_cost": 80,
+    "water_meter_last": 1407,
+    "water_meter_current": 1412,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1700,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:39.257926+00:00",
+    "updated_at": "2026-07-01T13:52:04.502Z"
+  },
+  {
+    "id": "87619510-4d48-4e60-bbbb-556f0b4fc185",
+    "contract_id": "a5289de8-e707-446d-9169-784c6d54f10f",
+    "tenant_id": "31a9388a-4b10-4cf5-9833-8ad9ce1a79e2",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 1,
+    "water_cost": 16,
+    "water_meter_last": 1339,
+    "water_meter_current": 1340,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1636,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:40.04233+00:00",
+    "updated_at": "2026-07-01T13:52:04.575Z"
+  },
+  {
+    "id": "026f54b4-7dc7-4d9b-a5f7-0270644376e8",
+    "contract_id": "28255672-d37c-401e-b235-508280cc4a01",
+    "tenant_id": "89ec3b4f-a131-473b-84f6-a46934046f7e",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 11,
+    "water_cost": 176,
+    "water_meter_last": 564,
+    "water_meter_current": 575,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1796,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:40.795795+00:00",
+    "updated_at": "2026-07-01T13:52:04.636Z"
+  },
+  {
+    "id": "8c246bae-e104-4cd3-863b-7df9cb54777c",
+    "contract_id": "3252cb5a-41ea-40ba-905d-37482bf3acd9",
+    "tenant_id": "b032593e-4a90-4b53-bc0d-f505fe3c2aec",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 13,
+    "water_cost": 208,
+    "water_meter_last": 1411,
+    "water_meter_current": 1424,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1828,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:41.582389+00:00",
+    "updated_at": "2026-07-01T13:52:04.696Z"
+  },
+  {
+    "id": "e14c2702-6141-45fd-8b27-9a3a6e8d1009",
+    "contract_id": "fd705eeb-4515-40f0-af7d-55889b6a49ec",
+    "tenant_id": "0486c2e9-142a-4fbe-a4d2-ecbd0eb0b4d0",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 11,
+    "water_cost": 176,
+    "water_meter_last": 541,
+    "water_meter_current": 552,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1796,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:42.53744+00:00",
+    "updated_at": "2026-07-01T13:52:04.758Z"
+  },
+  {
+    "id": "68f22a74-d637-4d15-80f3-729e56d12ca0",
+    "contract_id": "0cb79c10-2881-412e-bfb2-023258b100ea",
+    "tenant_id": "d05c4e0e-1991-4b7a-ab04-35e8aadb7d81",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "billing_month": "2026-02-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1244,
+    "water_meter_current": 1244,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-03-05",
+    "status": "pending",
+    "created_at": "2026-03-02T09:15:43.333788+00:00",
+    "updated_at": "2026-07-01T13:52:04.833Z"
+  },
+  {
+    "id": "2da1a12e-ac04-4854-8cd0-ebc8f748d2a3",
+    "contract_id": "840c82d3-5867-4239-ae5e-13ec1597541d",
+    "tenant_id": "c1d67292-f591-4641-b9a8-f83b26641bfa",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 9,
+    "water_cost": 144,
+    "water_meter_last": 2452,
+    "water_meter_current": 2461,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1764,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:38.442541+00:00",
+    "updated_at": "2026-07-01T13:52:04.895Z"
+  },
+  {
+    "id": "632cc61f-3bc2-48ff-a697-2b0daf5cc6d5",
+    "contract_id": "1719a33c-b8af-4d6f-bff8-6b98d3bf84cd",
+    "tenant_id": "7a0769ec-8ece-41f3-aa34-be03b70fe776",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 16,
+    "water_cost": 256,
+    "water_meter_last": 1201,
+    "water_meter_current": 1217,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1876,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:39.730661+00:00",
+    "updated_at": "2026-07-01T13:52:04.974Z"
+  },
+  {
+    "id": "e64d71f0-4eac-422b-a09b-51eadee8361f",
+    "contract_id": "d2619307-6b7d-4d54-9e92-b3251d4f0f71",
+    "tenant_id": "0f31eb2f-a4a4-4994-9915-d185fd905fa8",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 19,
+    "water_cost": 304,
+    "water_meter_last": 2304,
+    "water_meter_current": 2323,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1924,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:40.421429+00:00",
+    "updated_at": "2026-07-01T13:52:05.041Z"
+  },
+  {
+    "id": "8486224a-85a5-48a4-a0d1-20047eef53fc",
+    "contract_id": "ebb507d2-e4a8-457a-9e0e-5403af49c0fa",
+    "tenant_id": "b531e081-fefc-4ec7-a5f9-b822854a9ee7",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 3,
+    "water_meter_current": 3,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:41.08263+00:00",
+    "updated_at": "2026-07-01T13:52:05.117Z"
+  },
+  {
+    "id": "4666fa66-5c1b-4c3f-8634-027a5808081b",
+    "contract_id": "d1aba7d4-a179-4364-8411-8f51bb936d4e",
+    "tenant_id": "b0631776-c085-487b-b149-53b22fcac7e3",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 10,
+    "water_cost": 160,
+    "water_meter_last": 1913,
+    "water_meter_current": 1923,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1780,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:41.728687+00:00",
+    "updated_at": "2026-07-01T13:52:05.187Z"
+  },
+  {
+    "id": "f7fa37e7-4db0-4f73-95f6-746635881f0c",
+    "contract_id": "94381c5d-20bc-4b87-9d47-e97a57b86448",
+    "tenant_id": "1e5a963f-62ee-484c-8f54-4d3b12c994ea",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1098,
+    "water_meter_current": 1098,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:42.393859+00:00",
+    "updated_at": "2026-07-01T13:52:05.247Z"
+  },
+  {
+    "id": "4467658d-92d2-42d9-8f89-26f1c9e5f521",
+    "contract_id": "7ba3420b-55b5-4412-b6a0-95fef5e2a815",
+    "tenant_id": "63e471ea-a5a4-4743-816e-4b64e4847f4d",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 8,
+    "water_cost": 128,
+    "water_meter_last": 1176,
+    "water_meter_current": 1184,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1748,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:39.079588+00:00",
+    "updated_at": "2026-07-01T13:52:05.310Z"
+  },
+  {
+    "id": "e2ec24a2-ce26-4c8a-8673-e63183087edc",
+    "contract_id": "201f15f4-0bd6-4710-ae58-0a060b1b3e7f",
+    "tenant_id": "b77e7423-5809-4f38-bf0f-1293aaac3336",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 7,
+    "water_cost": 112,
+    "water_meter_last": 2004,
+    "water_meter_current": 2011,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1732,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:44.430799+00:00",
+    "updated_at": "2026-07-01T13:52:05.383Z"
+  },
+  {
+    "id": "6046d7c8-ea79-48ae-b90b-aa7133bb25ec",
+    "contract_id": "49248155-e2b8-4eef-8d89-4357f0db4638",
+    "tenant_id": "1c378649-dd6c-4151-b9ea-a6c710971b29",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "billing_month": "2026-03-01",
+    "rent_amount": 2500,
+    "water_usage": 20,
+    "water_cost": 320,
+    "water_meter_last": 2180,
+    "water_meter_current": 2200,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 300
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 3140,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:37.807003+00:00",
+    "updated_at": "2026-07-01T13:52:05.445Z"
+  },
+  {
+    "id": "6225e97c-3fdc-4d4d-8166-0f7c50c2e9f0",
+    "contract_id": "bc88f648-f4c9-4405-9762-b34de8a06f5f",
+    "tenant_id": "6a04638f-a97f-47e5-a514-fa7ea7aeb055",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 3,
+    "water_cost": 48,
+    "water_meter_last": 1462,
+    "water_meter_current": 1465,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1668,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:43.124994+00:00",
+    "updated_at": "2026-07-01T13:52:05.506Z"
+  },
+  {
+    "id": "b2c48a6d-5b80-461a-a1bf-d7f9833a5413",
+    "contract_id": "3252cb5a-41ea-40ba-905d-37482bf3acd9",
+    "tenant_id": "b032593e-4a90-4b53-bc0d-f505fe3c2aec",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1424,
+    "water_meter_current": 1424,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:48.399082+00:00",
+    "updated_at": "2026-07-01T13:52:05.567Z"
+  },
+  {
+    "id": "880d2f8b-ea33-4bc5-9d53-d3bae6e80f4d",
+    "contract_id": "41ac4d57-04fc-4a3f-8234-3285f8f8144f",
+    "tenant_id": "0be26eb8-7e36-496a-be65-31627e42dd80",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 6,
+    "water_cost": 96,
+    "water_meter_last": 1526,
+    "water_meter_current": 1532,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1716,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:43.77356+00:00",
+    "updated_at": "2026-07-01T13:52:05.642Z"
+  },
+  {
+    "id": "83e9ca3e-f3ea-492b-8060-aa346310094b",
+    "contract_id": "d36ca219-8951-4cbb-a49e-627ccdd09097",
+    "tenant_id": "d1feaa67-0377-4624-b09a-e9dc2debf55f",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1700,
+    "water_usage": 15,
+    "water_cost": 240,
+    "water_meter_last": 1070,
+    "water_meter_current": 1085,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2210,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:45.060993+00:00",
+    "updated_at": "2026-07-01T13:52:05.702Z"
+  },
+  {
+    "id": "acea3bfc-cf2d-4798-bc84-4b819434ae0f",
+    "contract_id": "ed6d0336-a223-4ee3-9eaf-0b78bff2c8f6",
+    "tenant_id": "2f0f6035-8d8f-477b-bfd8-424e48ed56f0",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1700,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1293,
+    "water_meter_current": 1293,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1970,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:45.70596+00:00",
+    "updated_at": "2026-07-01T13:52:05.762Z"
+  },
+  {
+    "id": "ddad1518-95b7-4e8e-9bfe-8d22c129fca6",
+    "contract_id": "951a197d-4221-43fc-955c-233ab9b1e214",
+    "tenant_id": "9c530350-885c-488b-a553-11cc5ac78e43",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1412,
+    "water_meter_current": 1412,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:46.356318+00:00",
+    "updated_at": "2026-07-01T13:52:05.824Z"
+  },
+  {
+    "id": "d1fb7990-a9fd-4b34-a1c9-40064b53234d",
+    "contract_id": "a5289de8-e707-446d-9169-784c6d54f10f",
+    "tenant_id": "31a9388a-4b10-4cf5-9833-8ad9ce1a79e2",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 2,
+    "water_cost": 32,
+    "water_meter_last": 1340,
+    "water_meter_current": 1342,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1652,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:47.022241+00:00",
+    "updated_at": "2026-07-01T13:52:05.899Z"
+  },
+  {
+    "id": "85a4e416-b7fa-422a-bd66-d0a26c7bf2e8",
+    "contract_id": "28255672-d37c-401e-b235-508280cc4a01",
+    "tenant_id": "89ec3b4f-a131-473b-84f6-a46934046f7e",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 7,
+    "water_cost": 112,
+    "water_meter_last": 575,
+    "water_meter_current": 582,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1732,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:47.723081+00:00",
+    "updated_at": "2026-07-01T13:52:05.960Z"
+  },
+  {
+    "id": "aa0a9bd8-6b81-4286-84f1-49f52034aff7",
+    "contract_id": "fd705eeb-4515-40f0-af7d-55889b6a49ec",
+    "tenant_id": "0486c2e9-142a-4fbe-a4d2-ecbd0eb0b4d0",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 11,
+    "water_cost": 176,
+    "water_meter_last": 552,
+    "water_meter_current": 563,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1796,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:49.038566+00:00",
+    "updated_at": "2026-07-01T13:52:06.020Z"
+  },
+  {
+    "id": "21da85f9-a3d9-4cdc-bac4-98f66fafc768",
+    "contract_id": "0cb79c10-2881-412e-bfb2-023258b100ea",
+    "tenant_id": "d05c4e0e-1991-4b7a-ab04-35e8aadb7d81",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "billing_month": "2026-03-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1244,
+    "water_meter_current": 1244,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-04-05",
+    "status": "pending",
+    "created_at": "2026-04-02T04:57:49.69093+00:00",
+    "updated_at": "2026-07-01T13:52:06.080Z"
+  },
+  {
+    "id": "4fb5701e-5e89-461a-a723-4d9051538e9a",
+    "contract_id": "49248155-e2b8-4eef-8d89-4357f0db4638",
+    "tenant_id": "1c378649-dd6c-4151-b9ea-a6c710971b29",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "billing_month": "2026-06-01",
+    "rent_amount": 2500,
+    "water_usage": 24,
+    "water_cost": 384,
+    "water_meter_last": 2284,
+    "water_meter_current": 2308,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 300
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 3204,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:51.825Z",
+    "updated_at": "2026-07-01T14:47:51.825Z"
+  },
+  {
+    "id": "f3854e99-9b89-4b5f-9172-842ec6b9de3a",
+    "contract_id": "840c82d3-5867-4239-ae5e-13ec1597541d",
+    "tenant_id": "c1d67292-f591-4641-b9a8-f83b26641bfa",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 7,
+    "water_cost": 112,
+    "water_meter_last": 2471,
+    "water_meter_current": 2478,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1732,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:51.964Z",
+    "updated_at": "2026-07-01T14:47:51.964Z"
+  },
+  {
+    "id": "5a16da13-d579-4c1f-9204-fa29a5a69f68",
+    "contract_id": "7ba3420b-55b5-4412-b6a0-95fef5e2a815",
+    "tenant_id": "63e471ea-a5a4-4743-816e-4b64e4847f4d",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 10,
+    "water_cost": 160,
+    "water_meter_last": 1202,
+    "water_meter_current": 1212,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1780,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:52.105Z",
+    "updated_at": "2026-07-01T14:47:52.105Z"
+  },
+  {
+    "id": "f67e407d-4d8a-4842-ad87-d6d5a58a7d2e",
+    "contract_id": "1719a33c-b8af-4d6f-bff8-6b98d3bf84cd",
+    "tenant_id": "7a0769ec-8ece-41f3-aa34-be03b70fe776",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 9,
+    "water_cost": 144,
+    "water_meter_last": 1236,
+    "water_meter_current": 1245,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1764,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:52.242Z",
+    "updated_at": "2026-07-01T14:47:52.242Z"
+  },
+  {
+    "id": "ed0f40cf-174f-47e6-80d7-f71241f35014",
+    "contract_id": "d2619307-6b7d-4d54-9e92-b3251d4f0f71",
+    "tenant_id": "0f31eb2f-a4a4-4994-9915-d185fd905fa8",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 29,
+    "water_cost": 464,
+    "water_meter_last": 2353,
+    "water_meter_current": 2382,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2084,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:52.377Z",
+    "updated_at": "2026-07-01T14:47:52.377Z"
+  },
+  {
+    "id": "a91078a0-5803-45b8-9f98-b62d6663963c",
+    "contract_id": "ebb507d2-e4a8-457a-9e0e-5403af49c0fa",
+    "tenant_id": "b531e081-fefc-4ec7-a5f9-b822854a9ee7",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 39,
+    "water_cost": 624,
+    "water_meter_last": 3,
+    "water_meter_current": 42,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2244,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:52.515Z",
+    "updated_at": "2026-07-01T14:47:52.515Z"
+  },
+  {
+    "id": "2265f249-2da6-44d3-b521-dc39895dfca5",
+    "contract_id": "d1aba7d4-a179-4364-8411-8f51bb936d4e",
+    "tenant_id": "b0631776-c085-487b-b149-53b22fcac7e3",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 8,
+    "water_cost": 128,
+    "water_meter_last": 1935,
+    "water_meter_current": 1943,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1748,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:52.648Z",
+    "updated_at": "2026-07-01T14:47:52.648Z"
+  },
+  {
+    "id": "8a95b784-1265-4388-95f9-67896499a019",
+    "contract_id": "94381c5d-20bc-4b87-9d47-e97a57b86448",
+    "tenant_id": "1e5a963f-62ee-484c-8f54-4d3b12c994ea",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1098,
+    "water_meter_current": 1098,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:52.789Z",
+    "updated_at": "2026-07-01T14:47:52.789Z"
+  },
+  {
+    "id": "392904f7-a068-40ed-ab27-3f94dd90f201",
+    "contract_id": "bc88f648-f4c9-4405-9762-b34de8a06f5f",
+    "tenant_id": "6a04638f-a97f-47e5-a514-fa7ea7aeb055",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 2,
+    "water_cost": 32,
+    "water_meter_last": 1470,
+    "water_meter_current": 1472,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1652,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:52.929Z",
+    "updated_at": "2026-07-01T14:47:52.929Z"
+  },
+  {
+    "id": "f116542c-62e8-4aac-a749-661f3f954684",
+    "contract_id": "41ac4d57-04fc-4a3f-8234-3285f8f8144f",
+    "tenant_id": "0be26eb8-7e36-496a-be65-31627e42dd80",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 3,
+    "water_cost": 48,
+    "water_meter_last": 1539,
+    "water_meter_current": 1542,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1668,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:53.075Z",
+    "updated_at": "2026-07-01T14:47:53.075Z"
+  },
+  {
+    "id": "ddec5329-3ff2-4f76-946d-eb06e02ab3a2",
+    "contract_id": "201f15f4-0bd6-4710-ae58-0a060b1b3e7f",
+    "tenant_id": "b77e7423-5809-4f38-bf0f-1293aaac3336",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 2028,
+    "water_meter_current": 2028,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:53.235Z",
+    "updated_at": "2026-07-01T14:47:53.235Z"
+  },
+  {
+    "id": "190a085e-b622-42e0-b6bf-c1eb36009d01",
+    "contract_id": "d36ca219-8951-4cbb-a49e-627ccdd09097",
+    "tenant_id": "d1feaa67-0377-4624-b09a-e9dc2debf55f",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1700,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1130,
+    "water_meter_current": 1130,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1970,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:53.382Z",
+    "updated_at": "2026-07-01T14:47:53.382Z"
+  },
+  {
+    "id": "6d054586-923e-401d-881f-ea977cdd62c8",
+    "contract_id": "ed6d0336-a223-4ee3-9eaf-0b78bff2c8f6",
+    "tenant_id": "2f0f6035-8d8f-477b-bfd8-424e48ed56f0",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1700,
+    "water_usage": 4,
+    "water_cost": 64,
+    "water_meter_last": 1304,
+    "water_meter_current": 1308,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 250
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 2034,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:53.514Z",
+    "updated_at": "2026-07-01T14:47:53.514Z"
+  },
+  {
+    "id": "77831395-625d-4c3d-8d1a-c943fdf62512",
+    "contract_id": "951a197d-4221-43fc-955c-233ab9b1e214",
+    "tenant_id": "9c530350-885c-488b-a553-11cc5ac78e43",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 8,
+    "water_cost": 128,
+    "water_meter_last": 1434,
+    "water_meter_current": 1442,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1748,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:53.653Z",
+    "updated_at": "2026-07-01T14:47:53.653Z"
+  },
+  {
+    "id": "64d046cd-78ac-4292-9b5e-019e26b8826d",
+    "contract_id": "a5289de8-e707-446d-9169-784c6d54f10f",
+    "tenant_id": "31a9388a-4b10-4cf5-9833-8ad9ce1a79e2",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 1,
+    "water_cost": 16,
+    "water_meter_last": 1344,
+    "water_meter_current": 1345,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1636,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:53.784Z",
+    "updated_at": "2026-07-01T14:47:53.784Z"
+  },
+  {
+    "id": "bdbed87e-46d5-43b7-9121-a871f2d243af",
+    "contract_id": "28255672-d37c-401e-b235-508280cc4a01",
+    "tenant_id": "89ec3b4f-a131-473b-84f6-a46934046f7e",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 13,
+    "water_cost": 208,
+    "water_meter_last": 582,
+    "water_meter_current": 595,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1828,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:53.916Z",
+    "updated_at": "2026-07-01T14:47:53.916Z"
+  },
+  {
+    "id": "cc0b380f-fef9-4792-b77b-11eb4a0ad14f",
+    "contract_id": "3252cb5a-41ea-40ba-905d-37482bf3acd9",
+    "tenant_id": "b032593e-4a90-4b53-bc0d-f505fe3c2aec",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1447,
+    "water_meter_current": 1447,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:54.063Z",
+    "updated_at": "2026-07-01T14:47:54.063Z"
+  },
+  {
+    "id": "6f65daec-0fc0-4f34-adc3-3e94a8fb6a89",
+    "contract_id": "fd705eeb-4515-40f0-af7d-55889b6a49ec",
+    "tenant_id": "0486c2e9-142a-4fbe-a4d2-ecbd0eb0b4d0",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 14,
+    "water_cost": 224,
+    "water_meter_last": 579,
+    "water_meter_current": 593,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1844,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:54.195Z",
+    "updated_at": "2026-07-01T14:47:54.195Z"
+  },
+  {
+    "id": "d3736a31-0c00-4440-8a11-bd7e1d87bb17",
+    "contract_id": "21acc15d-aa02-441d-9e51-300843af0a83",
+    "tenant_id": "6e35e183-2bfd-4136-8625-17f422f76d41",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 1,
+    "water_cost": 16,
+    "water_meter_last": 1141,
+    "water_meter_current": 1142,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1636,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:54.332Z",
+    "updated_at": "2026-07-01T14:47:54.332Z"
+  },
+  {
+    "id": "1c3f2c1a-f055-4ca5-9a30-c90876010a62",
+    "contract_id": "0cb79c10-2881-412e-bfb2-023258b100ea",
+    "tenant_id": "d05c4e0e-1991-4b7a-ab04-35e8aadb7d81",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "billing_month": "2026-06-01",
+    "rent_amount": 1400,
+    "water_usage": 0,
+    "water_cost": 0,
+    "water_meter_last": 1269,
+    "water_meter_current": 1269,
+    "electricity_usage": 0,
+    "electricity_cost": 0,
+    "electricity_meter_last": 0,
+    "electricity_meter_current": 0,
+    "additional_charges": [
+      {
+        "name": "ค่าส่วนกลาง",
+        "amount": 200
+      },
+      {
+        "name": "ค่าบำรุงมิเตอร์น้ำ",
+        "amount": 20
+      }
+    ],
+    "total_amount": 1620,
+    "due_date": "2026-07-05",
+    "status": "pending",
+    "created_at": "2026-07-01T14:47:54.460Z",
+    "updated_at": "2026-07-01T14:47:54.460Z"
+  }
+]

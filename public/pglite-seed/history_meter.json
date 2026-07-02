@@ -1,0 +1,2522 @@
+[
+  {
+    "id": "07e23c78-606a-4acf-bbd7-dc64da1686c1",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-11",
+    "water_meter": 2108,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.271346+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "6fd48228-5922-4439-9a7e-12d8d98e4e2b",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "month": "2025-11",
+    "water_meter": 2428,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "cc76756f-31f9-49db-bda5-924bae0e345c",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "month": "2025-11",
+    "water_meter": 1156,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "8e234029-3abd-4699-a844-60bfe1b5f3cc",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "month": "2025-11",
+    "water_meter": 1186,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "aeeadc6d-8f2e-4c00-a9b5-b89b003da904",
+    "room_id": "99c3440c-f26f-4a79-b48b-98e41b6a1db4",
+    "month": "2025-11",
+    "water_meter": 1654,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "36a91892-b5bf-4bcf-bc2b-1fb7fbedf637",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "month": "2025-11",
+    "water_meter": 2250,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "4268e2eb-0053-41fc-9103-978afb81cff2",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "month": "2025-11",
+    "water_meter": 3,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "638cf811-a09b-425a-b584-be2253f6ab20",
+    "room_id": "7adee0b4-91cd-43bd-924a-e9c62c4e6308",
+    "month": "2025-11",
+    "water_meter": 1494,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "b973e2ef-5cac-438a-a3b1-9bce83340aff",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "month": "2025-11",
+    "water_meter": 1898,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "9fb383ae-cb2d-4d96-a2f8-59061fb35e99",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "month": "2025-11",
+    "water_meter": 1098,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "6bdf68e4-f93f-4970-a5d2-b7b290a594a2",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "month": "2025-11",
+    "water_meter": 1453,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "72208ec4-34b3-4ccf-8d55-eddafa35c63d",
+    "room_id": "9f957b76-f335-4574-a68a-2013599c0ec2",
+    "month": "2025-11",
+    "water_meter": 1460,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "70235054-e224-4341-ae35-ca14ef82e33b",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "month": "2025-11",
+    "water_meter": 1515,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "6e6d5ed6-de2e-443f-8d0b-d116ebceb656",
+    "room_id": "d7e32ec2-23da-4c30-b91f-d88cf7b9cc35",
+    "month": "2025-11",
+    "water_meter": 1235,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "bc188a6c-98db-4bf1-8ed1-d6134e1ffeac",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "month": "2025-11",
+    "water_meter": 1981,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "337501ea-28af-4370-a0ee-e43f060fcf96",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "month": "2025-11",
+    "water_meter": 1043,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "858cb03e-887b-4a79-9f12-1d99975bd79c",
+    "room_id": "d9aefdd1-b0ff-4d60-9c4b-1952f91ccb2c",
+    "month": "2025-11",
+    "water_meter": 675,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "7485e3a5-967a-42bc-95aa-7448895b3b4b",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "month": "2025-11",
+    "water_meter": 1289,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "ab4bde6d-380b-44f7-b4ec-cc78a0f8efef",
+    "room_id": "acdbaeb7-053f-4821-a5ad-01fd861b1de6",
+    "month": "2025-11",
+    "water_meter": 1112,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "c343eb6c-cdd8-4d51-a3c9-2ebb0c8ceeef",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "month": "2025-11",
+    "water_meter": 1393,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "df5688d6-397d-434d-b413-4a41c0770ebf",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "month": "2025-11",
+    "water_meter": 1336,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "d2706c38-1b03-4e48-a7d0-3e17bf88f601",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "month": "2025-11",
+    "water_meter": 553,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "a2b5f857-cae6-486a-8480-9fdf1f8f8f45",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "month": "2025-11",
+    "water_meter": 1403,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "305bd3d1-57ac-4375-8205-0d2ec670877d",
+    "room_id": "b349f391-6838-4ec0-95b6-2093cfbbd4f8",
+    "month": "2025-11",
+    "water_meter": 821,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "f74cc829-4293-46d2-8849-425123a8a9dc",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "month": "2025-11",
+    "water_meter": 520,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "6763c9a3-7aa9-4f95-b1fa-eff1853199eb",
+    "room_id": "ce49ea8b-db3b-4632-bf92-e32125de13bf",
+    "month": "2025-11",
+    "water_meter": 741,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "1644486b-9cff-4d06-9bfb-e323bcb462eb",
+    "room_id": "867fd14a-20e9-4760-bac7-b6db976d3a56",
+    "month": "2025-11",
+    "water_meter": 1074,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "3aae6a3f-958e-4b4d-9b79-d21092c1ed34",
+    "room_id": "a09ca9b9-b039-437f-aca6-1f4406448b1c",
+    "month": "2025-11",
+    "water_meter": 1154,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "0312d070-82a9-4825-8d16-1aa524a3c8ad",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "month": "2025-11",
+    "water_meter": 1141,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:06.150373+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "6916d8c1-5602-4624-a9e7-7723441cf43d",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "month": "2025-11",
+    "water_meter": 1232,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:14:27.270975+00:00",
+    "updated_at": "2025-12-29T17:02:06.150373+00:00"
+  },
+  {
+    "id": "7f373d31-79e8-47c0-b63e-31d71d32fcd7",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-12",
+    "water_meter": 2132,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "f79c9dca-4091-46fa-b496-9f3a750488b3",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "month": "2025-12",
+    "water_meter": 2435,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "13cea9c0-d651-4c31-82b6-df9764ea2e9e",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "month": "2025-12",
+    "water_meter": 1160,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "91c727b8-48a3-4430-9692-10a140a1f953",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "month": "2025-12",
+    "water_meter": 1186,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "46dafd22-07c5-4c77-bf02-17d7538488d2",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-07",
+    "water_meter": 2020,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.262343+00:00",
+    "updated_at": "2025-12-18T03:22:13.231+00:00"
+  },
+  {
+    "id": "f34c897d-cdaa-4ad3-ac4f-70acd812ba22",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-09",
+    "water_meter": 2052,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.261858+00:00",
+    "updated_at": "2025-12-18T03:22:13.231+00:00"
+  },
+  {
+    "id": "773d2a9d-c63f-42c8-9f8c-b306abae50fa",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-05",
+    "water_meter": 1970,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.271588+00:00",
+    "updated_at": "2025-12-18T03:22:13.231+00:00"
+  },
+  {
+    "id": "54a24765-6b7f-435b-a3c7-a79f9b667c04",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-10",
+    "water_meter": 2085,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.252589+00:00",
+    "updated_at": "2025-12-18T03:22:13.231+00:00"
+  },
+  {
+    "id": "ef0c04d1-c6c0-4ade-b3c2-a6d79b044b32",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-01",
+    "water_meter": 1892,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.13552+00:00",
+    "updated_at": "2025-12-18T03:22:13.23+00:00"
+  },
+  {
+    "id": "4bb74583-2acf-4d73-a3f1-fbae802c197f",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-03",
+    "water_meter": 1930,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.256601+00:00",
+    "updated_at": "2025-12-18T03:22:13.231+00:00"
+  },
+  {
+    "id": "90346b50-0efa-484a-a4be-c3d92b9d4437",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-04",
+    "water_meter": 1950,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.125328+00:00",
+    "updated_at": "2025-12-18T03:22:13.231+00:00"
+  },
+  {
+    "id": "e7dcde63-9090-4575-aecf-bc94b89b6c1a",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-06",
+    "water_meter": 1995,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.271593+00:00",
+    "updated_at": "2025-12-18T03:22:13.231+00:00"
+  },
+  {
+    "id": "7de08823-738e-4d5b-8937-fb3d18705559",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-08",
+    "water_meter": 2032,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.424741+00:00",
+    "updated_at": "2025-12-18T03:22:13.231+00:00"
+  },
+  {
+    "id": "504bd3e5-e5a0-4502-9baf-4d8cca31feb8",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2025-02",
+    "water_meter": 1910,
+    "electricity_meter": 0,
+    "created_at": "2025-12-18T03:22:14.060978+00:00",
+    "updated_at": "2025-12-18T03:22:13.23+00:00"
+  },
+  {
+    "id": "93997637-742a-45d5-9fd2-5dfb814115ad",
+    "room_id": "7adee0b4-91cd-43bd-924a-e9c62c4e6308",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "97a54383-5fa1-491b-9df9-a7180d6b1440",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "month": "2026-04",
+    "water_meter": 1923,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "acdcb487-7923-4092-a504-572bf6625495",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "month": "2026-04",
+    "water_meter": 1098,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "270c3b31-eb80-45c9-9156-481f3ded24ec",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "month": "2026-04",
+    "water_meter": 1467,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "fd025bd2-96b6-4c0c-a0ff-d02d254ed527",
+    "room_id": "9f957b76-f335-4574-a68a-2013599c0ec2",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "d05bf3ef-99e7-4493-a958-8edc4cceb934",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "month": "2026-04",
+    "water_meter": 1536,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "e525f017-f6fe-4bfe-b222-c4d132dfb0fd",
+    "room_id": "d7e32ec2-23da-4c30-b91f-d88cf7b9cc35",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "7c6f92c2-0cdb-4a2a-8305-cf95d26749ea",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "month": "2026-04",
+    "water_meter": 2019,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "cc226551-9af2-44bb-a7a8-4f417437a44b",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "month": "2026-04",
+    "water_meter": 1085,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "44cfce00-d2ef-4d81-a672-2ced49f29077",
+    "room_id": "d9aefdd1-b0ff-4d60-9c4b-1952f91ccb2c",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "a7945b25-2a0a-450d-bea9-a40ed281bf22",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "month": "2026-04",
+    "water_meter": 1298,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "b0ce6ce4-f7ff-4eb0-a92c-866fd1931175",
+    "room_id": "acdbaeb7-053f-4821-a5ad-01fd861b1de6",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "d6cdd9a4-2dac-4e07-b56e-52070c2a89b4",
+    "room_id": "99c3440c-f26f-4a79-b48b-98e41b6a1db4",
+    "month": "2025-12",
+    "water_meter": 1654,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "57124a01-5e55-433a-a20a-498b64b498af",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "month": "2025-12",
+    "water_meter": 2269,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "665bd2d3-9a3c-4641-b9cf-660d0b664807",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "month": "2025-12",
+    "water_meter": 3,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "7d1efe67-bcca-455d-9801-088003f98cd4",
+    "room_id": "7adee0b4-91cd-43bd-924a-e9c62c4e6308",
+    "month": "2025-12",
+    "water_meter": 1494,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "9c98c34f-f53e-479c-91fe-2309567695dd",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "month": "2025-12",
+    "water_meter": 1906,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "2403dc30-9760-465b-9520-7141a6216a06",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "month": "2025-12",
+    "water_meter": 1098,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "44913bde-db95-49f0-a467-ef796b3eaf66",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "month": "2026-04",
+    "water_meter": 1412,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "033f0cfa-d655-47dd-b013-f113ab59db8f",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "month": "2026-04",
+    "water_meter": 1343,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "71eba17f-f897-47d3-aa17-9dabdfc3a823",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "month": "2026-04",
+    "water_meter": 582,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "36acf408-8fb5-40b3-b8dd-4bc7cf8150a1",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "month": "2026-04",
+    "water_meter": 1424,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "0224eaeb-3201-4cf4-a9c9-33379fff9343",
+    "room_id": "b349f391-6838-4ec0-95b6-2093cfbbd4f8",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "3162c398-11fb-46e4-bbd7-e5ce52bc47ea",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "month": "2026-04",
+    "water_meter": 563,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "5682ba66-454c-41ea-8370-490233c09630",
+    "room_id": "ce49ea8b-db3b-4632-bf92-e32125de13bf",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "dd81bcb0-85ba-4a5e-942d-6d52fc911dec",
+    "room_id": "867fd14a-20e9-4760-bac7-b6db976d3a56",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "161541c8-5e56-451e-95eb-f34be0f19680",
+    "room_id": "a09ca9b9-b039-437f-aca6-1f4406448b1c",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "368c6811-40c7-4370-8962-796dcd9a7d79",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "month": "2026-04",
+    "water_meter": 1141,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "57cf414c-a290-4c88-94ec-c2cebbde98b8",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "month": "2025-12",
+    "water_meter": 1456,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "954fbf79-5015-4cab-a9e1-0d8923bdd96e",
+    "room_id": "9f957b76-f335-4574-a68a-2013599c0ec2",
+    "month": "2025-12",
+    "water_meter": 1460,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "b47358cc-66ef-49a4-83fb-e36f28cb7250",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "month": "2025-12",
+    "water_meter": 1518,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "2cbf8373-c34b-4ff5-bd87-eef85c74302f",
+    "room_id": "d7e32ec2-23da-4c30-b91f-d88cf7b9cc35",
+    "month": "2025-12",
+    "water_meter": 1235,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "5cada819-3f6b-4bed-89bf-4e46c48da8be",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "month": "2025-12",
+    "water_meter": 1987,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "57a531b8-f7b6-426d-815f-f6fa419bd3d0",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "month": "2025-12",
+    "water_meter": 1043,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "fac7b6e8-2d58-4bf8-a7f6-13fa9ed85246",
+    "room_id": "d9aefdd1-b0ff-4d60-9c4b-1952f91ccb2c",
+    "month": "2025-12",
+    "water_meter": 675,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "0703d179-568d-487a-90f8-12eb043d489e",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "month": "2025-12",
+    "water_meter": 1293,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "edc1dbbc-0973-4442-9bec-921ebde07f38",
+    "room_id": "acdbaeb7-053f-4821-a5ad-01fd861b1de6",
+    "month": "2025-12",
+    "water_meter": 1112,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "c2cdd0e1-cb46-4eb4-a2f5-ea01ca44eadb",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "month": "2025-12",
+    "water_meter": 1400,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "6c4becb3-f11e-477b-94cc-e7a6ee2eeb62",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "month": "2025-12",
+    "water_meter": 1338,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "d2b18ff6-180b-406c-8c5b-e70eb59aea40",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "month": "2025-12",
+    "water_meter": 564,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "43d58716-e0ac-4638-964f-b2279a87d37d",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "month": "2025-12",
+    "water_meter": 1411,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "1ff425d8-b888-4ba7-9ed3-c2355f8dca1d",
+    "room_id": "b349f391-6838-4ec0-95b6-2093cfbbd4f8",
+    "month": "2025-12",
+    "water_meter": 821,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "5ee9f8bc-065f-44b2-98df-77e54c6a4bc3",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "month": "2025-12",
+    "water_meter": 531,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "23c0e7ec-7fe8-489d-8294-96762f32dadd",
+    "room_id": "ce49ea8b-db3b-4632-bf92-e32125de13bf",
+    "month": "2025-12",
+    "water_meter": 741,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "634cdfbb-400c-4ec3-a902-e4f4cd52fd4b",
+    "room_id": "867fd14a-20e9-4760-bac7-b6db976d3a56",
+    "month": "2025-12",
+    "water_meter": 1074,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "93596988-cea9-481e-8065-87c8597cfe38",
+    "room_id": "a09ca9b9-b039-437f-aca6-1f4406448b1c",
+    "month": "2025-12",
+    "water_meter": 1154,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "13aaaa96-0190-43da-84af-4ce01d1187e5",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "month": "2025-12",
+    "water_meter": 1141,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T17:02:59.050977+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "6bb052e3-dd8e-4202-82e7-d2b00ada2b76",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "month": "2025-12",
+    "water_meter": 1232,
+    "electricity_meter": 0,
+    "created_at": "2025-12-29T16:19:02.004901+00:00",
+    "updated_at": "2025-12-29T17:02:59.050977+00:00"
+  },
+  {
+    "id": "4d8568b2-9a0a-4a12-bb96-20ebe2b3304a",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "month": "2026-04",
+    "water_meter": 1244,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "8b913b67-537e-4e71-b72a-650aae0d3531",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2026-01",
+    "water_meter": 2160,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "6199c9f7-45d9-4c96-9109-4725e6d2fc3b",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "month": "2026-01",
+    "water_meter": 2445,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "d21ac600-1a71-4dc8-ad70-253287faa55e",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "month": "2026-01",
+    "water_meter": 1169,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "ddb771b7-69ab-4a10-9b8c-0649490e81c9",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "month": "2026-01",
+    "water_meter": 1201,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "08fb25bc-0b88-43d8-a0ba-4abb5c69d57d",
+    "room_id": "99c3440c-f26f-4a79-b48b-98e41b6a1db4",
+    "month": "2026-01",
+    "water_meter": 1654,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "73e91d65-f413-425f-ae8f-a9926fe4b5b4",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "month": "2026-01",
+    "water_meter": 2285,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "efd817ff-e22d-4127-9d8c-f7da881e9f36",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "month": "2026-01",
+    "water_meter": 3,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "40d0af46-27bf-4d93-a25f-401855e2efd9",
+    "room_id": "7adee0b4-91cd-43bd-924a-e9c62c4e6308",
+    "month": "2026-01",
+    "water_meter": 1494,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "6c5abc5b-d313-4647-b2b9-78d5886a8f33",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "month": "2026-01",
+    "water_meter": 1913,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "cc22468e-ec4c-4165-b0d5-6cbc084f061b",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "month": "2026-01",
+    "water_meter": 1098,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "0e20d17f-8e66-4838-972d-74e3fd0758d6",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "month": "2026-01",
+    "water_meter": 1460,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "c4118baf-4e9b-4c03-aca7-e4d0a5f7e3ee",
+    "room_id": "9f957b76-f335-4574-a68a-2013599c0ec2",
+    "month": "2026-01",
+    "water_meter": 1460,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "5129de22-f520-4188-9aaa-1d31ae69ae4f",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "month": "2026-01",
+    "water_meter": 1521,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "c1fda6ba-331e-48b1-9a27-b267e1664b36",
+    "room_id": "d7e32ec2-23da-4c30-b91f-d88cf7b9cc35",
+    "month": "2026-01",
+    "water_meter": 1235,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "9fd2c223-17d2-46ca-8658-7b12e8ee07a0",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "month": "2026-01",
+    "water_meter": 1995,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "0bc57d87-2cd8-46e3-8f13-c286eafec1b0",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "month": "2026-01",
+    "water_meter": 1070,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "2672a930-51b2-4ec9-9c5d-efab3cf4fac7",
+    "room_id": "d9aefdd1-b0ff-4d60-9c4b-1952f91ccb2c",
+    "month": "2026-01",
+    "water_meter": 675,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "94d6a561-a8ba-4427-944b-0e639fdf7f08",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "month": "2026-01",
+    "water_meter": 1293,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "c8007215-5204-4510-82e2-849af46a764d",
+    "room_id": "acdbaeb7-053f-4821-a5ad-01fd861b1de6",
+    "month": "2026-01",
+    "water_meter": 1112,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "5dab379f-05fa-4daf-ad68-70da6794ceee",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "month": "2026-01",
+    "water_meter": 1407,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "bcf5ca20-0662-4a3d-ad05-7f9a017aa6a8",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "month": "2026-01",
+    "water_meter": 1339,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "f7f7ad1f-69ef-46d2-ad44-fdc93005f1c7",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "month": "2026-01",
+    "water_meter": 564,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "8079ec7a-ab16-41b7-a5d1-32662eff9535",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "month": "2026-01",
+    "water_meter": 1411,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "036b58bb-a870-4ea1-9302-b1d39abb224c",
+    "room_id": "b349f391-6838-4ec0-95b6-2093cfbbd4f8",
+    "month": "2026-01",
+    "water_meter": 821,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "db4f805f-d503-45b0-8e12-59265b81581b",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "month": "2026-01",
+    "water_meter": 541,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "9dd12f9d-1c1f-48ef-89f6-00ce44a028a8",
+    "room_id": "ce49ea8b-db3b-4632-bf92-e32125de13bf",
+    "month": "2026-01",
+    "water_meter": 741,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "05cb1c12-b74f-49d1-afb3-a506b91feaac",
+    "room_id": "867fd14a-20e9-4760-bac7-b6db976d3a56",
+    "month": "2026-01",
+    "water_meter": 1074,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "925830fa-594a-43fc-9d69-e1acd63472d6",
+    "room_id": "a09ca9b9-b039-437f-aca6-1f4406448b1c",
+    "month": "2026-01",
+    "water_meter": 1154,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "66414fef-317a-42c5-b63e-130fe377ab5e",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "month": "2026-01",
+    "water_meter": 1141,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "e8ce6dd6-fac8-48ef-bcd9-87248376a09b",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "month": "2026-01",
+    "water_meter": 1244,
+    "electricity_meter": 0,
+    "created_at": "2026-02-02T13:35:52.069788+00:00",
+    "updated_at": "2026-02-02T13:35:52.069788+00:00"
+  },
+  {
+    "id": "42d5f90a-7bb1-4fd0-8010-dc82a66a6115",
+    "room_id": "99c3440c-f26f-4a79-b48b-98e41b6a1db4",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "dd92f954-dacc-4ec2-8df6-59ad04d154e4",
+    "room_id": "7adee0b4-91cd-43bd-924a-e9c62c4e6308",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "af175573-3414-4471-ab1b-455f68ada8a5",
+    "room_id": "9f957b76-f335-4574-a68a-2013599c0ec2",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "4feb5368-e410-42e1-9471-14471f06b05f",
+    "room_id": "d7e32ec2-23da-4c30-b91f-d88cf7b9cc35",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "2ba07f9c-6feb-42b3-b7df-80cbb4662bbd",
+    "room_id": "d9aefdd1-b0ff-4d60-9c4b-1952f91ccb2c",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "d16e80ff-3173-4ca2-a1a7-ba68cde51445",
+    "room_id": "acdbaeb7-053f-4821-a5ad-01fd861b1de6",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "54d5b6eb-0820-4563-a976-bae68cbfa9df",
+    "room_id": "b349f391-6838-4ec0-95b6-2093cfbbd4f8",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "7904b9a5-5935-4880-bd0d-764db317d6b8",
+    "room_id": "ce49ea8b-db3b-4632-bf92-e32125de13bf",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "00ce6dc6-6b37-40a4-865f-9962f41fbd82",
+    "room_id": "867fd14a-20e9-4760-bac7-b6db976d3a56",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "d2f3a324-83a8-471a-a3de-5658f8aa77d5",
+    "room_id": "a09ca9b9-b039-437f-aca6-1f4406448b1c",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "3f6c6f39-a62a-42f3-bd0a-1dd0ab9f29ec",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "month": "2026-03",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-01T09:04:38.605297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "8a9107c4-eb12-4345-8324-2ce381efde16",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2026-02",
+    "water_meter": 2180,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "ac6fd9ad-12ed-4165-ae96-45aa97f6395c",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "month": "2026-02",
+    "water_meter": 2452,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "2ddef6c2-4e5d-4028-a43d-41271f39a6ac",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "month": "2026-02",
+    "water_meter": 1176,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "333bc109-ae63-43ce-89ba-b87b4a3359ea",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "month": "2026-02",
+    "water_meter": 1201,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "88388ac2-bae5-4cc1-853b-8489968de534",
+    "room_id": "99c3440c-f26f-4a79-b48b-98e41b6a1db4",
+    "month": "2026-02",
+    "water_meter": 1654,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "341f789e-8128-4420-b0d9-70b2c78d9083",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "month": "2026-02",
+    "water_meter": 2304,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "48f64727-93ef-45c2-a5d1-d37533109be0",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "month": "2026-02",
+    "water_meter": 3,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "7f192673-5c7b-46c4-9008-7617811e3243",
+    "room_id": "7adee0b4-91cd-43bd-924a-e9c62c4e6308",
+    "month": "2026-02",
+    "water_meter": 1494,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "f4d6cd27-a3cf-4caf-9dee-6c3a1a2d01f6",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "month": "2026-02",
+    "water_meter": 1913,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "3a1cd996-115d-403c-9dd1-df268354a2f5",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "month": "2026-02",
+    "water_meter": 1098,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "89c70e65-5a5b-4c18-ad4e-304e0da2396d",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "month": "2026-02",
+    "water_meter": 1462,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "07ee90d8-8dde-4476-95cb-f151783b6007",
+    "room_id": "9f957b76-f335-4574-a68a-2013599c0ec2",
+    "month": "2026-02",
+    "water_meter": 1460,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "ecc0a43b-b368-4c1b-aa63-2d0aacc8c868",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "month": "2026-02",
+    "water_meter": 1526,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "fc306b53-5a45-4ba3-b091-9b17297646a9",
+    "room_id": "d7e32ec2-23da-4c30-b91f-d88cf7b9cc35",
+    "month": "2026-02",
+    "water_meter": 1235,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "730fa751-d3d2-48c2-ab30-1d76de1907bf",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "month": "2026-02",
+    "water_meter": 2004,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "6e6fdff6-033c-47a0-8694-dc9967d6a596",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "month": "2026-02",
+    "water_meter": 1070,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "98cc0a19-15a6-4d06-beff-ab7b6e2e5b40",
+    "room_id": "d9aefdd1-b0ff-4d60-9c4b-1952f91ccb2c",
+    "month": "2026-02",
+    "water_meter": 675,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "aa887790-ee1d-46b4-85f7-d2b0f8b72ce9",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "month": "2026-02",
+    "water_meter": 1293,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "c1b56f51-cb1a-4a3b-80e6-a41a91a5f1f9",
+    "room_id": "acdbaeb7-053f-4821-a5ad-01fd861b1de6",
+    "month": "2026-02",
+    "water_meter": 1112,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "e3c2199c-f949-4510-944c-c2afc7a59ab8",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "month": "2026-02",
+    "water_meter": 1412,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "bfb8bd8d-002a-4ca9-9af4-59b6b66790e2",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "month": "2026-02",
+    "water_meter": 1340,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "fd5d9c92-eb00-48e5-b0b9-2b88e516edf4",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "month": "2026-02",
+    "water_meter": 575,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "50bee9a0-e43c-4952-b809-44cf7537e68a",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "month": "2026-02",
+    "water_meter": 1424,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "b588cacb-1321-4d5f-9222-957a6b04305c",
+    "room_id": "b349f391-6838-4ec0-95b6-2093cfbbd4f8",
+    "month": "2026-02",
+    "water_meter": 821,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "5fe53a73-58cc-41cb-bda4-64ebfe696c00",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "month": "2026-02",
+    "water_meter": 552,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "2872cdb8-0fcc-42d5-a7da-46a913e8a4f5",
+    "room_id": "ce49ea8b-db3b-4632-bf92-e32125de13bf",
+    "month": "2026-02",
+    "water_meter": 741,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "dbca93d1-f2da-40c7-8dba-62bbeee97bf6",
+    "room_id": "867fd14a-20e9-4760-bac7-b6db976d3a56",
+    "month": "2026-02",
+    "water_meter": 1074,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "cf6a38af-da76-41de-9b1c-8a500cc538bd",
+    "room_id": "a09ca9b9-b039-437f-aca6-1f4406448b1c",
+    "month": "2026-02",
+    "water_meter": 1154,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "fdfe9517-3476-482a-8784-b7e2b286e607",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "month": "2026-02",
+    "water_meter": 1141,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "91a17706-bbaf-4937-ab92-3fa8d3f94ce4",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "month": "2026-02",
+    "water_meter": 1244,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:12:49.925008+00:00",
+    "updated_at": "2026-03-02T09:13:37.710345+00:00"
+  },
+  {
+    "id": "b089b89c-09b0-4b41-8e04-038545a1b164",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2026-03",
+    "water_meter": 2200,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:07.154872+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "f7eb9027-60e3-46fb-992b-084c5f41d854",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "month": "2026-03",
+    "water_meter": 2461,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:08.077921+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "2409c9cd-e184-4c68-beab-9d9451fdeafe",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "month": "2026-03",
+    "water_meter": 1184,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:08.894669+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "e4b13f8b-09e7-44eb-8f56-9936fcedd0fa",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "month": "2026-03",
+    "water_meter": 1217,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:09.640195+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "68c5c2c4-2869-4e9a-b39d-99407e001fcd",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "month": "2026-03",
+    "water_meter": 2323,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:10.638884+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "d046b597-75f1-43c9-b646-c13bbc36d4d8",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "month": "2026-03",
+    "water_meter": 3,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:11.521524+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "6efb21cf-e8a4-4475-b059-14694c523da1",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "month": "2026-03",
+    "water_meter": 1923,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:12.401022+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "81421ef8-d3d6-4961-a276-71987270f353",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "month": "2026-03",
+    "water_meter": 1098,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:13.230349+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "381120b5-663b-4888-b9d4-d06921c8eb38",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "month": "2026-03",
+    "water_meter": 1465,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:14.012056+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "36af9e66-b0d1-4aa6-bc31-c53b92360f45",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "month": "2026-03",
+    "water_meter": 1532,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:14.741469+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "94b93877-f5fd-4aa6-83de-94dc6b0e8669",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "month": "2026-03",
+    "water_meter": 2011,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:15.473994+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "471a8fd0-39bc-461c-b466-053bf935ddfb",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "month": "2026-03",
+    "water_meter": 1085,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:16.336689+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "98cfc829-db0d-4558-9023-36fb827b4209",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "month": "2026-03",
+    "water_meter": 1293,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:17.137359+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "6fcb7a58-25c2-442d-a359-d000c62781df",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "month": "2026-03",
+    "water_meter": 1412,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:17.859297+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "6dfa6a02-8fc8-4c63-87dc-d5df7a58381f",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "month": "2026-03",
+    "water_meter": 1342,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:18.599846+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "6d543c54-777e-4696-a1fd-e0cba57039f0",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "month": "2026-03",
+    "water_meter": 582,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:19.370423+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "0e0dfaf1-7c14-4266-a6ea-e53d5048e060",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "month": "2026-03",
+    "water_meter": 1424,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:20.094977+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "9271550e-4f2e-4edb-b327-19949b0917b4",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "month": "2026-03",
+    "water_meter": 563,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:20.807933+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "4b8dcada-8afa-4d3e-b3cd-449934438603",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "month": "2026-03",
+    "water_meter": 1244,
+    "electricity_meter": 0,
+    "created_at": "2026-03-02T09:14:21.551651+00:00",
+    "updated_at": "2026-04-02T04:56:20.568023+00:00"
+  },
+  {
+    "id": "46a8bf9a-34b9-45ce-84e9-909d342a57e1",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2026-04",
+    "water_meter": 2264,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "e731e2df-f7f1-4913-af92-85043c92e38e",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "month": "2026-04",
+    "water_meter": 2466,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "539a485a-fdef-45f3-a58c-e56617b8ec98",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "month": "2026-04",
+    "water_meter": 1193,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "54957767-723b-49c9-8460-e18a519f16b4",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "month": "2026-04",
+    "water_meter": 1228,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "b4ec66d0-dead-418d-a9c8-f1377a8a770a",
+    "room_id": "99c3440c-f26f-4a79-b48b-98e41b6a1db4",
+    "month": "2026-04",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "a9c77e0a-2e90-4f59-a9e0-6fd51e813b09",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "month": "2026-04",
+    "water_meter": 2323,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "b5cba9dc-169d-49ad-826c-832b0bcd8281",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "month": "2026-04",
+    "water_meter": 3,
+    "electricity_meter": 0,
+    "created_at": "2026-04-30T14:06:19.734999+00:00",
+    "updated_at": "2026-06-01T09:05:54.800965+00:00"
+  },
+  {
+    "id": "80786fb4-45e3-45c9-8bcc-d909b9f1ae55",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2026-05",
+    "water_meter": 2284,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "53aacf1d-8994-4667-b0b5-5b4efbf8cc2a",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "month": "2026-05",
+    "water_meter": 2471,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "f5ad1610-2583-4950-9440-6a3cdd6cd71b",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "month": "2026-05",
+    "water_meter": 1202,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "689cde39-77b3-495a-ad01-416cd608ed81",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "month": "2026-05",
+    "water_meter": 1236,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "411b0a8b-33cf-4533-91a3-3c421b0bc234",
+    "room_id": "99c3440c-f26f-4a79-b48b-98e41b6a1db4",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "bed8c2ef-db8e-4735-a4ae-cb5a84587ab5",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "month": "2026-05",
+    "water_meter": 2353,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "b2a3c930-21ba-4372-b1de-4f22782c8359",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "month": "2026-05",
+    "water_meter": 3,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "989e101f-4948-4d0f-9ed5-08c9cd7187e1",
+    "room_id": "7adee0b4-91cd-43bd-924a-e9c62c4e6308",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "1efa0678-44be-4575-8428-39031e05a523",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "month": "2026-05",
+    "water_meter": 1935,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "4e14a44b-a035-42c2-9c56-edaab3418f66",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "month": "2026-05",
+    "water_meter": 1098,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "5e8e480a-e40d-4521-bd41-1c5be71fab5a",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "month": "2026-05",
+    "water_meter": 1470,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "6aa59a1d-2ffc-4ee6-8650-258ce1e271e3",
+    "room_id": "9f957b76-f335-4574-a68a-2013599c0ec2",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "084a0835-281d-4b70-a7c0-cc8ee779c45c",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "month": "2026-05",
+    "water_meter": 1539,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "b5135e9f-78a9-416e-8268-903effe7e641",
+    "room_id": "d7e32ec2-23da-4c30-b91f-d88cf7b9cc35",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "7386894a-b7a4-4939-9541-50ee5852a50f",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "month": "2026-05",
+    "water_meter": 2028,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "c724832f-3cdb-4517-934a-b54fc88f6a21",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "month": "2026-05",
+    "water_meter": 1130,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "03a07edc-7ceb-4143-b03a-dca7eb62c51f",
+    "room_id": "d9aefdd1-b0ff-4d60-9c4b-1952f91ccb2c",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "780a74b6-6484-411b-a70d-bb5548c8383d",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "month": "2026-05",
+    "water_meter": 1304,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "1d3f9f18-78bd-432b-bea3-0564c982c705",
+    "room_id": "acdbaeb7-053f-4821-a5ad-01fd861b1de6",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "9dc6b337-8306-4965-b62f-9538be7ae08e",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "month": "2026-05",
+    "water_meter": 1434,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "a7d829fc-5e94-4202-ae86-3b9728b37c83",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "month": "2026-05",
+    "water_meter": 1344,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "5a0bc9d6-5e40-4b4a-b8c3-4deee1cc464b",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "month": "2026-05",
+    "water_meter": 582,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "4ca96d7f-25b0-486e-b462-630c9399f2d2",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "month": "2026-05",
+    "water_meter": 1447,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "fd0a6c6b-0cf9-4ebb-ba12-456cc65791f9",
+    "room_id": "b349f391-6838-4ec0-95b6-2093cfbbd4f8",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "c02ffec2-907b-45d5-832d-b7e515d7b8bf",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "month": "2026-05",
+    "water_meter": 579,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "480d1cfd-579e-4d0d-b214-e2fc7ff6cb9c",
+    "room_id": "ce49ea8b-db3b-4632-bf92-e32125de13bf",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "c82b8f77-2722-47ab-a1ed-78f13193c712",
+    "room_id": "867fd14a-20e9-4760-bac7-b6db976d3a56",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "75bcf969-7441-4125-9154-b733201540ec",
+    "room_id": "a09ca9b9-b039-437f-aca6-1f4406448b1c",
+    "month": "2026-05",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "e1449fd8-df43-4000-be41-c1230bc2209d",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "month": "2026-05",
+    "water_meter": 1141,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "9e522515-e495-420d-a4ff-d0ebea987668",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "month": "2026-05",
+    "water_meter": 1269,
+    "electricity_meter": 0,
+    "created_at": "2026-06-01T08:59:40.917231+00:00",
+    "updated_at": "2026-06-01T08:59:49.562844+00:00"
+  },
+  {
+    "id": "ad7bab1d-4440-4918-a7e9-898eee23eb58",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2026-07",
+    "water_meter": 2308,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.338Z",
+    "updated_at": "2026-07-01T14:30:03.338Z"
+  },
+  {
+    "id": "d3bf1ed0-8b7c-428d-8966-b224f45b7cab",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "month": "2026-07",
+    "water_meter": 2478,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.406Z",
+    "updated_at": "2026-07-01T14:30:03.406Z"
+  },
+  {
+    "id": "2f98e46e-bd4b-4b33-88dd-6230d1ef3877",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "month": "2026-07",
+    "water_meter": 1212,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.470Z",
+    "updated_at": "2026-07-01T14:30:03.470Z"
+  },
+  {
+    "id": "9dc90dea-b021-42a5-ac46-49b643fa4064",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "month": "2026-07",
+    "water_meter": 1245,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.533Z",
+    "updated_at": "2026-07-01T14:30:03.533Z"
+  },
+  {
+    "id": "78ad4979-03ad-4270-b555-f039116083df",
+    "room_id": "99c3440c-f26f-4a79-b48b-98e41b6a1db4",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.593Z",
+    "updated_at": "2026-07-01T14:30:03.593Z"
+  },
+  {
+    "id": "b2a990a3-c568-4112-97f2-c221e235c658",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "month": "2026-07",
+    "water_meter": 2382,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.654Z",
+    "updated_at": "2026-07-01T14:30:03.654Z"
+  },
+  {
+    "id": "5d21326e-2344-45bf-b1de-33141dd07c83",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "month": "2026-07",
+    "water_meter": 42,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.718Z",
+    "updated_at": "2026-07-01T14:30:03.718Z"
+  },
+  {
+    "id": "fcd7ae8f-c725-4dfe-b814-f80a49bd0692",
+    "room_id": "7adee0b4-91cd-43bd-924a-e9c62c4e6308",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.778Z",
+    "updated_at": "2026-07-01T14:30:03.778Z"
+  },
+  {
+    "id": "3f52944a-1192-4415-8b88-9abdd07c599b",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "month": "2026-07",
+    "water_meter": 1943,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.838Z",
+    "updated_at": "2026-07-01T14:30:03.838Z"
+  },
+  {
+    "id": "8bbe4030-5fa6-4f63-9d1d-75df23e4cead",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "month": "2026-07",
+    "water_meter": 1098,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.903Z",
+    "updated_at": "2026-07-01T14:30:03.903Z"
+  },
+  {
+    "id": "5d6adb06-12c8-435f-8c6b-26e8f021c9d2",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "month": "2026-07",
+    "water_meter": 1473,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:03.965Z",
+    "updated_at": "2026-07-01T14:30:03.965Z"
+  },
+  {
+    "id": "cb1b3e50-cda9-4736-b8b1-89dc63b6a60c",
+    "room_id": "9f957b76-f335-4574-a68a-2013599c0ec2",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.027Z",
+    "updated_at": "2026-07-01T14:30:04.027Z"
+  },
+  {
+    "id": "e02cee16-7d05-4a7f-a9b3-365caca753da",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "month": "2026-07",
+    "water_meter": 1542,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.088Z",
+    "updated_at": "2026-07-01T14:30:04.088Z"
+  },
+  {
+    "id": "51c375f4-2a98-4b1d-ba4c-fd3dbe08aef9",
+    "room_id": "d7e32ec2-23da-4c30-b91f-d88cf7b9cc35",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.152Z",
+    "updated_at": "2026-07-01T14:30:04.152Z"
+  },
+  {
+    "id": "b0a649d2-1623-4d8f-97a3-f3c4333cc92f",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "month": "2026-07",
+    "water_meter": 2028,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.212Z",
+    "updated_at": "2026-07-01T14:30:04.212Z"
+  },
+  {
+    "id": "2b58cf2e-d7a2-45bf-a88f-753d21b2e1e9",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "month": "2026-07",
+    "water_meter": 1130,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.276Z",
+    "updated_at": "2026-07-01T14:30:04.276Z"
+  },
+  {
+    "id": "5fa90e75-451d-4bbd-8ef1-b0152bc31df4",
+    "room_id": "d9aefdd1-b0ff-4d60-9c4b-1952f91ccb2c",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.338Z",
+    "updated_at": "2026-07-01T14:30:04.338Z"
+  },
+  {
+    "id": "80edac28-fba0-467e-b2bc-093944260938",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "month": "2026-07",
+    "water_meter": 1308,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.408Z",
+    "updated_at": "2026-07-01T14:30:04.408Z"
+  },
+  {
+    "id": "2497a855-8956-4a2e-a1ae-f1fc2e9bce01",
+    "room_id": "acdbaeb7-053f-4821-a5ad-01fd861b1de6",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.471Z",
+    "updated_at": "2026-07-01T14:30:04.471Z"
+  },
+  {
+    "id": "20096206-fcec-4c55-8088-37c54a208a22",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "month": "2026-07",
+    "water_meter": 1442,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.532Z",
+    "updated_at": "2026-07-01T14:30:04.532Z"
+  },
+  {
+    "id": "174cd49b-ef01-4019-b775-63f6b7892ee6",
+    "room_id": "5139a9bb-f54e-41fe-8cf6-68938b4fe98a",
+    "month": "2026-06",
+    "water_meter": 2478,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:54.730Z",
+    "updated_at": "2026-07-01T14:47:54.730Z"
+  },
+  {
+    "id": "eb1c2821-466b-4a31-bdc3-acabb1b52f68",
+    "room_id": "f452e0d1-0be6-4496-a687-fad050751710",
+    "month": "2026-06",
+    "water_meter": 1212,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:54.860Z",
+    "updated_at": "2026-07-01T14:47:54.860Z"
+  },
+  {
+    "id": "61cc2fa0-7d3d-4de1-b700-d10802d17e19",
+    "room_id": "f8eba9a4-cea7-4c72-b034-084c8ec2e89d",
+    "month": "2026-06",
+    "water_meter": 1245,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:54.992Z",
+    "updated_at": "2026-07-01T14:47:54.993Z"
+  },
+  {
+    "id": "5b7980de-2bcd-426b-917a-1a7f13aaee42",
+    "room_id": "20804ce3-b09e-4afd-b7ce-fec1ee875691",
+    "month": "2026-06",
+    "water_meter": 2382,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:55.133Z",
+    "updated_at": "2026-07-01T14:47:55.133Z"
+  },
+  {
+    "id": "3a0a4cb7-72ca-45a8-a71f-007323896314",
+    "room_id": "aaff00a5-2d66-484d-9345-3f53e6d0f9ec",
+    "month": "2026-06",
+    "water_meter": 42,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:55.271Z",
+    "updated_at": "2026-07-01T14:47:55.271Z"
+  },
+  {
+    "id": "8bcfb086-78d8-4d4e-aba8-9cfba951c14a",
+    "room_id": "097d0d73-784c-4994-af08-cf3b8b7756bf",
+    "month": "2026-06",
+    "water_meter": 1943,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:55.420Z",
+    "updated_at": "2026-07-01T14:47:55.420Z"
+  },
+  {
+    "id": "05535e90-b8f3-400b-980a-5b189c19731a",
+    "room_id": "a5ba1062-81d6-4541-92ba-9a44541d03a6",
+    "month": "2026-06",
+    "water_meter": 1098,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:55.569Z",
+    "updated_at": "2026-07-01T14:47:55.569Z"
+  },
+  {
+    "id": "62ba8cab-e721-4fc6-ac0d-916cafb4df00",
+    "room_id": "ae4dab71-bb85-4041-a497-a22ef22223f5",
+    "month": "2026-06",
+    "water_meter": 1472,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:55.723Z",
+    "updated_at": "2026-07-01T14:47:55.723Z"
+  },
+  {
+    "id": "944c6e57-c704-46c1-9899-ed7ced214713",
+    "room_id": "8277fe7e-7305-40f0-a6ad-3553df7f8408",
+    "month": "2026-06",
+    "water_meter": 1542,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:55.854Z",
+    "updated_at": "2026-07-01T14:47:55.854Z"
+  },
+  {
+    "id": "bb6d9352-d230-42d0-b4dc-b02a45e2a50c",
+    "room_id": "9508140d-9ec1-4e6e-9c61-f53b33f29d87",
+    "month": "2026-06",
+    "water_meter": 2028,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:55.988Z",
+    "updated_at": "2026-07-01T14:47:55.988Z"
+  },
+  {
+    "id": "4579a658-6f67-4cfd-8d9a-b9213c605e51",
+    "room_id": "9888c2eb-82ea-4137-8ab2-4f07895332a4",
+    "month": "2026-06",
+    "water_meter": 1130,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:56.120Z",
+    "updated_at": "2026-07-01T14:47:56.120Z"
+  },
+  {
+    "id": "c2add678-3553-4f55-8d24-ddaf11ced752",
+    "room_id": "37dc6d1f-285c-4616-9c6c-56e2a517af56",
+    "month": "2026-06",
+    "water_meter": 1308,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:56.257Z",
+    "updated_at": "2026-07-01T14:47:56.257Z"
+  },
+  {
+    "id": "dade6ef3-844d-4449-b3d1-f79034bdff38",
+    "room_id": "4c8185c9-f5e2-4ab8-b3ab-9ca1cfb1d0cf",
+    "month": "2026-06",
+    "water_meter": 1442,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:56.400Z",
+    "updated_at": "2026-07-01T14:47:56.400Z"
+  },
+  {
+    "id": "ad22c5e3-275e-4d8d-a9c9-95e777a15143",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "month": "2026-06",
+    "water_meter": 1345,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:56.535Z",
+    "updated_at": "2026-07-01T14:47:56.535Z"
+  },
+  {
+    "id": "0b4626aa-88a3-47c5-b41a-fae7a2df36b7",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "month": "2026-06",
+    "water_meter": 595,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:56.666Z",
+    "updated_at": "2026-07-01T14:47:56.666Z"
+  },
+  {
+    "id": "d91ada69-5443-434c-bb91-92e4b0554bb5",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "month": "2026-06",
+    "water_meter": 1447,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:56.791Z",
+    "updated_at": "2026-07-01T14:47:56.791Z"
+  },
+  {
+    "id": "3e305d39-7d18-476e-88d6-42b1c78e6eb5",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "month": "2026-06",
+    "water_meter": 593,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:56.931Z",
+    "updated_at": "2026-07-01T14:47:56.931Z"
+  },
+  {
+    "id": "9104afb2-3299-4588-bb84-86fe6c07789d",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "month": "2026-06",
+    "water_meter": 1142,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:57.058Z",
+    "updated_at": "2026-07-01T14:47:57.058Z"
+  },
+  {
+    "id": "e0c0f306-b37a-4813-9df6-b756f2ba657f",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "month": "2026-06",
+    "water_meter": 1269,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:57.193Z",
+    "updated_at": "2026-07-01T14:47:57.193Z"
+  },
+  {
+    "id": "f720b217-a0dc-4044-a3dc-752dbd337cae",
+    "room_id": "af1c474a-a774-423c-9533-2a646d9ead72",
+    "month": "2026-07",
+    "water_meter": 1345,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.599Z",
+    "updated_at": "2026-07-01T14:30:04.599Z"
+  },
+  {
+    "id": "f75534c9-e70f-4ae8-971b-e72c2aeb5174",
+    "room_id": "7f5c4683-22ad-46e2-b2a3-1cd000d67965",
+    "month": "2026-07",
+    "water_meter": 595,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.663Z",
+    "updated_at": "2026-07-01T14:30:04.663Z"
+  },
+  {
+    "id": "14a0db44-3a7a-4342-8a14-03b14efd44ca",
+    "room_id": "db573b23-3396-4811-981b-9596ea20843f",
+    "month": "2026-07",
+    "water_meter": 1447,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.723Z",
+    "updated_at": "2026-07-01T14:30:04.723Z"
+  },
+  {
+    "id": "066819e3-5916-4fb2-9aec-797c1b5741ef",
+    "room_id": "b349f391-6838-4ec0-95b6-2093cfbbd4f8",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.784Z",
+    "updated_at": "2026-07-01T14:30:04.784Z"
+  },
+  {
+    "id": "b98a821e-ec4f-4fa6-994e-ee2f56ad0a78",
+    "room_id": "73063a63-1ba4-4ad6-8683-8119db18d027",
+    "month": "2026-07",
+    "water_meter": 593,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.846Z",
+    "updated_at": "2026-07-01T14:30:04.846Z"
+  },
+  {
+    "id": "37730595-6983-4b38-9fec-7fe253fe0eed",
+    "room_id": "ce49ea8b-db3b-4632-bf92-e32125de13bf",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.906Z",
+    "updated_at": "2026-07-01T14:30:04.906Z"
+  },
+  {
+    "id": "c4239e13-ffac-4361-8df3-9ca7c3af1ba0",
+    "room_id": "867fd14a-20e9-4760-bac7-b6db976d3a56",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:04.967Z",
+    "updated_at": "2026-07-01T14:30:04.967Z"
+  },
+  {
+    "id": "05dbfad6-0aa5-452d-b160-967d03155dfb",
+    "room_id": "a09ca9b9-b039-437f-aca6-1f4406448b1c",
+    "month": "2026-07",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:05.031Z",
+    "updated_at": "2026-07-01T14:30:05.031Z"
+  },
+  {
+    "id": "820c92fb-24c3-4f0d-99e4-dee255b1e007",
+    "room_id": "f3e534f0-0dc2-4087-a35f-417b84e01054",
+    "month": "2026-07",
+    "water_meter": 1142,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:05.091Z",
+    "updated_at": "2026-07-01T14:30:05.091Z"
+  },
+  {
+    "id": "594d9da4-b4b5-4883-a25a-8d1a7cc4b244",
+    "room_id": "25317701-330b-45d4-bb93-6a5e2a8517c2",
+    "month": "2026-07",
+    "water_meter": 1269,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:30:05.153Z",
+    "updated_at": "2026-07-01T14:30:05.153Z"
+  },
+  {
+    "id": "5c7dfbcb-d22b-4327-b262-a4c3f6edac64",
+    "room_id": "99c3440c-f26f-4a79-b48b-98e41b6a1db4",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:09.474Z",
+    "updated_at": "2026-07-01T14:47:09.474Z"
+  },
+  {
+    "id": "f1d98898-b993-41c0-aae6-e4944b1e39d7",
+    "room_id": "7adee0b4-91cd-43bd-924a-e9c62c4e6308",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:09.929Z",
+    "updated_at": "2026-07-01T14:47:09.929Z"
+  },
+  {
+    "id": "99aa949c-38a1-403c-a9a8-76e8de0188dd",
+    "room_id": "9f957b76-f335-4574-a68a-2013599c0ec2",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:10.495Z",
+    "updated_at": "2026-07-01T14:47:10.495Z"
+  },
+  {
+    "id": "c9d2e659-725b-42e7-b303-df748461ace5",
+    "room_id": "d7e32ec2-23da-4c30-b91f-d88cf7b9cc35",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:10.808Z",
+    "updated_at": "2026-07-01T14:47:10.808Z"
+  },
+  {
+    "id": "97a9b00f-2c29-4bf6-ae76-2464c8b2fc59",
+    "room_id": "d9aefdd1-b0ff-4d60-9c4b-1952f91ccb2c",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:11.207Z",
+    "updated_at": "2026-07-01T14:47:11.207Z"
+  },
+  {
+    "id": "5579e6e7-672c-4139-9127-768aa50573ea",
+    "room_id": "acdbaeb7-053f-4821-a5ad-01fd861b1de6",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:11.503Z",
+    "updated_at": "2026-07-01T14:47:11.503Z"
+  },
+  {
+    "id": "b2ffc9ef-c13e-4c45-b8a6-ebeaf6408024",
+    "room_id": "b349f391-6838-4ec0-95b6-2093cfbbd4f8",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:12.178Z",
+    "updated_at": "2026-07-01T14:47:12.178Z"
+  },
+  {
+    "id": "57314f47-a012-490b-8018-883c7c79c590",
+    "room_id": "ce49ea8b-db3b-4632-bf92-e32125de13bf",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:12.463Z",
+    "updated_at": "2026-07-01T14:47:12.463Z"
+  },
+  {
+    "id": "002e4466-2a3a-42f4-b38e-7345c8d54b88",
+    "room_id": "867fd14a-20e9-4760-bac7-b6db976d3a56",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:12.599Z",
+    "updated_at": "2026-07-01T14:47:12.599Z"
+  },
+  {
+    "id": "02047393-0c3e-47d4-bc21-ae8c8efa01c4",
+    "room_id": "a09ca9b9-b039-437f-aca6-1f4406448b1c",
+    "month": "2026-06",
+    "water_meter": 0,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:12.775Z",
+    "updated_at": "2026-07-01T14:47:12.775Z"
+  },
+  {
+    "id": "1804d061-e0c1-4376-baee-992834e8e899",
+    "room_id": "6982e435-1589-4cca-8ba1-b142565b5e8d",
+    "month": "2026-06",
+    "water_meter": 2308,
+    "electricity_meter": 0,
+    "created_at": "2026-07-01T14:47:54.594Z",
+    "updated_at": "2026-07-01T14:47:54.594Z"
+  }
+]
