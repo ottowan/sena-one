@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import multer from 'multer';
 import fs from 'node:fs';
@@ -30,7 +31,14 @@ const port = Number(process.env.PORT || 3000);
 const sessionCookie = 'sena_session';
 const sessionSecret = process.env.SESSION_SECRET || 'change-this-before-production';
 const isProduction = process.env.NODE_ENV === 'production';
+const frontendOrigin = process.env.FRONTEND_ORIGIN || process.env.CORS_ORIGIN || '';
 
+if (frontendOrigin) {
+    app.use(cors({
+        origin: frontendOrigin,
+        credentials: true,
+    }));
+}
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
@@ -188,7 +196,7 @@ function setSessionCookie(res, user) {
     res.cookie(sessionCookie, signSession(user), {
         httpOnly: true,
         secure: isProduction,
-        sameSite: 'lax',
+        sameSite: isProduction && frontendOrigin ? 'none' : 'lax',
         maxAge: 1000 * 60 * 60 * 12,
         path: '/',
     });

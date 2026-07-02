@@ -112,13 +112,21 @@ Publish directory: dist
 ให้ตั้ง environment variable บน Netlify:
 
 ```txt
-VITE_API_BASE=https://your-api-domain.example.com
+VITE_API_BASE=https://your-backend-domain.example.com
 ```
+
+อย่าใส่ `VITE_API_BASE=https://sena-one.netlify.app` เพราะค่านี้ต้องเป็น URL ของ backend API ไม่ใช่ URL frontend
 
 จากนั้น backend ต้องเปิด HTTPS และตอบ API เช่น:
 
 ```txt
-https://your-api-domain.example.com/api/health
+https://your-backend-domain.example.com/api/health
+```
+
+ฝั่ง backend ให้ตั้งค่า origin ของ Netlify เพื่อให้ cookie login ใช้ข้ามโดเมนได้:
+
+```txt
+FRONTEND_ORIGIN=https://sena-one.netlify.app
 ```
 
 ไม่แนะนำให้วาง SQLite backend ลง Netlify Functions สำหรับข้อมูลจริง เพราะ function ไม่มี SQLite file storage แบบถาวรเหมือน server ปกติ
