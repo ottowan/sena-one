@@ -15,49 +15,73 @@ import {
     DialogRoot,
     DialogTitle,
     DialogTrigger,
-} from "../../components/ui/dialog"
+} from '../../components/ui/dialog';
+
+const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+const formatThaiMonth = (dateStr: string) => {
+    if (!dateStr) return '-';
+    if (!/^\d{4}-\d{2}$/.test(dateStr)) return dateStr;
+
+    const [year, month] = dateStr.split('-');
+    const monthThai = thaiMonths[Number(month) - 1];
+    return `${monthThai} ${Number(year) + 543}`;
+};
 
 export const TenantDashboardPage: React.FC = () => {
     const { profile } = useAuth();
     const navigate = useNavigate();
+    const [tenantId, setTenantId] = useState<string | null>(null);
     const [contract, setContract] = useState<any>(null);
     const [unpaidInvoices, setUnpaidInvoices] = useState<any[]>([]);
     const [meterHistory, setMeterHistory] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [contractLoading, setContractLoading] = useState(true);
+    const [invoiceLoading, setInvoiceLoading] = useState(false);
+    const [meterLoading, setMeterLoading] = useState(false);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     const fetchMeterHistory = async (roomId: string, year: number) => {
-        const startMonth = `${year}-01`;
-        const endMonth = `${year}-12`;
-        const { data } = await pgliteClient
-            .from('history_meter')
-            .select('*')
-            .eq('room_id', roomId)
-            .gte('month', startMonth)
-            .lte('month', endMonth)
-            .order('month', { ascending: false });
+        setMeterLoading(true);
+        try {
+            const { data } = await pgliteClient
+                .from('history_meter')
+                .select('*')
+                .eq('room_id', roomId)
+                .gte('month', `${year}-01`)
+                .lte('month', `${year}-12`)
+                .order('month', { ascending: false });
 
-        setMeterHistory(data || []);
+            setMeterHistory(data || []);
+        } finally {
+            setMeterLoading(false);
+        }
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (!profile?.id) return;
+        let cancelled = false;
 
+        const fetchContract = async () => {
+            if (!profile?.id) {
+                setContractLoading(false);
+                return;
+            }
+
+            setContractLoading(true);
             try {
-                // 1. Get Tenant Record linked to this User
                 const { data: tenant } = await pgliteClient
                     .from('tenants')
                     .select('id')
                     .eq('user_id', profile.id)
                     .maybeSingle();
 
+                if (cancelled) return;
+                setTenantId(tenant?.id || null);
+
                 if (!tenant) {
-                    setIsLoading(false);
+                    setContract(null);
                     return;
                 }
 
-                // 2. Get Active Contract using Tenant ID
                 const { data: contractData } = await pgliteClient
                     .from('contracts')
                     .select('*, room:rooms(*)')
@@ -65,62 +89,91 @@ export const TenantDashboardPage: React.FC = () => {
                     .eq('status', 'active')
                     .maybeSingle();
 
-                if (contractData) {
-                    // Normalize room data (handle array from join)
-                    if (Array.isArray(contractData.room)) {
-                        contractData.room = contractData.room[0];
-                    }
+                if (cancelled) return;
 
-                    // Fallback: Fetch room manually if missing
-                    if (!contractData.room && contractData.room_id) {
-                        const { data: roomData } = await pgliteClient
-                            .from('rooms')
-                            .select('*')
-                            .eq('id', contractData.room_id)
-                            .maybeSingle();
-                        if (roomData) contractData.room = roomData;
-                    }
+                if (contractData && Array.isArray(contractData.room)) {
+                    contractData.room = contractData.room[0];
                 }
 
-                setContract(contractData);
-
-                // 3. Get Unpaid Invoices
-                if (contractData) {
-                    const { data: invoices } = await pgliteClient
-                        .from('invoices')
+                if (contractData && !contractData.room && contractData.room_id) {
+                    const { data: roomData } = await pgliteClient
+                        .from('rooms')
                         .select('*')
-                        .eq('contract_id', contractData.id)
-                        .eq('status', 'pending')
-                        .order('due_date', { ascending: true });
-
-                    setUnpaidInvoices(invoices || []);
-
-                    // 4. Get Meter History for selected year
-                    await fetchMeterHistory(contractData.room_id, selectedYear);
+                        .eq('id', contractData.room_id)
+                        .maybeSingle();
+                    if (roomData) contractData.room = roomData;
                 }
+
+                setContract(contractData || null);
             } catch (error) {
                 console.error(error);
             } finally {
-                setIsLoading(false);
+                if (!cancelled) setContractLoading(false);
             }
         };
 
-        fetchData();
-    }, [profile, selectedYear]);
+        void fetchContract();
 
-    const totalDue = unpaidInvoices.reduce((sum, inv) => sum + inv.total_amount, 0);
+        return () => {
+            cancelled = true;
+        };
+    }, [profile?.id]);
 
-    if (isLoading) return <Box>กำลังโหลด...</Box>;
+    useEffect(() => {
+        let cancelled = false;
+
+        const fetchInvoices = async () => {
+            if (!contract?.id) {
+                setUnpaidInvoices([]);
+                return;
+            }
+
+            setInvoiceLoading(true);
+            try {
+                const { data } = await pgliteClient
+                    .from('invoices')
+                    .select('*')
+                    .eq('contract_id', contract.id)
+                    .eq('status', 'pending')
+                    .order('due_date', { ascending: true });
+
+                if (!cancelled) setUnpaidInvoices(data || []);
+            } finally {
+                if (!cancelled) setInvoiceLoading(false);
+            }
+        };
+
+        void fetchInvoices();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [contract?.id]);
+
+    useEffect(() => {
+        if (!contract?.room_id) {
+            setMeterHistory([]);
+            return;
+        }
+
+        void fetchMeterHistory(contract.room_id, selectedYear);
+    }, [contract?.room_id, selectedYear]);
+
+    const totalDue = unpaidInvoices.reduce((sum, inv) => sum + Number(inv.total_amount || 0), 0);
 
     return (
         <VStack align="stretch" gap={8} py={4}>
             <Box>
                 <Heading size="xl" mb={2}>สวัสดี, คุณ{profile?.full_name}</Heading>
                 <Text color="gray.600">ยินดีต้อนรับสู่ระบบจัดการหอพัก Sena-One</Text>
+                {contractLoading && (
+                    <Text color="gray.500" fontSize="sm" mt={2}>
+                        กำลังโหลดข้อมูลห้องพัก...
+                    </Text>
+                )}
             </Box>
 
             <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={6}>
-                {/* Room Info */}
                 <Card.Root>
                     <Card.Body>
                         <HStack align="start" justify="space-between">
@@ -136,7 +189,6 @@ export const TenantDashboardPage: React.FC = () => {
                     </Card.Body>
                 </Card.Root>
 
-                {/* Outstanding Balance */}
                 <Card.Root>
                     <Card.Body>
                         <HStack align="start" justify="space-between">
@@ -145,7 +197,9 @@ export const TenantDashboardPage: React.FC = () => {
                                 <Heading size="2xl" color={totalDue > 0 ? 'red.500' : 'green.500'}>
                                     {formatCurrency(totalDue)}
                                 </Heading>
-                                <Text fontSize="xs" color="gray.500">{unpaidInvoices.length} รายการที่ต้องชำระ</Text>
+                                <Text fontSize="xs" color="gray.500">
+                                    {invoiceLoading ? 'กำลังอัปเดต...' : `${unpaidInvoices.length} รายการที่ต้องชำระ`}
+                                </Text>
                             </VStack>
                             <Box p={3} bg={totalDue > 0 ? 'red.50' : 'green.50'} borderRadius="lg" color={totalDue > 0 ? 'red.600' : 'green.600'}>
                                 <Icon fontSize="2xl"><LuWallet /></Icon>
@@ -154,7 +208,6 @@ export const TenantDashboardPage: React.FC = () => {
                     </Card.Body>
                 </Card.Root>
 
-                {/* Quick Actions */}
                 <Card.Root>
                     <Card.Body>
                         <Text color="gray.500" fontSize="sm" mb={4}>เมนูด่วน</Text>
@@ -171,16 +224,15 @@ export const TenantDashboardPage: React.FC = () => {
                     </Card.Body>
                 </Card.Root>
 
-                {/* Meter Reading Input */}
                 <Card.Root>
                     <Card.Body>
-                        <Text color="gray.500" fontSize="sm" mb={4}>จดมิเตอร์น้ำ (ส่งด้วยตนเอง)</Text>
+                        <Text color="gray.500" fontSize="sm" mb={4}>จดมิเตอร์น้ำด้วยตนเอง</Text>
                         <MeterReadingDialog
                             contract={contract}
+                            disabled={!contract}
                             onSuccess={() => {
-                                // Refresh meter history
                                 if (contract?.room_id) {
-                                    fetchMeterHistory(contract.room_id, selectedYear);
+                                    void fetchMeterHistory(contract.room_id, selectedYear);
                                 }
                             }}
                         />
@@ -188,7 +240,14 @@ export const TenantDashboardPage: React.FC = () => {
                 </Card.Root>
             </Grid>
 
-            {/* Meter History Table */}
+            {tenantId && !contractLoading && !contract && (
+                <Card.Root>
+                    <Card.Body>
+                        <Text color="gray.600">ยังไม่พบสัญญาที่กำลังใช้งานสำหรับบัญชีนี้</Text>
+                    </Card.Body>
+                </Card.Root>
+            )}
+
             {contract && (
                 <Card.Root>
                     <Card.Header>
@@ -211,8 +270,8 @@ export const TenantDashboardPage: React.FC = () => {
                                     value={selectedYear}
                                     onChange={(e) => setSelectedYear(Number(e.target.value))}
                                 >
-                                    {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(y => (
-                                        <option key={y} value={y}>พ.ศ. {y + 543}</option>
+                                    {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                                        <option key={year} value={year}>พ.ศ. {year + 543}</option>
                                     ))}
                                 </select>
                             </Box>
@@ -228,7 +287,11 @@ export const TenantDashboardPage: React.FC = () => {
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                                {meterHistory.length === 0 ? (
+                                {meterLoading ? (
+                                    <Table.Row>
+                                        <Table.Cell colSpan={3} textAlign="center">กำลังโหลด...</Table.Cell>
+                                    </Table.Row>
+                                ) : meterHistory.length === 0 ? (
                                     <Table.Row>
                                         <Table.Cell colSpan={3} textAlign="center">ไม่พบข้อมูลสำหรับปีนี้</Table.Cell>
                                     </Table.Row>
@@ -238,17 +301,10 @@ export const TenantDashboardPage: React.FC = () => {
                                         ? Math.max(0, record.water_meter - prevRecord.water_meter)
                                         : '-';
 
-                                    // Format month to Thai
-                                    const [year, month] = record.month.split('-');
-                                    const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
-                                        'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-                                    const monthThai = thaiMonths[parseInt(month) - 1];
-                                    const yearThai = parseInt(year) + 543;
-
                                     return (
                                         <Table.Row key={record.month}>
                                             <Table.Cell fontWeight="medium">
-                                                {monthThai} {yearThai}
+                                                {formatThaiMonth(record.month)}
                                             </Table.Cell>
                                             <Table.Cell textAlign="right">
                                                 {record.water_meter?.toLocaleString() || '-'}
@@ -268,25 +324,15 @@ export const TenantDashboardPage: React.FC = () => {
     );
 };
 
-// Helper to format YYYY-MM to Thai
-const formatThaiMonth = (dateStr: string) => {
-    if (!dateStr) return '-';
-    // Validate format
-    if (!/^\d{4}-\d{2}$/.test(dateStr)) return dateStr;
-
-    const [year, month] = dateStr.split('-');
-    const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
-        'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-    const monthIndex = parseInt(month) - 1;
-    if (monthIndex < 0 || monthIndex > 11) return dateStr;
-
-    const monthThai = thaiMonths[monthIndex];
-    const yearThai = parseInt(year) + 543;
-    return `${monthThai} ${yearThai}`;
-};
-
-// Sub-component for Meter Dialog
-const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?: () => void }) => {
+const MeterReadingDialog = ({
+    contract,
+    disabled,
+    onSuccess,
+}: {
+    contract: any;
+    disabled?: boolean;
+    onSuccess?: () => void;
+}) => {
     const [isOpen, setIsOpen] = useState(false);
     const [waterMeter, setWaterMeter] = useState('');
     const [prevWaterMeter, setPrevWaterMeter] = useState(0);
@@ -296,51 +342,19 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
     const [isEdit, setIsEdit] = useState(false);
     const [invoiceIssued, setInvoiceIssued] = useState(false);
 
-    const handleOpen = async () => {
-        setIsOpen(true);
-        if (!contract?.room_id) return;
-
-        // 1. Calculate Smart Default Month
-        const { data: history } = await pgliteClient
-            .from('history_meter')
-            .select('month')
-            .eq('room_id', contract.room_id)
-            .order('month', { ascending: false })
-            .limit(12);
-
-        const filledMonths = new Set((history || []).map(h => h.month));
-
-        let targetMonth = new Date().toISOString().slice(0, 7); // Default: Today's month
-        const today = new Date();
-
-        // Find the LATEST month (going back from today) that is MISSING.
-        for (let i = 0; i < 3; i++) {
-            const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-            const m = d.toISOString().slice(0, 7);
-            if (!filledMonths.has(m)) {
-                targetMonth = m;
-                break;
-            }
-        }
-
-        setSelectedMonth(targetMonth);
-        await loadMonthData(targetMonth);
-    };
-
     const loadMonthData = async (monthStr: string) => {
         if (!contract?.room_id) return;
 
-        // Reset state
         setInvoiceIssued(false);
 
-        // 1. Check if Selected Month already exists (Edit Mode)
-        const { data: currentData } = await pgliteClient.from('history_meter')
+        const { data: currentData } = await pgliteClient
+            .from('history_meter')
             .select('water_meter')
             .eq('room_id', contract.room_id)
             .eq('month', monthStr)
             .maybeSingle();
 
-        if (currentData && currentData.water_meter) {
+        if (currentData?.water_meter) {
             setWaterMeter(currentData.water_meter.toString());
             setIsEdit(true);
         } else {
@@ -348,19 +362,12 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
             setIsEdit(false);
         }
 
-        // 2. CHECK FOR INVOICE (New Logic)
-        // If an invoice exists for this month (and is not cancelled), block editing.
-        // Invoice billing_month is usually YYYY-MM-DD (first of month) or YYYY-MM.
-        // We compare using >= startOfMonth and < nextMonth to be safe.
         const startDate = `${monthStr}-01`;
-        const [y, m] = monthStr.split('-').map(Number);
-        const nextMonthDate = new Date(y, m, 1); // Month is 0-indexed in Date ctor, so m is next month? No, Date(y, m, 1) where m is 1-12... wait.
-        // Date(year, monthIndex) -> monthIndex 0=Jan.
-        // monthStr '2024-01' -> y=2024, m=1.
-        // nextMonth needs to be index 1 (Feb). so m is correct index for next month.
-        const nextMonthStr = nextMonthDate.toISOString().slice(0, 10);
+        const [year, month] = monthStr.split('-').map(Number);
+        const nextMonthStr = new Date(year, month, 1).toISOString().slice(0, 10);
 
-        const { data: invoice } = await pgliteClient.from('invoices')
+        const { data: invoice } = await pgliteClient
+            .from('invoices')
             .select('id')
             .eq('room_id', contract.room_id)
             .neq('status', 'cancelled')
@@ -369,12 +376,10 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
             .limit(1)
             .maybeSingle();
 
-        if (invoice) {
-            setInvoiceIssued(true);
-        }
+        setInvoiceIssued(!!invoice);
 
-        // 3. Fetch "Previous" Meter Reading reliably
-        const { data: prevData } = await pgliteClient.from('history_meter')
+        const { data: prevData } = await pgliteClient
+            .from('history_meter')
             .select('water_meter, month')
             .eq('room_id', contract.room_id)
             .lt('month', monthStr)
@@ -386,13 +391,41 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
         setPrevMonthStr(prevData?.month || '');
     };
 
+    const handleOpen = async () => {
+        setIsOpen(true);
+        if (!contract?.room_id) return;
+
+        const { data: history } = await pgliteClient
+            .from('history_meter')
+            .select('month')
+            .eq('room_id', contract.room_id)
+            .order('month', { ascending: false })
+            .limit(12);
+
+        const filledMonths = new Set((history || []).map((item) => item.month));
+        const today = new Date();
+        let targetMonth = today.toISOString().slice(0, 7);
+
+        for (let i = 0; i < 3; i += 1) {
+            const monthDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
+            const monthValue = monthDate.toISOString().slice(0, 7);
+            if (!filledMonths.has(monthValue)) {
+                targetMonth = monthValue;
+                break;
+            }
+        }
+
+        setSelectedMonth(targetMonth);
+        await loadMonthData(targetMonth);
+    };
+
     const handleSubmit = async () => {
-        if (!waterMeter || !contract?.room_id || !selectedMonth) return;
-        if (invoiceIssued) return; // double check
+        if (!waterMeter || !contract?.room_id || !selectedMonth || invoiceIssued) return;
 
         setIsLoading(true);
         try {
-            const { data: existing } = await pgliteClient.from('history_meter')
+            const { data: existing } = await pgliteClient
+                .from('history_meter')
                 .select('*')
                 .eq('room_id', contract.room_id)
                 .eq('month', selectedMonth)
@@ -402,17 +435,19 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
                 room_id: contract.room_id,
                 month: selectedMonth,
                 water_meter: parseFloat(waterMeter),
-                electricity_meter: existing?.electricity_meter || 0
+                electricity_meter: existing?.electricity_meter || 0,
             };
 
-            const { error } = await pgliteClient.from('history_meter').upsert(payload, { onConflict: 'room_id, month' });
+            const { error } = await pgliteClient
+                .from('history_meter')
+                .upsert(payload, { onConflict: 'room_id, month' });
+
             if (error) throw error;
 
             toaster.create({ title: 'บันทึกมิเตอร์น้ำเรียบร้อย', type: 'success' });
             setIsOpen(false);
             setWaterMeter('');
-
-            if (onSuccess) onSuccess();
+            onSuccess?.();
         } catch (error) {
             console.error(error);
             toaster.create({ title: 'เกิดข้อผิดพลาด', type: 'error' });
@@ -422,9 +457,9 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
     };
 
     return (
-        <DialogRoot open={isOpen} onOpenChange={(e) => setIsOpen(e.open)}>
+        <DialogRoot open={isOpen} onOpenChange={(event) => setIsOpen(event.open)}>
             <DialogTrigger asChild>
-                <Button variant="surface" width="full" onClick={handleOpen}>
+                <Button variant="surface" width="full" onClick={handleOpen} disabled={disabled}>
                     <Icon mr={2}><LuWrench /></Icon>
                     {isEdit ? 'แก้ไขมิเตอร์น้ำ' : 'บันทึกมิเตอร์น้ำ'}
                 </Button>
@@ -471,7 +506,9 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
                                 <Text fontSize="sm" color="blue.700">เลขครั้งก่อน ({formatThaiMonth(prevMonthStr)}):</Text>
                                 <Text fontWeight="bold" color="blue.800">{prevWaterMeter.toLocaleString()}</Text>
                             </HStack>
-                            {prevWaterMeter === 0 && <Text fontSize="xs" color="gray.500" mt={1}>*ไม่พบข้อมูลเดือนก่อนหน้า</Text>}
+                            {prevWaterMeter === 0 && (
+                                <Text fontSize="xs" color="gray.500" mt={1}>*ไม่พบข้อมูลเดือนก่อนหน้า</Text>
+                            )}
                         </Box>
 
                         <Box>
@@ -479,7 +516,7 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
                             <Input
                                 type="number"
                                 value={waterMeter}
-                                onChange={(e) => setWaterMeter(e.target.value)}
+                                onChange={(event) => setWaterMeter(event.target.value)}
                                 placeholder="กรอกเลขมิเตอร์"
                                 size="lg"
                                 disabled={invoiceIssued}
@@ -487,7 +524,9 @@ const MeterReadingDialog = ({ contract, onSuccess }: { contract: any; onSuccess?
                         </Box>
 
                         {parseFloat(waterMeter) < prevWaterMeter && waterMeter !== '' && (
-                            <Text color="red.500" fontSize="xs">ตัวเลขต่ำกว่าครั้งก่อน ({prevWaterMeter})</Text>
+                            <Text color="red.500" fontSize="xs">
+                                ตัวเลขต่ำกว่าครั้งก่อน ({prevWaterMeter})
+                            </Text>
                         )}
                     </VStack>
                 </DialogBody>

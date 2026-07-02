@@ -6,7 +6,7 @@ interface AuthContextType {
     user: CustomUser | null;
     profile: CustomUser | null; // Keep for backward compatibility
     loading: boolean;
-    signIn: (phone: string, password: string) => Promise<{ error?: string }>;
+    signIn: (phone: string, password: string) => Promise<{ user?: CustomUser; error?: string }>;
     signOut: () => void;
 }
 
@@ -33,6 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const currentUser = authService.getCurrentUser();
         setUser(currentUser);
         setLoading(false);
+        void authService.warmUp();
     }, []);
 
     const signIn = async (phone: string, password: string) => {
@@ -43,7 +44,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
 
         setUser(loggedInUser || null);
-        return {};
+        return { user: loggedInUser };
     };
 
     const signOut = () => {

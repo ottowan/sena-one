@@ -8,7 +8,6 @@ import {
     HStack,
     VStack,
     Icon,
-    Stat,
     Badge,
 } from '@chakra-ui/react';
 import {
@@ -26,7 +25,7 @@ import { reportService } from '../../services/reportService';
 interface StatCardProps {
     title: string;
     value: string | number;
-    icon: any;
+    icon: React.ReactNode;
     colorScheme: string;
     trend?: {
         value: number;
@@ -57,9 +56,7 @@ const StatCard: React.FC<StatCardProps> = ({
                         <Heading size="2xl">{value}</Heading>
                         {trend && (
                             <HStack gap={1} fontSize="sm">
-                                <Icon
-                                    color={trend.isPositive ? 'success.500' : 'danger.500'}
-                                >
+                                <Icon color={trend.isPositive ? 'success.500' : 'danger.500'}>
                                     {trend.isPositive ? <LuTrendingUp /> : <LuTrendingDown />}
                                 </Icon>
                                 <Text
@@ -98,40 +95,51 @@ export const DashboardPage: React.FC = () => {
         totalRooms: 0,
         availableRooms: 0,
         occupiedRooms: 0,
+        maintenanceRooms: 0,
         monthlyRevenue: 0,
         overduePayments: 0,
         activeTenants: 0,
         openMaintenanceRequests: 0,
     });
     const [recentActivity, setRecentActivity] = React.useState<any[]>([]);
-    const [isLoading, setIsLoading] = React.useState(true);
+    const [statsLoading, setStatsLoading] = React.useState(true);
+    const [activityLoading, setActivityLoading] = React.useState(true);
 
     React.useEffect(() => {
-        const fetchDashboardData = async () => {
+        let cancelled = false;
+
+        const fetchStats = async () => {
             try {
-                const [statsData, activityData] = await Promise.all([
-                    reportService.getDashboardStats(),
-                    reportService.getRecentActivity()
-                ]);
-                setStats(statsData);
-                setRecentActivity(activityData);
+                const statsData = await reportService.getDashboardStats();
+                if (!cancelled) setStats(statsData);
             } catch (error) {
-                console.error('Error fetching dashboard data:', error);
+                console.error('Error fetching dashboard stats:', error);
             } finally {
-                setIsLoading(false);
+                if (!cancelled) setStatsLoading(false);
             }
         };
 
-        fetchDashboardData();
-    }, []);
+        const fetchRecentActivity = async () => {
+            try {
+                const activityData = await reportService.getRecentActivity();
+                if (!cancelled) setRecentActivity(activityData);
+            } catch (error) {
+                console.error('Error fetching recent activity:', error);
+            } finally {
+                if (!cancelled) setActivityLoading(false);
+            }
+        };
 
-    if (isLoading) {
-        return <Box p={6}>กำลังโหลดข้อมูล...</Box>;
-    }
+        void fetchStats();
+        void fetchRecentActivity();
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     return (
         <VStack align="stretch" gap={8} p={6}>
-            {/* Header */}
             <Box>
                 <Heading size="2xl" mb={2}>
                     แดชบอร์ด
@@ -139,9 +147,13 @@ export const DashboardPage: React.FC = () => {
                 <Text color="gray.600" fontSize="lg">
                     ภาพรวมระบบจัดการหอพัก Sena-One
                 </Text>
+                {statsLoading && (
+                    <Text color="gray.500" fontSize="sm" mt={2}>
+                        กำลังอัปเดตข้อมูลสรุป...
+                    </Text>
+                )}
             </Box>
 
-            {/* Stats Grid */}
             <Grid
                 templateColumns={{
                     base: '1fr',
@@ -166,7 +178,6 @@ export const DashboardPage: React.FC = () => {
                     value={formatCurrency(stats.monthlyRevenue)}
                     icon={<LuDollarSign />}
                     colorScheme="brand"
-                // Trend logic would need historical comparison, skipping for now
                 />
 
                 <StatCard
@@ -188,7 +199,6 @@ export const DashboardPage: React.FC = () => {
                 />
             </Grid>
 
-            {/* Additional Stats */}
             <Grid
                 templateColumns={{
                     base: '1fr',
@@ -259,15 +269,20 @@ export const DashboardPage: React.FC = () => {
                 </Card.Root>
             </Grid>
 
-            {/* Recent Activity */}
             <Card.Root>
                 <Card.Header>
                     <Heading size="md">กิจกรรมล่าสุด</Heading>
                 </Card.Header>
                 <Card.Body>
                     <VStack align="stretch" gap={4}>
-                        {recentActivity.length === 0 ? (
-                            <Text color="gray.500" textAlign="center">ไม่มีกิจกรรมล่าสุด</Text>
+                        {activityLoading ? (
+                            <Text color="gray.500" textAlign="center">
+                                กำลังโหลดกิจกรรมล่าสุด...
+                            </Text>
+                        ) : recentActivity.length === 0 ? (
+                            <Text color="gray.500" textAlign="center">
+                                ไม่มีกิจกรรมล่าสุด
+                            </Text>
                         ) : (
                             recentActivity.map((activity) => (
                                 <HStack key={`${activity.type}-${activity.id}`} gap={4} p={4} bg="gray.50" borderRadius="md">

@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Box,
     Container,
     Heading,
     Input,
-    Stack,
     Text,
-    Link,
     Card,
     VStack,
-    HStack,
-    Icon,
 } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserRole } from '../../types';
@@ -22,7 +18,7 @@ import { Button } from '../../components/ui/button';
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { signIn, profile } = useAuth();
+    const { signIn } = useAuth();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -34,7 +30,7 @@ export const LoginPage: React.FC = () => {
         e.preventDefault();
         setLoading(true);
 
-        const { error } = await signIn(username, password);
+        const { user, error } = await signIn(username.trim(), password);
 
         if (error) {
             toaster.create({
@@ -52,12 +48,12 @@ export const LoginPage: React.FC = () => {
             type: 'success',
         });
 
-        // Redirect based on role
-        if (profile?.role === UserRole.TENANT) {
-            navigate('/tenant');
-        } else {
-            navigate('/admin');
+        if (user?.role === UserRole.TENANT) {
+            navigate(from.startsWith('/tenant') ? from : '/tenant', { replace: true });
+            return;
         }
+
+        navigate(from === '/login' || from === '/' ? '/admin' : from, { replace: true });
     };
 
     return (
@@ -73,7 +69,6 @@ export const LoginPage: React.FC = () => {
         >
             <Container maxW="md">
                 <VStack gap={8}>
-                    {/* Logo / Header */}
                     <VStack gap={2}>
                         <Heading
                             size="2xl"
@@ -89,7 +84,6 @@ export const LoginPage: React.FC = () => {
                         </Text>
                     </VStack>
 
-                    {/* Login Card */}
                     <Card.Root w="full" shadow="xl">
                         <Card.Body p={8}>
                             <form onSubmit={handleSubmit}>
@@ -103,8 +97,9 @@ export const LoginPage: React.FC = () => {
                                             type="text"
                                             placeholder="sena301"
                                             value={username}
-                                            onChange={(e) => setUsername(e.target.value)}
+                                            onChange={(event) => setUsername(event.target.value)}
                                             size="lg"
+                                            autoComplete="username"
                                             required
                                         />
                                     </Field>
@@ -114,8 +109,9 @@ export const LoginPage: React.FC = () => {
                                             type="password"
                                             placeholder="••••••••"
                                             value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
+                                            onChange={(event) => setPassword(event.target.value)}
                                             size="lg"
+                                            autoComplete="current-password"
                                             required
                                         />
                                     </Field>
@@ -138,7 +134,6 @@ export const LoginPage: React.FC = () => {
                         </Card.Body>
                     </Card.Root>
 
-                    {/* Footer */}
                     <Text color="gray.500" fontSize="sm" textAlign="center">
                         © 2024 Sena-One. All rights reserved.
                     </Text>

@@ -1,195 +1,163 @@
-# Sena-One - ระบบจัดการหอพัก
+# Sena-One
 
-ระบบจัดการหอพักแบบครบวงจร สร้างด้วย React + TypeScript + Chakra UI v3 + Supabase
+ระบบจัดการหอพัก/อพาร์ตเมนต์สำหรับผู้ดูแลและผู้เช่า สร้างด้วย React, TypeScript, Chakra UI v3 และ PGlite โดยเก็บข้อมูลไว้ใน IndexedDB ของเบราว์เซอร์สำหรับการใช้งาน/ทดสอบแบบ local-first
 
-## ✨ Features
+## คุณสมบัติหลัก
 
-### 🔐 ระบบผู้ใช้
+### ผู้ดูแลระบบ
 
-- ระบบ Authentication (Login/Register)
-- จัดการ Role: Admin, Owner, Tenant
-- Protected Routes ตาม Role
+- Dashboard สรุปจำนวนห้อง ผู้เช่า รายได้ และรายการที่ต้องติดตาม
+- จัดการห้องพัก พร้อมสถานะห้อง รูปภาพ และประวัติมิเตอร์
+- จัดการผู้เช่า ข้อมูลติดต่อ บัญชีผู้ใช้ และการผูกห้อง
+- จัดการสัญญาเช่า สร้าง แก้ไข ต่อสัญญา ย้ายห้อง และยกเลิกสัญญา
+- สถิติสัญญาใกล้หมดอายุ แยกช่วงเหลือ 4 เดือน, 2 เดือน, 30 วัน และหมดอายุ
+- จัดการมิเตอร์น้ำ/ไฟ พร้อมข้อมูลย้อนหลัง
+- ออกบิล ใบแจ้งหนี้ บันทึกการชำระเงิน และ export ข้อมูล
+- รับเรื่องแจ้งซ่อมและอัปเดตสถานะงาน
+- รายงานการเงิน ห้องว่าง และค่าสาธารณูปโภค
+- จัดการผู้ใช้งานและสิทธิ์ Admin, Owner, Tenant
 
-### 👨‍💼 ฟีเจอร์สำหรับ Admin/Owner
+### ผู้เช่า
 
-- **Dashboard**: ภาพรวมสถิติห้องพัก, รายได้, ค้างชำระ
-- **จัดการห้องพัก**: เพิ่ม/ลบ/แก้ไข ห้องพัก, อัปโหลดรูปภาพ
-- **จัดการผู้เช่า**: ลงทะเบียนผู้เช่า, ประวัติการชำระเงิน
-- **สัญญาเช่า**: สร้าง/ต่อ/ยกเลิก สัญญา
-- **จัดการมิเตอร์**: บันทึกมิเตอร์น้ำ-ไฟ ย้อนหลังและตรวจสอบความผิดปกติ
-- **การเงิน**: ออกบิล, บันทึกการชำระเงิน, จัดการเงินประกัน, พิมพ์ใบเสร็จ/ใบแจ้งหนี้
-- **แจ้งซ่อม**: รับแจ้งซ่อม, อัปเดตสถานะ, แนบรูปภาพ
-- **รายงาน**: รายงานรายได้, ห้องว่าง, การใช้น้ำ-ไฟ, Export Excel
-
-### 🏠 ฟีเจอร์สำหรับผู้เช่า (Tenant Portal)
-
-- ดูประวัติบิลและการชำระเงิน
-- ดาวน์โหลดใบเสร็จ
-- แจ้งซ่อมและติดตามสถานะ
-- จองห้องออนไลน์
+- ดู Dashboard ส่วนตัว
+- ดูบิลและประวัติการชำระเงิน
 - ดูข้อมูลสัญญาเช่า
+- แจ้งซ่อมและติดตามสถานะ
 
-## 🚀 การติดตั้ง
+## Tech Stack
 
-### 1. Clone โปรเจค
+- React 19
+- TypeScript
+- Vite
+- Chakra UI v3
+- React Router
+- TanStack React Query
+- PGlite (`@electric-sql/pglite`) สำหรับฐานข้อมูล local ใน IndexedDB
+- bcryptjs สำหรับ hash รหัสผ่านใน local database
+- XLSX / file-saver สำหรับ export
+- React Icons
 
-```bash
-cd d:\workspace\sena1
-```
-
-### 2. ติดตั้ง Dependencies
+## การติดตั้ง
 
 ```bash
 npm install
 ```
 
-### 3. ตั้งค่า Supabase
-
-#### 3.1 สร้าง Supabase Project
-
-1. ไปที่ [https://supabase.com](https://supabase.com)
-2. สร้าง Project ใหม่
-3. คัดลอก `Project URL` และ `anon public key`
-
-#### 3.2 ตั้งค่า Environment Variables
-
-สร้างไฟล์ `.env` และใส่ค่าดังนี้:
-
-```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-#### 3.3 สร้าง Database Schema
-
-1. ไปที่ Supabase Dashboard > SQL Editor
-2. คัดลอกเนื้อหาจากไฟล์ `supabase/schema.sql`
-3. รัน SQL script
-
-#### 3.4 สร้าง Storage Buckets
-
-ไปที่ Supabase Dashboard > Storage และสร้าง buckets ดังนี้:
-
-- `room-images` (Public)
-- `documents` (Private)
-- `receipts` (Private)
-- `id-cards` (Private)
-- `maintenance-images` (Public)
-
-### 4. รันโปรเจค
+## การรันสำหรับพัฒนา
 
 ```bash
 npm run dev
 ```
 
-เปิดเบราว์เซอร์ที่ `http://localhost:5173`
+Vite จะรันแบบ `--host` ตาม script ใน `package.json` โดยปกติเปิดได้ที่:
 
-## 📁 โครงสร้างโปรเจค
-
-```
-sena1/
-├── src/
-│   ├── components/          # React components
-│   │   ├── layout/         # Layout components (AdminLayout, TenantLayout)
-│   │   ├── ui/             # Chakra UI snippets
-│   │   ├── reports/        # Report components (Financial, Utilities)
-│   │   └── ProtectedRoute.tsx
-│   ├── contexts/           # React Context (AuthContext)
-│   ├── lib/                # Utilities
-│   │   ├── supabase.ts    # Supabase client
-│   │   └── utils.ts       # Helper functions
-│   ├── pages/              # Pages
-│   │   ├── auth/          # Login, Register
-│   │   ├── admin/         # Admin pages (Dashboard, Meters, Reports, etc.)
-│   ├── services/           # API Services (invoice, report, maintenance, etc.)
-│   ├── theme/              # Chakra UI theme
-│   ├── types/              # TypeScript types
-│   ├── App.tsx
-│   └── main.tsx
-├── supabase/
-│   └── schema.sql          # Database schema
-├── .env                    # Environment variables
-└── package.json
+```txt
+http://localhost:5173
 ```
 
-## 🎨 Tech Stack
+ถ้า port 5173 ถูกใช้งานอยู่ Vite อาจเลื่อนไป port ถัดไป เช่น `5174`
 
-- **Frontend**: React 18 + TypeScript
-- **Build Tool**: Vite
-- **UI Library**: Chakra UI v3
-- **Backend**: Supabase (PostgreSQL, Auth, Storage)
-- **Routing**: React Router v6
-- **State Management**: React Query + Context API
-- **Form Handling**: React Hook Form + Zod
-- **Icons**: Lucide React
-- **Fonts**: Inter (Google Fonts)
-- **Data Export**: XLSX
+## คำสั่งที่ใช้บ่อย
 
-## 📝 การใช้งาน
+```bash
+npm run dev
+npm run type-check
+npm run build
+npm run lint
+npm run preview
+```
 
-### สร้างผู้ใช้ Admin แรก
+หมายเหตุ: บน Windows หาก PowerShell block `npm.ps1` ให้ใช้:
 
-1. สมัครสมาชิกผ่านหน้า Register
-2. เลือก Role เป็น "ผู้ดูแลระบบ"
-3. ยืนยันอีเมล (ถ้า Supabase ตั้งค่าให้ยืนยัน)
-4. Login เข้าสู่ระบบ
+```bash
+cmd /c npm run type-check
+cmd /c npm run build
+```
 
-### เพิ่มห้องพัก
+## ฐานข้อมูล Local
 
-1. ไปที่ "จัดการห้องพัก"
-2. คลิก "เพิ่มห้องพัก"
-3. กรอกข้อมูลห้อง (หมายเลขห้อง, ประเภท, ราคา, ฯลฯ)
-4. อัปโหลดรูปภาพห้อง
-5. บันทึก
+โปรเจกต์นี้ใช้ PGlite และ IndexedDB แทน Supabase client ใน runtime ปัจจุบัน
 
-### เพิ่มผู้เช่า
+- Database name: `idb://sena-one-pglite`
+- Seed data อยู่ที่ `public/pglite-seed/*.json`
+- schema และ table ถูกสร้างใน `src/lib/pgliteClient.ts`
+- session ผู้ใช้เก็บใน `localStorage` key: `sena_user_session`
 
-1. ไปที่ "จัดการผู้เช่า"
-2. คลิก "เพิ่มผู้เช่า"
-3. กรอกข้อมูลผู้เช่า
-4. อัปโหลดสำเนาบัตรประชาชน
-5. บันทึก
+เมื่อ seed version เปลี่ยน ระบบจะโหลดข้อมูลจาก `public/pglite-seed` ใหม่โดยอัตโนมัติ
 
-### จัดการมิเตอร์ (ใหม่!)
+### รหัสผ่าน seed users
 
-1. ไปที่ "จัดการมิเตอร์"
-2. เลือกเดือนที่ต้องการบันทึก
-3. ระบบจะแสดงรายการห้องและมิเตอร์ครั้งก่อนหน้า
-4. กรอกเลขมิเตอร์ปัจจุบันและบันทึก
+ระบบตั้งรหัสผ่านผู้ใช้ใน seed data เป็น:
 
-### รายงาน (ใหม่!)
+```txt
+sP@ssw0rd
+```
 
-1. ไปที่ "รายงานและสถิติ"
-2. เลือกดูภาพรวม, รายงานการเงิน, หรือ รายงานสาธารณูปโภค
-3. กดปุ่ม Export Excel เพื่อดาวน์โหลดข้อมูล
+การ login รองรับ username/phone ตามข้อมูลใน table `users` และมีรูปแบบ username สำหรับผู้เช่าตามเลขห้อง เช่น `sena301`
 
-## 🔒 Security
+## โครงสร้างโปรเจกต์
 
-- Row Level Security (RLS) enabled บนทุก table
-- Admin/Owner เท่านั้นที่เข้าถึงข้อมูลทั้งหมด
-- Tenant เห็นเฉพาะข้อมูลของตัวเอง
-- Protected Routes ตาม Role
-- Secure file upload ผ่าน Supabase Storage
+```txt
+sena-one/
+├─ public/
+│  ├─ images/
+│  └─ pglite-seed/
+├─ src/
+│  ├─ components/
+│  │  ├─ common/
+│  │  ├─ contracts/
+│  │  ├─ invoices/
+│  │  ├─ layout/
+│  │  ├─ maintenance/
+│  │  ├─ reports/
+│  │  ├─ rooms/
+│  │  ├─ tenants/
+│  │  └─ ui/
+│  ├─ contexts/
+│  ├─ hooks/
+│  ├─ lib/
+│  │  ├─ pgliteClient.ts
+│  │  ├─ exportInvoice.ts
+│  │  └─ utils.ts
+│  ├─ pages/
+│  │  ├─ admin/
+│  │  ├─ auth/
+│  │  └─ tenant/
+│  ├─ services/
+│  ├─ theme/
+│  ├─ types/
+│  ├─ App.tsx
+│  └─ main.tsx
+├─ supabase/
+├─ package.json
+└─ vite.config.ts
+```
 
-## 🚧 Roadmap
+## เส้นทางหลักในแอป
 
-- [x] Phase 1: Authentication + Dashboard + Room Management
-- [x] Phase 2: Tenant Management + Contract Management
-- [x] Phase 3: Billing & Payment System (Invoice, Receipt, Meter Management)
-- [x] Phase 4: Maintenance Requests + Notifications
-- [x] Phase 5: Tenant Portal + Reports (Financial & Utility Reports + Export)
-- [ ] Phase 6: LINE/Email Notifications
-- [ ] Phase 7: QR Payment Integration
-- [ ] Phase 8: IoT Features (Optional)
+- `/login` หน้าเข้าสู่ระบบ
+- `/admin` Dashboard ผู้ดูแล
+- `/admin/users` จัดการผู้ใช้งาน
+- `/admin/rooms` จัดการห้องพัก
+- `/admin/tenants` จัดการผู้เช่า
+- `/admin/contracts` จัดการสัญญาเช่า
+- `/admin/invoices` จัดการบิล
+- `/admin/meters` จัดการมิเตอร์
+- `/admin/maintenance` จัดการแจ้งซ่อม
+- `/admin/reports` รายงาน
+- `/admin/settings` ตั้งค่า
+- `/tenant` Dashboard ผู้เช่า
+- `/tenant/bills` บิลของผู้เช่า
+- `/tenant/maintenance` แจ้งซ่อมของผู้เช่า
+- `/tenant/contract` สัญญาของผู้เช่า
 
-## 📄 License
+## หมายเหตุสำหรับนักพัฒนา
 
-MIT License
+- โปรดบันทึกไฟล์เป็น UTF-8 เพื่อป้องกันข้อความไทยกลายเป็น mojibake
+- หลีกเลี่ยงการเขียนไฟล์ภาษาไทยผ่าน PowerShell โดยไม่กำหนด encoding
+- ถ้าต้อง reset ข้อมูล local ให้ลบ IndexedDB ของ site นี้ใน DevTools แล้ว refresh หน้าใหม่
+- โค้ดบางส่วนใน `supabase/` ยังเก็บ SQL และ migration เดิมไว้เป็น reference แต่ runtime ปัจจุบันใช้ PGlite client
 
-## 👨‍💻 Author
+## License
 
-Sena-One Development Team
-
----
-
-สร้างด้วย ❤️ โดยใช้ React + Chakra UI + Supabase
+MIT

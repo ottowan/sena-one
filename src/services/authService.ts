@@ -11,6 +11,14 @@ export interface CustomUser {
 const SESSION_KEY = 'sena_user_session';
 
 export const authService = {
+    warmUp: async (): Promise<void> => {
+        try {
+            await pgliteClient.initialize();
+        } catch (error) {
+            console.error('Database warm-up error:', error);
+        }
+    },
+
     // Login with username (room number format: sena301) and password
     login: async (username: string, password: string): Promise<{ user?: CustomUser; error?: string }> => {
         try {

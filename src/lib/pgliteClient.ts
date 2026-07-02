@@ -699,6 +699,9 @@ function getStorageUrl(bucket: string, path: string) {
 }
 
 export const pgliteClient = {
+    initialize() {
+        return ensureInitialized();
+    },
     from(table: string) {
         return new QueryBuilder(table);
     },
