@@ -15,6 +15,7 @@ dist-ssr
 .env.*
 !.env.example
 backups/
+data/
 public/pglite-seed/*.json
 
 # Editor directories and files

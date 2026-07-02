@@ -53,16 +53,24 @@ export const authService = {
     },
 
     // Logout
-    logout: () => {
+    logout: async () => {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => undefined);
         localStorage.removeItem(SESSION_KEY);
     },
 
     // Get current user from localStorage
-    getCurrentUser: (): CustomUser | null => {
+    getCurrentUser: async (): Promise<CustomUser | null> => {
         try {
+            const { data } = await pgliteClient.auth.getUser();
+            if (data.user) {
+                localStorage.setItem(SESSION_KEY, JSON.stringify(data.user));
+                return data.user;
+            }
+
             const userStr = localStorage.getItem(SESSION_KEY);
             if (!userStr) return null;
-            return JSON.parse(userStr);
+            const cached = JSON.parse(userStr);
+            return cached || null;
         } catch (error) {
             console.error('Error getting current user:', error);
             return null;

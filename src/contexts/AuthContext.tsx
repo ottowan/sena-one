@@ -29,11 +29,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Check for existing session on mount
-        const currentUser = authService.getCurrentUser();
-        setUser(currentUser);
-        setLoading(false);
-        void authService.warmUp();
+        let cancelled = false;
+
+        const loadSession = async () => {
+            await authService.warmUp();
+            const currentUser = await authService.getCurrentUser();
+            if (!cancelled) {
+                setUser(currentUser);
+                setLoading(false);
+            }
+        };
+
+        void loadSession();
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     const signIn = async (phone: string, password: string) => {
@@ -48,7 +59,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     const signOut = () => {
-        authService.logout();
+        void authService.logout();
         setUser(null);
     };
 
