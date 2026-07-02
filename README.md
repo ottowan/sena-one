@@ -88,9 +88,40 @@ SQLITE_DB_PATH=/absolute/path/to/sena-one.sqlite
 UPLOAD_DIR=/absolute/path/to/uploads
 DEFAULT_ACCOUNT_PASSWORD=change-before-first-run
 MAX_UPLOAD_BYTES=10485760
+ADMIN_USERNAME=admin
+ADMIN_PHONE=admin
+ADMIN_FULL_NAME=Administrator
+ADMIN_PASSWORD=change-before-first-run
 ```
 
 ควรตั้ง reverse proxy เช่น Nginx/Caddy ให้ใช้ HTTPS หน้า backend
+
+## Deploy Frontend on Netlify
+
+ใช้ Netlify สำหรับ frontend ได้ โดย backend SQLite ต้องรันแยกบน server ที่มี persistent disk เช่น VPS, Render, Railway หรือ Fly.io
+
+Netlify settings:
+
+```txt
+Build command: npm run build
+Publish directory: dist
+```
+
+ไฟล์ `netlify.toml` ตั้งค่า SPA redirect ไว้แล้ว
+
+ให้ตั้ง environment variable บน Netlify:
+
+```txt
+VITE_API_BASE=https://your-api-domain.example.com
+```
+
+จากนั้น backend ต้องเปิด HTTPS และตอบ API เช่น:
+
+```txt
+https://your-api-domain.example.com/api/health
+```
+
+ไม่แนะนำให้วาง SQLite backend ลง Netlify Functions สำหรับข้อมูลจริง เพราะ function ไม่มี SQLite file storage แบบถาวรเหมือน server ปกติ
 
 ## ฐานข้อมูลและไฟล์
 

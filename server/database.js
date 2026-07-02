@@ -224,6 +224,7 @@ export function initializeDatabase() {
     const meta = db.prepare('SELECT value FROM _meta WHERE key = ?').get('seed_version');
     if (meta?.value === SEED_VERSION) {
         resetAllUserPasswordsIfNeeded();
+        ensureBootstrapAdmin();
         return;
     }
 
@@ -242,6 +243,7 @@ export function initializeDatabase() {
     });
     seed();
     resetAllUserPasswordsIfNeeded();
+    ensureBootstrapAdmin();
 }
 
 function resetAllUserPasswordsIfNeeded() {
@@ -256,6 +258,36 @@ function resetAllUserPasswordsIfNeeded() {
         INSERT INTO _meta (key, value) VALUES ('password_reset_version', ?)
         ON CONFLICT(key) DO UPDATE SET value = excluded.value
     `).run(PASSWORD_RESET_VERSION);
+}
+
+function ensureBootstrapAdmin() {
+    const userCount = db.prepare('SELECT COUNT(*) AS count FROM users').get();
+    if (Number(userCount?.count || 0) > 0) return;
+
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminPassword) return;
+
+    const id = crypto.randomUUID();
+    const phone = process.env.ADMIN_PHONE || 'admin';
+    const username = process.env.ADMIN_USERNAME || 'admin';
+    const fullName = process.env.ADMIN_FULL_NAME || 'Administrator';
+    const passwordHash = bcrypt.hashSync(adminPassword, 12);
+
+    insertRows('users', {
+        id,
+        phone,
+        username,
+        password_hash: passwordHash,
+        full_name: fullName,
+        role: 'admin',
+    }, true);
+    upsertRows('profiles', {
+        id,
+        phone,
+        full_name: fullName,
+        role: 'admin',
+        email: `${username}@senaone.local`,
+    });
 }
 
 export function insertRows(table, input, preserveIds = false) {
