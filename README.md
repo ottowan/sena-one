@@ -96,6 +96,29 @@ ADMIN_PASSWORD=change-before-first-run
 
 ควรตั้ง reverse proxy เช่น Nginx/Caddy ให้ใช้ HTTPS หน้า backend
 
+## Deploy พร้อมกันที่เดียว
+
+แนะนำให้ deploy เป็น service เดียวบน Render/Railway/Fly.io/VPS เพราะ backend serve ทั้ง API และ frontend จาก `dist` ได้อยู่แล้ว
+
+สำหรับ Render ใช้ไฟล์ `render.yaml` ได้เลย:
+
+1. Push repo ไป GitHub
+2. เข้า Render แล้วเลือก New Blueprint
+3. เลือก repo นี้
+4. ตั้งค่า `ADMIN_PASSWORD` ใน Render
+5. Deploy
+
+Render จะใช้:
+
+```txt
+Build command: npm ci && npm run build
+Start command: npm run server
+SQLite path: /var/data/sena-one.sqlite
+Uploads path: /var/data/uploads
+```
+
+ในโหมด deploy พร้อมกัน **ไม่ต้องตั้ง `VITE_API_BASE`** เพราะ frontend และ backend อยู่โดเมนเดียวกัน
+
 ## Deploy Frontend on Netlify
 
 ใช้ Netlify สำหรับ frontend ได้ โดย backend SQLite ต้องรันแยกบน server ที่มี persistent disk เช่น VPS, Render, Railway หรือ Fly.io
