@@ -18,6 +18,7 @@ import { RoomCard } from '../../components/rooms/RoomCard';
 import { RoomCompactCard } from '../../components/rooms/RoomCompactCard';
 import { RoomTable } from '../../components/rooms/RoomTable';
 import { RoomFormDialog } from '../../components/rooms/RoomFormDialog';
+import { RoomDetailsDialog } from '../../components/rooms/RoomDetailsDialog';
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { FloorFilter } from '../../components/common/FloorFilter';
 import { Button } from '../../components/ui/button';
@@ -33,6 +34,7 @@ export const RoomsPage: React.FC = () => {
     const [floorFilter, setFloorFilter] = useState<number | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+    const [detailsRoom, setDetailsRoom] = useState<Room | null>(null);
     const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
     const { data: rooms, isLoading } = useRooms({
@@ -63,6 +65,10 @@ export const RoomsPage: React.FC = () => {
 
         setSelectedRoom(room);
         setDialogOpen(true);
+    };
+
+    const handleView = (room: Room) => {
+        setDetailsRoom(room);
     };
 
     const handleDelete = async (room: Room) => {
@@ -297,7 +303,7 @@ export const RoomsPage: React.FC = () => {
                             <RoomTable
                                 rooms={rooms}
                                 rentRates={rentRates}
-                                onView={handleEdit}
+                                onView={handleView}
                                 onEdit={handleEdit}
                                 onDelete={handleDelete}
                             />
@@ -316,6 +322,7 @@ export const RoomsPage: React.FC = () => {
                                             key={room.id}
                                             room={room}
                                             rentRates={rentRates}
+                                            onView={handleView}
                                             onEdit={handleEdit}
                                             onDelete={handleDelete}
                                             onRelease={handleForceRelease}
@@ -325,6 +332,7 @@ export const RoomsPage: React.FC = () => {
                                             key={room.id}
                                             room={room}
                                             rentRates={rentRates}
+                                            onView={handleView}
                                             onEdit={handleEdit}
                                             onDelete={handleDelete}
                                             onRelease={handleForceRelease}
@@ -363,6 +371,13 @@ export const RoomsPage: React.FC = () => {
                 open={dialogOpen}
                 onClose={handleCloseDialog}
                 room={selectedRoom}
+            />
+
+            {/* Room Details Dialog (read-only) */}
+            <RoomDetailsDialog
+                open={!!detailsRoom}
+                onClose={() => setDetailsRoom(null)}
+                room={detailsRoom}
             />
         </>
     );

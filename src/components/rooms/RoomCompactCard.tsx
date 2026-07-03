@@ -9,17 +9,19 @@ import {
     Badge,
     Icon,
 } from '@chakra-ui/react';
-import { LuPencil, LuTrash2, LuCalendar, LuRotateCcw, LuHistory, LuLock } from 'react-icons/lu';
+import { LuPencil, LuTrash2, LuCalendar, LuRotateCcw, LuHistory, LuLock, LuEye, LuBoxes } from 'react-icons/lu';
 import type { Room, RoomStatus } from '../../types';
-import { formatCurrency } from '../../lib/utils';
+import { formatCurrency, formatDate } from '../../lib/utils';
 import { Button } from '../ui/button';
 import { MeterHistoryDialog } from './MeterHistoryDialog';
+import { RoomEquipmentViewDialog } from './RoomEquipmentViewDialog';
 
 import type { RentRate } from '../../types';
 
 interface RoomCompactCardProps {
     room: Room;
     rentRates?: RentRate[];
+    onView?: (room: Room) => void;
     onEdit: (room: Room) => void;
     onDelete: (room: Room) => void;
     onRelease?: (room: Room) => void;
@@ -58,6 +60,7 @@ const getStatusLabel = (status: RoomStatus): string => {
 export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
     room,
     rentRates,
+    onView,
     onEdit,
     onDelete,
     onRelease,
@@ -65,6 +68,7 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
     const statusColor = getStatusColor(room.status);
     const statusLabel = getStatusLabel(room.status);
     const [historyOpen, setHistoryOpen] = useState(false);
+    const [equipmentOpen, setEquipmentOpen] = useState(false);
     const isLocked = !!room.has_active_contract;
 
     const handleDelete = () => {
@@ -119,19 +123,35 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                                     <Icon fontSize="xs">
                                         <LuCalendar />
                                     </Icon>
-                                    <Text>เริ่ม: 01/01/2024</Text>
+                                    <Text>
+                                        เริ่ม: {room.current_contract_start_date ? formatDate(room.current_contract_start_date) : '-'}
+                                    </Text>
                                 </HStack>
                                 <HStack gap={1}>
                                     <Icon fontSize="xs">
                                         <LuCalendar />
                                     </Icon>
-                                    <Text>สิ้นสุด: 31/12/2024</Text>
+                                    <Text>
+                                        สิ้นสุด: {room.current_contract_end_date ? formatDate(room.current_contract_end_date) : '-'}
+                                    </Text>
                                 </HStack>
                             </VStack>
                         )}
 
                         {/* Actions */}
                         <HStack gap={1} pt={1} borderTop="1px" borderColor="gray.200">
+                            {onView && (
+                                <Button
+                                    variant="ghost"
+                                    size="xs"
+                                    onClick={() => onView(room)}
+                                    title="ดูรายละเอียด"
+                                >
+                                    <Icon fontSize="xs">
+                                        <LuEye />
+                                    </Icon>
+                                </Button>
+                            )}
                             <Button
                                 variant="ghost"
                                 size="xs"
@@ -149,12 +169,11 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                                     variant="ghost"
                                     colorPalette="orange"
                                     size="xs"
-                                    disabled={isLocked}
                                     onClick={() => onRelease(room)}
                                     title="บังคับคืนห้อง (Reset)"
                                 >
                                     <Icon fontSize="xs">
-                                        {isLocked ? <LuLock /> : <LuRotateCcw />}
+                                        <LuRotateCcw />
                                     </Icon>
                                 </Button>
                             )}
@@ -167,6 +186,17 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                             >
                                 <Icon fontSize="xs">
                                     <LuHistory />
+                                </Icon>
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                colorPalette="purple"
+                                size="xs"
+                                onClick={() => setEquipmentOpen(true)}
+                                title="ครุภัณฑ์ประจำห้อง"
+                            >
+                                <Icon fontSize="xs">
+                                    <LuBoxes />
                                 </Icon>
                             </Button>
                             <Button
@@ -190,6 +220,12 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                 onClose={() => setHistoryOpen(false)}
                 roomId={room.id}
                 roomNumber={room.room_number}
+            />
+
+            <RoomEquipmentViewDialog
+                open={equipmentOpen}
+                onClose={() => setEquipmentOpen(false)}
+                room={room}
             />
         </>
     );

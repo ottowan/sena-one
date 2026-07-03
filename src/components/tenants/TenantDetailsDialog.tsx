@@ -24,6 +24,7 @@ import { LuPhone, LuMail, LuUser, LuCar, LuMapPin } from 'react-icons/lu';
 import { tenantService } from '../../services/tenantService';
 import { toaster } from '../ui/toaster';
 import type { Tenant } from '../../types';
+import { VEHICLE_TYPE_LABELS } from '../vehicles/vehicleMeta';
 
 interface TenantDetailsDialogProps {
     open: boolean;
@@ -311,6 +312,88 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                         </Box>
                                     ))}
                                 </VStack>
+                            </VStack>
+                        )}
+
+                        {/* ทะเบียนคุมรถยนต์ (อ่านอย่างเดียว - จัดการที่หน้าทะเบียนคุมรถยนต์) */}
+                        {tenant.registered_vehicles && tenant.registered_vehicles.length > 0 && (
+                            <VStack align="stretch" gap={3}>
+                                <Heading size="md">
+                                    ทะเบียนคุมรถยนต์ ({tenant.registered_vehicles.length} คัน)
+                                </Heading>
+
+                                <VStack align="stretch" gap={3}>
+                                    {tenant.registered_vehicles.map((vehicle) => (
+                                        <Box
+                                            key={vehicle.id}
+                                            p={4}
+                                            borderWidth="1px"
+                                            borderRadius="md"
+                                            borderColor="gray.200"
+                                            bg="gray.50"
+                                        >
+                                            <VStack align="stretch" gap={2}>
+                                                <HStack justify="space-between">
+                                                    <HStack gap={2}>
+                                                        <Icon color="blue.500">
+                                                            <LuCar />
+                                                        </Icon>
+                                                        <Text fontWeight="bold">
+                                                            {VEHICLE_TYPE_LABELS[vehicle.type]}
+                                                        </Text>
+                                                    </HStack>
+                                                    {vehicle.has_sticker ? (
+                                                        <Badge colorPalette="green">มีสติ๊กเกอร์</Badge>
+                                                    ) : (
+                                                        <Badge colorPalette="gray">ไม่มีสติ๊กเกอร์</Badge>
+                                                    )}
+                                                </HStack>
+
+                                                <Grid templateColumns="repeat(2, 1fr)" gap={3}>
+                                                    <VStack align="start" gap={0}>
+                                                        <Text fontSize="sm" color="gray.600">
+                                                            ทะเบียน
+                                                        </Text>
+                                                        <Text fontWeight="medium">{vehicle.plate}</Text>
+                                                    </VStack>
+
+                                                    <VStack align="start" gap={0}>
+                                                        <Text fontSize="sm" color="gray.600">
+                                                            จังหวัด
+                                                        </Text>
+                                                        <Text fontWeight="medium">{vehicle.province}</Text>
+                                                    </VStack>
+                                                </Grid>
+
+                                                {(vehicle.brand || vehicle.color) && (
+                                                    <Grid templateColumns="repeat(2, 1fr)" gap={3}>
+                                                        {vehicle.brand && (
+                                                            <VStack align="start" gap={0}>
+                                                                <Text fontSize="sm" color="gray.600">
+                                                                    ยี่ห้อ/รุ่น
+                                                                </Text>
+                                                                <Text fontWeight="medium">{vehicle.brand}</Text>
+                                                            </VStack>
+                                                        )}
+
+                                                        {vehicle.color && (
+                                                            <VStack align="start" gap={0}>
+                                                                <Text fontSize="sm" color="gray.600">
+                                                                    สี
+                                                                </Text>
+                                                                <Text fontWeight="medium">{vehicle.color}</Text>
+                                                            </VStack>
+                                                        )}
+                                                    </Grid>
+                                                )}
+                                            </VStack>
+                                        </Box>
+                                    ))}
+                                </VStack>
+
+                                <Text fontSize="xs" color="gray.500">
+                                    จัดการรถกลุ่มนี้ได้ที่หน้า "ทะเบียนคุมรถยนต์"
+                                </Text>
                             </VStack>
                         )}
 

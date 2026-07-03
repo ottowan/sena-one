@@ -1,8 +1,10 @@
-import React from 'react';
-import { Table, Badge, HStack, IconButton, Icon } from '@chakra-ui/react';
-import { LuEye, LuLock, LuPencil, LuTrash2 } from 'react-icons/lu';
+import React, { useState } from 'react';
+import { Box, Table, Badge, HStack, IconButton, Icon } from '@chakra-ui/react';
+import { LuEye, LuLock, LuPencil, LuTrash2, LuHistory, LuBoxes } from 'react-icons/lu';
 import type { Room } from '../../types';
 import { Tooltip } from '../ui/tooltip';
+import { MeterHistoryDialog } from './MeterHistoryDialog';
+import { RoomEquipmentViewDialog } from './RoomEquipmentViewDialog';
 import type { RentRate } from '../../types';
 
 interface RoomTableProps {
@@ -44,7 +46,12 @@ const getStatusLabel = (status: string): string => {
 };
 
 export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, onEdit, onDelete }) => {
+    const [historyRoom, setHistoryRoom] = useState<Room | null>(null);
+    const [equipmentRoom, setEquipmentRoom] = useState<Room | null>(null);
+
     return (
+        <>
+        <Box overflowX="auto">
         <Table.Root size="sm" variant="outline">
             <Table.Header>
                 <Table.Row>
@@ -108,11 +115,10 @@ export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, 
                                         aria-label="View"
                                         size="xs"
                                         variant="ghost"
-                                        disabled={isLocked}
                                         onClick={() => onView(room)}
                                     >
                                         <Icon>
-                                            {isLocked ? <LuLock /> : <LuEye />}
+                                            <LuEye />
                                         </Icon>
                                     </IconButton>
                                 </Tooltip>
@@ -126,6 +132,32 @@ export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, 
                                     >
                                         <Icon>
                                             {isLocked ? <LuLock /> : <LuPencil />}
+                                        </Icon>
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip content="ประวัติมิเตอร์">
+                                    <IconButton
+                                        aria-label="Meter history"
+                                        size="xs"
+                                        variant="ghost"
+                                        colorPalette="blue"
+                                        onClick={() => setHistoryRoom(room)}
+                                    >
+                                        <Icon>
+                                            <LuHistory />
+                                        </Icon>
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip content="ครุภัณฑ์ประจำห้อง">
+                                    <IconButton
+                                        aria-label="Equipment"
+                                        size="xs"
+                                        variant="ghost"
+                                        colorPalette="purple"
+                                        onClick={() => setEquipmentRoom(room)}
+                                    >
+                                        <Icon>
+                                            <LuBoxes />
                                         </Icon>
                                     </IconButton>
                                 </Tooltip>
@@ -150,5 +182,22 @@ export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, 
                 })}
             </Table.Body>
         </Table.Root>
+        </Box>
+
+        {historyRoom && (
+            <MeterHistoryDialog
+                open={!!historyRoom}
+                onClose={() => setHistoryRoom(null)}
+                roomId={historyRoom.id}
+                roomNumber={historyRoom.room_number}
+            />
+        )}
+
+        <RoomEquipmentViewDialog
+            open={!!equipmentRoom}
+            onClose={() => setEquipmentRoom(null)}
+            room={equipmentRoom}
+        />
+        </>
     );
 };

@@ -14,7 +14,7 @@ import {
 import { db } from '../lib/firebase';
 import { fetchByIds, fetchWhereIn, nowIso, withId } from '../lib/firestoreUtils';
 import { normalizePhone } from './authService';
-import type { Tenant } from '../types';
+import type { Tenant, VehicleRegistration } from '../types';
 
 export interface TenantFilters {
     searchTerm?: string;
@@ -63,23 +63,46 @@ export const tenantService = {
         );
         const roomIds = [...new Set(contracts.map((contract) => contract.room_id).filter(Boolean))];
         const roomById = await fetchByIds<{ id: string; room_number: string; room_type: string }>('rooms', roomIds);
+        const registryVehicles = await fetchWhereIn<VehicleRegistration>('vehicles', 'room_id', roomIds);
+        const vehiclesByRoom = new Map<string, VehicleRegistration[]>();
+        registryVehicles.forEach((vehicle) => {
+            const list = vehiclesByRoom.get(vehicle.room_id) || [];
+            list.push(vehicle);
+            vehiclesByRoom.set(vehicle.room_id, list);
+        });
         const contractByTenant = new Map(contracts.map((contract) => [contract.tenant_id, contract]));
 
         let tenantsWithRooms = tenants.map((tenant) => {
             const contract = contractByTenant.get(tenant.id);
+            const roomId = contract?.room_id;
             return {
                 ...tenant,
-                room: contract?.room_id ? roomById.get(contract.room_id) || null : null,
+                room: roomId ? roomById.get(roomId) || null : null,
+                registered_vehicles: roomId ? vehiclesByRoom.get(roomId) || [] : [],
             };
         });
 
         if (filters?.vehiclePlate) {
             const searchPlate = filters.vehiclePlate.toLowerCase();
             tenantsWithRooms = tenantsWithRooms.filter((tenant) => {
-                if (!tenant.vehicles || tenant.vehicles.length === 0) return false;
-                return tenant.vehicles.some((vehicle: any) => vehicle.plate?.toLowerCase().includes(searchPlate));
+                const legacyMatch = tenant.vehicles?.some((vehicle) =>
+                    vehicle.plate?.toLowerCase().includes(searchPlate)
+                );
+                const registryMatch = tenant.registered_vehicles?.some((vehicle) =>
+                    vehicle.plate?.toLowerCase().includes(searchPlate)
+                );
+                return !!legacyMatch || !!registryMatch;
             });
         }
+
+        // Tenants without an active contract have no room - keep them last,
+        // sorted amongst themselves the old way (most recently created first).
+        tenantsWithRooms.sort((a, b) => {
+            if (!a.room && !b.room) return 0;
+            if (!a.room) return 1;
+            if (!b.room) return -1;
+            return a.room.room_number.localeCompare(b.room.room_number, undefined, { numeric: true });
+        });
 
         return tenantsWithRooms;
     },
@@ -98,8 +121,11 @@ export const tenantService = {
                   (map) => map.get(contract.room_id) || null
               )
             : null;
+        const registeredVehicles = contract?.room_id
+            ? await fetchWhereIn<VehicleRegistration>('vehicles', 'room_id', [contract.room_id])
+            : [];
 
-        return { ...data, room };
+        return { ...data, room, registered_vehicles: registeredVehicles };
     },
 
     async createTenant(tenant: Omit<Tenant, 'id' | 'created_at' | 'updated_at'>): Promise<Tenant> {

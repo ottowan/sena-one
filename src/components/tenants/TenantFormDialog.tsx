@@ -9,7 +9,6 @@ import {
     Heading,
     Text,
     Icon,
-    IconButton,
 } from '@chakra-ui/react';
 import {
     DialogRoot,
@@ -27,8 +26,8 @@ import {
     NativeSelectRoot,
 } from '../ui/native-select';
 import { Button } from '../ui/button';
-import { LuPlus, LuTrash2, LuUser } from 'react-icons/lu';
-import type { Tenant, Vehicle, VehicleType, PositionLevel } from '../../types';
+import { LuUser } from 'react-icons/lu';
+import type { Tenant, PositionLevel } from '../../types';
 import { useCreateTenant, useUpdateTenant } from '../../hooks/useTenants';
 import { userService } from '../../services/userService';
 import { tenantService } from '../../services/tenantService';
@@ -38,24 +37,6 @@ interface TenantFormDialogProps {
     onClose: () => void;
     tenant?: Tenant | null;
 }
-
-const THAI_PROVINCES = [
-    'กรุงเทพมหานคร', 'กระบี่', 'กาญจนบุรี', 'กาฬสินธุ์', 'กำแพงเพชร',
-    'ขอนแก่น', 'จันทบุรี', 'ฉะเชิงเทรา', 'ชลบุรี', 'ชัยนาท', 'ชัยภูมิ',
-    'ชุมพร', 'เชียงราย', 'เชียงใหม่', 'ตรัง', 'ตราด', 'ตาก', 'นครนายก',
-    'นครปฐม', 'นครพนม', 'นครราชสีมา', 'นครศรีธรรมราช', 'นครสวรรค์',
-    'นนทบุรี', 'นราธิวาส', 'น่าน', 'บึงกาฬ', 'บุรีรัมย์', 'ปทุมธานี',
-    'ประจวบคีรีขันธ์', 'ปราจีนบุรี', 'ปัตตานี', 'พระนครศรีอยุธยา', 'พังงา',
-    'พัทลุง', 'พิจิตร', 'พิษณุโลก', 'เพชรบุรี', 'เพชรบูรณ์', 'แพร่',
-    'พะเยา', 'ภูเก็ต', 'มหาสารคาม', 'มุกดาหาร', 'แม่ฮ่องสอน', 'ยโสธร',
-    'ยะลา', 'ร้อยเอ็ด', 'ระนอง', 'ระยอง', 'ราชบุรี', 'ลพบุรี', 'ลำปาง',
-    'ลำพูน', 'เลย', 'ศรีสะเกษ', 'สกลนคร', 'สงขลา', 'สตูล', 'สมุทรปราการ',
-    'สมุทรสงคราม', 'สมุทรสาคร', 'สระแก้ว', 'สระบุรี', 'สิงห์บุรี', 'สุโขทัย',
-    'สุพรรณบุรี', 'สุราษฎร์ธานี', 'สุรินทร์', 'หนองคาย', 'หนองบัวลำภู',
-    'อ่างทอง', 'อุดรธานี', 'อุทัยธานี', 'อุตรดิตถ์', 'อุบลราชธานี', 'อำนาจเจริญ',
-];
-
-// ... existing imports
 
 export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
     open,
@@ -80,7 +61,6 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
         status: 'active' as 'active' | 'inactive' | 'pending',
     });
 
-    const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [matchingUser, setMatchingUser] = useState<any | null>(null);
 
@@ -143,7 +123,6 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
                 workplace: tenant.workplace || '',
                 status: tenant.status,
             });
-            setVehicles(tenant.vehicles || []);
         } else {
             setFormData({
                 full_name: '',
@@ -158,34 +137,10 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
                 workplace: '',
                 status: 'active',
             });
-            setVehicles([]);
         }
         setErrors({});
         setSelectedUserId('');
     }, [tenant, open]);
-
-    const handleAddVehicle = () => {
-        setVehicles([
-            ...vehicles,
-            {
-                type: 'car' as VehicleType,
-                plate: '',
-                province: 'กรุงเทพมหานคร',
-                brand: '',
-                color: '',
-            },
-        ]);
-    };
-
-    const handleRemoveVehicle = (index: number) => {
-        setVehicles(vehicles.filter((_, i) => i !== index));
-    };
-
-    const handleVehicleChange = (index: number, field: keyof Vehicle, value: string) => {
-        const newVehicles = [...vehicles];
-        newVehicles[index] = { ...newVehicles[index], [field]: value };
-        setVehicles(newVehicles);
-    };
 
     const validate = async () => {
         const newErrors: Record<string, string> = {};
@@ -242,7 +197,6 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
                     relationship: formData.emergency_contact_relationship,
                 }
                 : undefined,
-            vehicles: vehicles.filter((v) => v.plate.trim() !== ''),
             position_title: formData.position_title || undefined,
             position_level: formData.position_level || undefined,
             workplace: formData.workplace || undefined,
@@ -478,117 +432,6 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
                                         placeholder="เช่น กรมพัฒนาที่ดิน"
                                     />
                                 </Field>
-                            </VStack>
-
-                            {/* ข้อมูลรถ */}
-                            <VStack align="stretch" gap={4}>
-                                <HStack justify="space-between">
-                                    <Heading size="md">ข้อมูลรถ</Heading>
-                                    <Button size="sm" onClick={handleAddVehicle}>
-                                        <Icon mr={1}>
-                                            <LuPlus />
-                                        </Icon>
-                                        เพิ่มรถ
-                                    </Button>
-                                </HStack>
-
-                                {vehicles.length === 0 ? (
-                                    <Text color="gray.500" fontSize="sm">
-                                        ยังไม่มีข้อมูลรถ คลิก "เพิ่มรถ" เพื่อเพิ่มข้อมูล
-                                    </Text>
-                                ) : (
-                                    <VStack align="stretch" gap={4}>
-                                        {vehicles.map((vehicle, index) => (
-                                            <VStack
-                                                key={index}
-                                                align="stretch"
-                                                gap={3}
-                                                p={4}
-                                                borderWidth="1px"
-                                                borderRadius="md"
-                                                borderColor="gray.200"
-                                            >
-                                                <HStack justify="space-between">
-                                                    <Text fontWeight="medium">รถคันที่ {index + 1}</Text>
-                                                    <IconButton
-                                                        size="sm"
-                                                        colorPalette="red"
-                                                        variant="ghost"
-                                                        onClick={() => handleRemoveVehicle(index)}
-                                                        aria-label="ลบรถ"
-                                                    >
-                                                        <LuTrash2 />
-                                                    </IconButton>
-                                                </HStack>
-
-                                                <Grid templateColumns="repeat(2, 1fr)" gap={3}>
-                                                    <Field label="ประเภท" required>
-                                                        <NativeSelectRoot>
-                                                            <NativeSelectField
-                                                                value={vehicle.type}
-                                                                onChange={(e) =>
-                                                                    handleVehicleChange(index, 'type', e.target.value)
-                                                                }
-                                                            >
-                                                                <option value="car">รถยนต์</option>
-                                                                <option value="motorcycle">มอเตอร์ไซค์</option>
-                                                            </NativeSelectField>
-                                                        </NativeSelectRoot>
-                                                    </Field>
-
-                                                    <Field label="ทะเบียน" required>
-                                                        <Input
-                                                            value={vehicle.plate}
-                                                            onChange={(e) =>
-                                                                handleVehicleChange(index, 'plate', e.target.value)
-                                                            }
-                                                            placeholder="เช่น กข 1234"
-                                                        />
-                                                    </Field>
-                                                </Grid>
-
-                                                <Grid templateColumns="repeat(2, 1fr)" gap={3}>
-                                                    <Field label="จังหวัด" required>
-                                                        <NativeSelectRoot>
-                                                            <NativeSelectField
-                                                                value={vehicle.province}
-                                                                onChange={(e) =>
-                                                                    handleVehicleChange(index, 'province', e.target.value)
-                                                                }
-                                                            >
-                                                                {THAI_PROVINCES.map((province) => (
-                                                                    <option key={province} value={province}>
-                                                                        {province}
-                                                                    </option>
-                                                                ))}
-                                                            </NativeSelectField>
-                                                        </NativeSelectRoot>
-                                                    </Field>
-
-                                                    <Field label="ยี่ห้อ/รุ่น">
-                                                        <Input
-                                                            value={vehicle.brand}
-                                                            onChange={(e) =>
-                                                                handleVehicleChange(index, 'brand', e.target.value)
-                                                            }
-                                                            placeholder="เช่น Toyota Camry"
-                                                        />
-                                                    </Field>
-                                                </Grid>
-
-                                                <Field label="สี">
-                                                    <Input
-                                                        value={vehicle.color}
-                                                        onChange={(e) =>
-                                                            handleVehicleChange(index, 'color', e.target.value)
-                                                        }
-                                                        placeholder="เช่น ขาว, ดำ, แดง"
-                                                    />
-                                                </Field>
-                                            </VStack>
-                                        ))}
-                                    </VStack>
-                                )}
                             </VStack>
                         </VStack>
                     </DialogBody>

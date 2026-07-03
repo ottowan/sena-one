@@ -23,6 +23,8 @@ import { MaintenancePage } from './pages/admin/MaintenancePage';
 import ReportsPage from './pages/admin/ReportsPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import { MeterManagementPage } from './pages/admin/MeterManagementPage';
+import { VehicleRegistryPage } from './pages/admin/VehicleRegistryPage';
+import { EquipmentRegistryPage } from './pages/admin/EquipmentRegistryPage';
 
 // Tenant Pages
 import { TenantLayout } from './components/layout/TenantLayout';
@@ -93,6 +95,8 @@ function App() {
                   <Route path="reports" element={<ReportsPage />} />
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="meters" element={<MeterManagementPage />} />
+                  <Route path="vehicles" element={<VehicleRegistryPage />} />
+                  <Route path="equipment" element={<EquipmentRegistryPage />} />
                 </Route>
 
                 {/* Tenant Routes */}

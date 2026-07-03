@@ -11,17 +11,20 @@ import {
     Grid,
     Image,
 } from '@chakra-ui/react';
-import { LuMapPin, LuDollarSign, LuMaximize, LuPencil, LuTrash2, LuImage, LuRotateCcw, LuHistory, LuLock } from 'react-icons/lu';
+import { LuMapPin, LuDollarSign, LuMaximize, LuPencil, LuTrash2, LuImage, LuRotateCcw, LuHistory, LuLock, LuEye, LuBoxes } from 'react-icons/lu';
 import type { Room, RoomStatus } from '../../types';
 import { formatCurrency } from '../../lib/utils';
 import { Button } from '../ui/button';
+import { Tooltip } from '../ui/tooltip';
 import { MeterHistoryDialog } from './MeterHistoryDialog';
+import { RoomEquipmentViewDialog } from './RoomEquipmentViewDialog';
 
 import type { RentRate } from '../../types';
 
 interface RoomCardProps {
     room: Room;
     rentRates?: RentRate[];
+    onView?: (room: Room) => void;
     onEdit: (room: Room) => void;
     onDelete: (room: Room) => void;
     onRelease?: (room: Room) => void;
@@ -57,10 +60,11 @@ const getStatusLabel = (status: RoomStatus): string => {
     }
 };
 
-export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onEdit, onDelete, onRelease }) => {
+export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onEdit, onDelete, onRelease }) => {
     const statusColor = getStatusColor(room.status);
     const statusLabel = getStatusLabel(room.status);
     const [historyOpen, setHistoryOpen] = useState(false);
+    const [equipmentOpen, setEquipmentOpen] = useState(false);
     const isLocked = !!room.has_active_contract;
 
     const handleDelete = () => {
@@ -210,6 +214,19 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onEdit, onD
 
                             {/* Actions */}
                             <HStack gap={2} pt={2} borderTop="1px" borderColor="gray.200">
+                                {onView && (
+                                    <Tooltip content="ดูรายละเอียด">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => onView(room)}
+                                        >
+                                            <Icon>
+                                                <LuEye />
+                                            </Icon>
+                                        </Button>
+                                    </Tooltip>
+                                )}
                                 <Button
                                     variant="outline"
                                     size="sm"
@@ -227,11 +244,10 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onEdit, onD
                                         variant="outline"
                                         colorPalette="orange"
                                         size="sm"
-                                        disabled={isLocked}
                                         onClick={() => onRelease(room)}
                                     >
                                         <Icon mr={2}>
-                                            {isLocked ? <LuLock /> : <LuRotateCcw />}
+                                            <LuRotateCcw />
                                         </Icon>
                                         คืนห้อง
                                     </Button>
@@ -247,6 +263,18 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onEdit, onD
                                     </Icon>
                                     ประวัติ
                                 </Button>
+                                <Tooltip content="ครุภัณฑ์ประจำห้อง">
+                                    <Button
+                                        variant="outline"
+                                        colorPalette="purple"
+                                        size="sm"
+                                        onClick={() => setEquipmentOpen(true)}
+                                    >
+                                        <Icon>
+                                            <LuBoxes />
+                                        </Icon>
+                                    </Button>
+                                </Tooltip>
                                 <Button
                                     variant="outline"
                                     colorPalette="red"
@@ -269,6 +297,12 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onEdit, onD
                 onClose={() => setHistoryOpen(false)}
                 roomId={room.id}
                 roomNumber={room.room_number}
+            />
+
+            <RoomEquipmentViewDialog
+                open={equipmentOpen}
+                onClose={() => setEquipmentOpen(false)}
+                room={room}
             />
         </>
     );

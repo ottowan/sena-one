@@ -34,7 +34,7 @@ import { ColorModeButton } from '../ui/color-mode';
 import {
     LuLayoutDashboard, LuDoorOpen, LuUsers, LuFileText,
     LuDollarSign, LuWrench, LuClipboardList, LuLogOut,
-    LuUser, LuSettings, LuShield, LuActivity, LuMenu
+    LuUser, LuSettings, LuShield, LuActivity, LuMenu, LuCarFront, LuBoxes
 } from 'react-icons/lu';
 
 interface NavItem {
@@ -50,6 +50,8 @@ const navItems: NavItem[] = [
     { label: 'จัดการผู้เช่า', icon: LuUsers, path: '/admin/tenants' },
     { label: 'สัญญาเช่า', icon: LuFileText, path: '/admin/contracts' },
     { label: 'จัดการมิเตอร์', icon: LuActivity, path: '/admin/meters' },
+    { label: 'ทะเบียนคุมรถยนต์', icon: LuCarFront, path: '/admin/vehicles' },
+    { label: 'ทะเบียนคุมครุภัณฑ์', icon: LuBoxes, path: '/admin/equipment' },
     { label: 'การเงิน (ใบแจ้งหนี้)', icon: LuDollarSign, path: '/admin/invoices' },
     { label: 'แจ้งซ่อม', icon: LuWrench, path: '/admin/maintenance' },
     { label: 'รายงาน', icon: LuClipboardList, path: '/admin/reports' },

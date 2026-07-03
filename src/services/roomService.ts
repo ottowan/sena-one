@@ -15,7 +15,8 @@ import {
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from '../lib/firebase';
 import { fetchByIds, fetchWhereIn, nowIso, withId } from '../lib/firestoreUtils';
-import type { Room, RoomStatus } from '../types';
+import { createDefaultRoomEquipment } from '../lib/defaultRoomEquipment';
+import type { Room, RoomEquipmentItem, RoomStatus } from '../types';
 
 export interface RoomFilters {
     status?: RoomStatus;
@@ -51,12 +52,14 @@ export const roomService = {
         }
 
         const roomIds = rooms.map((room) => room.id);
-        const contracts = await fetchWhereIn<{ id: string; room_id: string; tenant_id: string; monthly_rent: number }>(
-            'contracts',
-            'room_id',
-            roomIds,
-            where('status', '==', 'active')
-        );
+        const contracts = await fetchWhereIn<{
+            id: string;
+            room_id: string;
+            tenant_id: string;
+            monthly_rent: number;
+            start_date: string;
+            end_date: string;
+        }>('contracts', 'room_id', roomIds, where('status', '==', 'active'));
 
         const tenantIds = [...new Set(contracts.map((contract) => contract.tenant_id).filter(Boolean))];
         const tenantById = await fetchByIds<{ id: string; full_name: string; phone: string; position_level?: string }>(
@@ -76,6 +79,8 @@ export const roomService = {
                 has_active_contract: hasActiveContract,
                 current_tenant: contract?.tenant_id ? tenantById.get(contract.tenant_id) || null : null,
                 current_rent: contract?.monthly_rent || null,
+                current_contract_start_date: contract?.start_date || null,
+                current_contract_end_date: contract?.end_date || null,
             };
         });
 
@@ -99,7 +104,9 @@ export const roomService = {
                 limit(1)
             )
         );
-        const contract = contracts.docs[0]?.data() as { monthly_rent: number; tenant_id: string } | undefined;
+        const contract = contracts.docs[0]?.data() as
+            | { monthly_rent: number; tenant_id: string; start_date: string; end_date: string }
+            | undefined;
         const tenant = contract?.tenant_id
             ? await fetchByIds<{ id: string; full_name: string; phone: string; position_level?: string }>('tenants', [
                   contract.tenant_id,
@@ -113,6 +120,8 @@ export const roomService = {
             has_active_contract: !!contract,
             current_tenant: tenant,
             current_rent: contract?.monthly_rent || null,
+            current_contract_start_date: contract?.start_date || null,
+            current_contract_end_date: contract?.end_date || null,
         } as Room;
     },
 
@@ -260,7 +269,7 @@ export const roomService = {
 
     async forceReleaseRoom(roomId: string): Promise<void> {
         if (await roomHasActiveContract(roomId)) {
-            throw new Error('This room has an active contract and cannot be released from the rooms page.');
+            throw new Error('ห้องนี้มีสัญญาเช่าที่ยัง active อยู่ ไม่สามารถบังคับคืนห้องได้ กรุณายกเลิก/สิ้นสุดสัญญาเช่าก่อน');
         }
 
         const staleContracts = await getDocs(
@@ -304,5 +313,29 @@ export const roomService = {
         };
         await setDoc(ref, payload, { merge: true });
         return payload;
+    },
+
+    async updateRoomEquipment(id: string, equipment: RoomEquipmentItem[]): Promise<void> {
+        await updateDoc(doc(db, 'rooms', id), { equipment, updated_at: nowIso() });
+    },
+
+    // Admin-triggered one-off backfill: adds the standard equipment list to
+    // any room that doesn't have one yet (never overwrites existing entries).
+    async seedDefaultEquipment(): Promise<number> {
+        const snap = await getDocs(collection(db, 'rooms'));
+        const now = nowIso();
+        const batch = writeBatch(db);
+        let count = 0;
+
+        snap.docs.forEach((roomDoc) => {
+            const equipment = roomDoc.data().equipment as RoomEquipmentItem[] | undefined;
+            if (!equipment || equipment.length === 0) {
+                batch.update(roomDoc.ref, { equipment: createDefaultRoomEquipment(), updated_at: now });
+                count += 1;
+            }
+        });
+
+        if (count > 0) await batch.commit();
+        return count;
     },
 };

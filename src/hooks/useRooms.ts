@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { roomService, type RoomFilters } from '../services/roomService';
-import type { Room } from '../types';
+import type { Room, RoomEquipmentItem } from '../types';
 import { toaster } from '../components/ui/toaster';
 
 export const useRooms = (filters?: RoomFilters) => {
@@ -117,6 +117,53 @@ export const useForceReleaseRoom = () => {
             toaster.create({
                 title: 'เกิดข้อผิดพลาด',
                 description: error.message || 'ไม่สามารถคืนห้องได้',
+                type: 'error',
+            });
+        },
+    });
+};
+
+export const useUpdateRoomEquipment = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ id, equipment }: { id: string; equipment: RoomEquipmentItem[] }) =>
+            roomService.updateRoomEquipment(id, equipment),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['rooms'] });
+            toaster.create({
+                title: 'สำเร็จ',
+                description: 'บันทึกรายการครุภัณฑ์เรียบร้อยแล้ว',
+                type: 'success',
+            });
+        },
+        onError: (error: any) => {
+            toaster.create({
+                title: 'เกิดข้อผิดพลาด',
+                description: error.message || 'ไม่สามารถบันทึกรายการครุภัณฑ์ได้',
+                type: 'error',
+            });
+        },
+    });
+};
+
+export const useSeedDefaultEquipment = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: () => roomService.seedDefaultEquipment(),
+        onSuccess: (count) => {
+            queryClient.invalidateQueries({ queryKey: ['rooms'] });
+            toaster.create({
+                title: 'สำเร็จ',
+                description: `เพิ่มรายการครุภัณฑ์เริ่มต้นให้ ${count} ห้อง`,
+                type: 'success',
+            });
+        },
+        onError: (error: any) => {
+            toaster.create({
+                title: 'เกิดข้อผิดพลาด',
+                description: error.message || 'ไม่สามารถเพิ่มรายการครุภัณฑ์ได้',
                 type: 'error',
             });
         },

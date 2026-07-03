@@ -66,6 +66,7 @@ export enum BookingStatus {
 
 export enum VehicleType {
     CAR = 'car',
+    PICKUP = 'pickup',
     MOTORCYCLE = 'motorcycle',
 }
 
@@ -92,6 +93,12 @@ export interface Profile {
     updated_at: string;
 }
 
+export interface RoomEquipmentItem {
+    id: string;
+    name: string;
+    asset_number?: string;
+}
+
 export interface Room {
     id: string;
     room_number: string;
@@ -107,6 +114,7 @@ export interface Room {
     description?: string;
     amenities?: string[];
     images?: string[];
+    equipment?: RoomEquipmentItem[];
     created_at: string;
     updated_at: string;
     current_tenant_id?: string | null;
@@ -119,6 +127,8 @@ export interface Room {
         position_level?: string;
     } | null;
     current_rent?: number;
+    current_contract_start_date?: string | null;
+    current_contract_end_date?: string | null;
 }
 
 export interface Vehicle {
@@ -127,6 +137,27 @@ export interface Vehicle {
     province: string;
     brand?: string;
     color?: string;
+}
+
+// ทะเบียนคุมรถยนต์ - independent registry keyed by room, separate from
+// Tenant.vehicles (which stays tied to a tenant profile).
+export interface VehicleRegistration {
+    id: string;
+    room_id: string;
+    type: VehicleType;
+    plate: string;
+    province: string;
+    brand?: string;
+    color?: string;
+    has_sticker: boolean;
+    created_at: string;
+    updated_at: string;
+    // Relations
+    room?: {
+        id: string;
+        room_number: string;
+        current_tenant_name?: string | null;
+    };
 }
 
 export interface Tenant {
@@ -143,6 +174,9 @@ export interface Tenant {
         relationship: string;
     };
     vehicles?: Vehicle[];
+    // Read-only: joined from the `vehicles` collection (ทะเบียนคุมรถยนต์) by
+    // the tenant's current room - managed on the vehicle registry page, not here.
+    registered_vehicles?: VehicleRegistration[];
     position_title?: string;
     position_level?: PositionLevel;
     workplace?: string;
@@ -374,6 +408,15 @@ export interface MaintenanceFormData {
     description: string;
     priority: MaintenancePriority;
     images?: string[];
+}
+
+export interface VehicleRegistrationFormData {
+    type: VehicleType;
+    plate: string;
+    province: string;
+    brand?: string;
+    color?: string;
+    has_sticker: boolean;
 }
 
 // ============================================

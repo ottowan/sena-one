@@ -39,6 +39,7 @@ const getStatusLabel = (status: string): string => {
 
 export const TenantTable: React.FC<TenantTableProps> = ({ tenants, onView, onEdit, onDelete }) => {
     return (
+        <Box overflowX="auto">
         <Table.Root size="sm" variant="outline">
             <Table.Header>
                 <Table.Row>
@@ -128,5 +129,6 @@ export const TenantTable: React.FC<TenantTableProps> = ({ tenants, onView, onEdi
                 ))}
             </Table.Body>
         </Table.Root>
+        </Box>
     );
 };

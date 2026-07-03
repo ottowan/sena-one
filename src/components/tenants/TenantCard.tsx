@@ -53,8 +53,12 @@ export const TenantCard: React.FC<TenantCardProps> = ({
 }) => {
     const statusColor = getStatusColor(tenant.status);
     const statusLabel = getStatusLabel(tenant.status);
-    const vehicleCount = tenant.vehicles?.length || 0;
-    const vehiclePlates = tenant.vehicles?.map(v => v.plate).join(', ') || '';
+    const allPlates = [
+        ...(tenant.vehicles?.map((v) => v.plate) || []),
+        ...(tenant.registered_vehicles?.map((v) => v.plate) || []),
+    ];
+    const vehicleCount = allPlates.length;
+    const vehiclePlates = allPlates.join(', ');
 
     return (
         <Card.Root>
