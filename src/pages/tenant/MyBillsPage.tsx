@@ -184,6 +184,7 @@ export const MyBillsPage: React.FC = () => {
     const { profile } = useAuth();
     const [invoices, setInvoices] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     useEffect(() => {
         let cancelled = false;
@@ -227,17 +228,44 @@ export const MyBillsPage: React.FC = () => {
         };
     }, [profile?.id, profile?.phone]);
 
+    const filteredInvoices = invoices.filter(
+        (invoice) => Number(String(invoice.billing_month || '').slice(0, 4)) === selectedYear
+    );
+
+    const yearSelect = (
+        <Box w="150px">
+            <select
+                className="chakra-select"
+                style={{
+                    padding: '8px',
+                    borderRadius: '6px',
+                    border: '1px solid #e2e8f0',
+                    width: '100%'
+                }}
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+            >
+                {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                    <option key={year} value={year}>พ.ศ. {year + 543}</option>
+                ))}
+            </select>
+        </Box>
+    );
+
     return (
         <VStack align="stretch" gap={6} py={4}>
-            <Heading size="lg">บิลและการชำระเงิน</Heading>
+            <HStack justify="space-between">
+                <Heading size="lg">บิลและการชำระเงิน</Heading>
+                {yearSelect}
+            </HStack>
 
             <Box display={{ base: 'block', md: 'none' }}>
                 {isLoading ? (
                     <Text textAlign="center">กำลังโหลด...</Text>
-                ) : invoices.length === 0 ? (
-                    <Text textAlign="center" color="gray.500">ไม่พบประวัติการชำระเงิน</Text>
+                ) : filteredInvoices.length === 0 ? (
+                    <Text textAlign="center" color="gray.500">ไม่พบประวัติการชำระเงินสำหรับปีนี้</Text>
                 ) : (
-                    invoices.map((invoice) => (
+                    filteredInvoices.map((invoice) => (
                         <MobileInvoiceCard key={invoice.id} invoice={invoice} />
                     ))
                 )}
@@ -259,9 +287,9 @@ export const MyBillsPage: React.FC = () => {
                         <Table.Body>
                             {isLoading ? (
                                 <Table.Row><Table.Cell colSpan={6} textAlign="center">กำลังโหลด...</Table.Cell></Table.Row>
-                            ) : invoices.length === 0 ? (
-                                <Table.Row><Table.Cell colSpan={6} textAlign="center">ไม่พบประวัติการชำระเงิน</Table.Cell></Table.Row>
-                            ) : invoices.map((invoice) => (
+                            ) : filteredInvoices.length === 0 ? (
+                                <Table.Row><Table.Cell colSpan={6} textAlign="center">ไม่พบประวัติการชำระเงินสำหรับปีนี้</Table.Cell></Table.Row>
+                            ) : filteredInvoices.map((invoice) => (
                                 <Table.Row key={invoice.id}>
                                     <Table.Cell>{formatBillingMonth(invoice.billing_month)}</Table.Cell>
                                     <Table.Cell>{getRoomNumber(invoice)}</Table.Cell>

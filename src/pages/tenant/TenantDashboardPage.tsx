@@ -37,7 +37,23 @@ import {
   getExpiryHighlight,
   formatRemainingDuration,
 } from "../../components/contracts/ContractTable";
+import { MonthlyLineChart } from "../../components/tenant/MonthlyLineChart";
 import type { VehicleRegistration } from "../../types";
+
+const MONTH_LABELS = [
+  "ม.ค.",
+  "ก.พ.",
+  "มี.ค.",
+  "เม.ย.",
+  "พ.ค.",
+  "มิ.ย.",
+  "ก.ค.",
+  "ส.ค.",
+  "ก.ย.",
+  "ต.ค.",
+  "พ.ย.",
+  "ธ.ค.",
+];
 
 const CONTRACT_STATUS_LABELS: Record<string, string> = {
   active: "ใช้งานอยู่",
@@ -59,6 +75,7 @@ export const TenantDashboardPage: React.FC = () => {
   const [tenant, setTenant] = useState<any>(null);
   const [contract, setContract] = useState<any>(null);
   const [unpaidInvoices, setUnpaidInvoices] = useState<any[]>([]);
+  const [yearlyInvoices, setYearlyInvoices] = useState<any[]>([]);
   const [vehicles, setVehicles] = useState<VehicleRegistration[]>([]);
   const [contractLoading, setContractLoading] = useState(true);
   const [invoiceLoading, setInvoiceLoading] = useState(false);
@@ -138,6 +155,7 @@ export const TenantDashboardPage: React.FC = () => {
     const fetchInvoices = async () => {
       if (!contract?.id || !profile?.id) {
         setUnpaidInvoices([]);
+        setYearlyInvoices([]);
         return;
       }
 
@@ -149,15 +167,18 @@ export const TenantDashboardPage: React.FC = () => {
             where("tenant_uid", "==", profile.id),
           ),
         );
-        const rows = snap.docs
+        const allRows = snap.docs
           .map((d) => ({ id: d.id, ...d.data() }) as any)
-          .filter(
-            (inv) =>
-              inv.contract_id === contract.id && inv.status === "pending",
-          )
+          .filter((inv) => inv.contract_id === contract.id);
+
+        const pendingRows = allRows
+          .filter((inv) => inv.status === "pending")
           .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)));
 
-        if (!cancelled) setUnpaidInvoices(rows);
+        if (!cancelled) {
+          setUnpaidInvoices(pendingRows);
+          setYearlyInvoices(allRows);
+        }
       } finally {
         if (!cancelled) setInvoiceLoading(false);
       }
@@ -207,6 +228,25 @@ export const TenantDashboardPage: React.FC = () => {
     0,
   );
 
+  const currentYear = new Date().getFullYear();
+  const monthlyStats = MONTH_LABELS.map((label, idx) => {
+    const monthStr = `${currentYear}-${String(idx + 1).padStart(2, "0")}`;
+    const monthInvoices = yearlyInvoices.filter((inv) =>
+      String(inv.billing_month || "").startsWith(monthStr),
+    );
+    return {
+      label,
+      due: monthInvoices.reduce(
+        (sum, inv) => sum + Number(inv.total_amount || 0),
+        0,
+      ),
+      water: monthInvoices.reduce(
+        (sum, inv) => sum + Number(inv.water_usage || 0),
+        0,
+      ),
+    };
+  });
+
   const rentRate = tenant?.position_level
     ? rentRates?.find((r) => r.position_level === tenant.position_level)
     : undefined;
@@ -253,15 +293,57 @@ export const TenantDashboardPage: React.FC = () => {
           <Card.Body>
             <HStack align="start" justify="space-between">
               <VStack align="start" gap={1}>
-                <Text color="gray.500" fontSize="sm">
-                  ข้อมูลห้องพัก
-                </Text>
+                <HStack gap={2}>
+                  <Text color="gray.500" fontSize="sm">
+                    ข้อมูลห้องพัก
+                  </Text>
+
+                  <Badge colorPalette="blue">
+                    {contract?.room?.room_type || "Standard"}
+                  </Badge>
+                </HStack>
                 <Heading size="2xl">
                   {contract?.room?.room_number || "-"}
                 </Heading>
-                <Badge colorPalette="blue">
-                  {contract?.room?.room_type || "Standard"}
-                </Badge>
+
+                {vehicles.length === 0 ? (
+                  <Text color="gray.500" fontSize="sm">
+                    ยังไม่มีข้อมูลรถของห้องนี้
+                  </Text>
+                ) : (
+                  <VStack align="stretch" gap={0}>
+                    {vehicles.map((vehicle) => {
+                      return (
+                        <HStack key={vehicle.id} justify="space-between">
+                          <HStack gap={3}>
+                            <VStack align="start" gap={0}>
+                              <HStack gap={1}>
+                                <Text fontWeight="medium">
+                                  {vehicle.plate} {vehicle.province}
+                                </Text>
+
+                                {vehicle.has_sticker ? (
+                                  <Badge colorPalette="green">
+                                    มีสติ๊กเกอร์
+                                  </Badge>
+                                ) : (
+                                  <Badge colorPalette="gray">
+                                    ไม่มีสติ๊กเกอร์
+                                  </Badge>
+                                )}
+                              </HStack>
+                              <Text fontSize="sm" color="gray.500">
+                                {VEHICLE_TYPE_LABELS[vehicle.type]}
+                                {vehicle.brand ? ` · ${vehicle.brand}` : ""}
+                                {vehicle.color ? ` (${vehicle.color})` : ""}
+                              </Text>
+                            </VStack>
+                          </HStack>
+                        </HStack>
+                      );
+                    })}
+                  </VStack>
+                )}
               </VStack>
               <Box p={3} bg="blue.50" borderRadius="lg" color="blue.600">
                 <Icon fontSize="2xl">
@@ -333,7 +415,7 @@ export const TenantDashboardPage: React.FC = () => {
                 <Text color="gray.500" fontSize="sm">
                   วันที่เริ่มสัญญา
                 </Text>
-                <Text  fontSize="sm">
+                <Text fontSize="sm">
                   {contract?.start_date
                     ? formatDate(contract.start_date, "long")
                     : "-"}
@@ -359,7 +441,6 @@ export const TenantDashboardPage: React.FC = () => {
                   )}
                 </VStack>
               </HStack>
-
             </VStack>
           </Card.Body>
         </Card.Root>
@@ -375,6 +456,41 @@ export const TenantDashboardPage: React.FC = () => {
         </Card.Root>
       )}
 
+      {contract && (
+        <Card.Root>
+          <Card.Header>
+            <Heading size="lg">แนวโน้มรายปี {currentYear + 543}</Heading>
+          </Card.Header>
+          <Card.Body>
+            <Grid
+              templateColumns={{ base: "1fr", lg: "repeat(2, 1fr)" }}
+              gap={8}
+            >
+              <MonthlyLineChart
+                title="ยอดที่ต้องชำระรายเดือน"
+                unit="บาท"
+                color="#2a78d6"
+                data={monthlyStats.map((m) => ({
+                  label: m.label,
+                  value: m.due,
+                }))}
+                valueFormatter={(v) => formatCurrency(v)}
+              />
+              <MonthlyLineChart
+                title="ปริมาณการใช้น้ำรายเดือน"
+                unit="หน่วย"
+                color="#1baf7a"
+                data={monthlyStats.map((m) => ({
+                  label: m.label,
+                  value: m.water,
+                }))}
+                valueFormatter={(v) => `${v.toLocaleString()} หน่วย`}
+              />
+            </Grid>
+          </Card.Body>
+        </Card.Root>
+      )}
+      
       {contract && (
         <Card.Root>
           <Card.Header>
@@ -437,61 +553,8 @@ export const TenantDashboardPage: React.FC = () => {
         </Card.Root>
       )}
 
-      {contract && (
-        <Card.Root>
-          <Card.Header>
-            <HStack>
-              <Icon color="blue.500" fontSize="xl">
-                <LuCarFront />
-              </Icon>
-              <Heading size="lg">ข้อมูลรถ</Heading>
-            </HStack>
-          </Card.Header>
-          <Card.Body>
-            {vehicles.length === 0 ? (
-              <Text color="gray.500" fontSize="sm">
-                ยังไม่มีข้อมูลรถของห้องนี้
-              </Text>
-            ) : (
-              <VStack align="stretch" gap={0}>
-                {vehicles.map((vehicle) => {
-                  const TypeIcon = VEHICLE_TYPE_ICONS[vehicle.type];
-                  return (
-                    <HStack
-                      key={vehicle.id}
-                      justify="space-between"
-                      py={3}
-                      borderBottomWidth="1px"
-                      borderColor="gray.100"
-                    >
-                      <HStack gap={3}>
-                        <Icon color="blue.500">
-                          <TypeIcon />
-                        </Icon>
-                        <VStack align="start" gap={0}>
-                          <Text fontWeight="medium">
-                            {vehicle.plate} {vehicle.province}
-                          </Text>
-                          <Text fontSize="sm" color="gray.500">
-                            {VEHICLE_TYPE_LABELS[vehicle.type]}
-                            {vehicle.brand ? ` · ${vehicle.brand}` : ""}
-                            {vehicle.color ? ` (${vehicle.color})` : ""}
-                          </Text>
-                        </VStack>
-                      </HStack>
-                      {vehicle.has_sticker ? (
-                        <Badge colorPalette="green">มีสติ๊กเกอร์</Badge>
-                      ) : (
-                        <Badge colorPalette="gray">ไม่มีสติ๊กเกอร์</Badge>
-                      )}
-                    </HStack>
-                  );
-                })}
-              </VStack>
-            )}
-          </Card.Body>
-        </Card.Root>
-      )}
+
+
     </VStack>
   );
 };
