@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Heading, Text, VStack, HStack, Input, Grid, Card } from '@chakra-ui/react';
+import { collection, getDocs, query, where, writeBatch } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { Button } from '../../components/ui/button';
 import { toaster } from '../../components/ui/toaster';
 import type { RentRate, AppSettings } from '../../types';
@@ -19,6 +21,7 @@ const SettingsPage: React.FC = () => {
     const [rates, setRates] = useState<RentRate[]>([]);
     const [appSettings, setAppSettings] = useState<Partial<AppSettings>>({});
     const [saving, setSaving] = useState(false);
+    const [fixingDueDate, setFixingDueDate] = useState(false);
 
     const positions = Object.values(PositionLevel);
 
@@ -91,6 +94,33 @@ const SettingsPage: React.FC = () => {
             // Toast is handled in hooks mostly, but good to have fallback or specific message
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleFixMayDueDate = async () => {
+        setFixingDueDate(true);
+        try {
+            const snap = await getDocs(query(collection(db, 'invoices'), where('billing_month', '==', '2026-05-01')));
+
+            if (snap.empty) {
+                toaster.create({ title: 'ไม่พบบิลเดือน พ.ค. 2569', type: 'info' });
+                return;
+            }
+
+            if (!confirm(`พบ ${snap.size} บิลของเดือน พ.ค. 2569 ต้องการแก้วันครบกำหนดเป็น 2026-06-05 ทั้งหมดใช่หรือไม่?`)) {
+                return;
+            }
+
+            const batch = writeBatch(db);
+            snap.docs.forEach((d) => batch.update(d.ref, { due_date: '2026-06-05' }));
+            await batch.commit();
+
+            toaster.create({ title: `แก้ไขวันครบกำหนด ${snap.size} บิลเรียบร้อย`, type: 'success' });
+        } catch (error) {
+            console.error('Error fixing due dates:', error);
+            toaster.create({ title: 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล', type: 'error' });
+        } finally {
+            setFixingDueDate(false);
         }
     };
 
@@ -188,6 +218,34 @@ const SettingsPage: React.FC = () => {
 
                             {/* Common Fee Removed */}
                         </Grid>
+                    </Card.Body>
+                </Card.Root>
+
+                {/* One-off data fix tools */}
+                <Card.Root borderColor="orange.200">
+                    <Card.Header>
+                        <Heading size="md">เครื่องมือแก้ไขข้อมูล</Heading>
+                        <Text color="gray.600" fontSize="sm">
+                            ใช้แก้ไขข้อมูลที่ผิดพลาดเป็นครั้งคราว
+                        </Text>
+                    </Card.Header>
+                    <Card.Body>
+                        <HStack justify="space-between" align="center">
+                            <Box>
+                                <Text fontWeight="medium">แก้วันครบกำหนดบิลเดือน พ.ค. 2569</Text>
+                                <Text color="gray.600" fontSize="sm">
+                                    เปลี่ยนวันครบกำหนด (due_date) ของบิลเดือน 2026-05 ทุกห้อง เป็น 2026-06-05
+                                </Text>
+                            </Box>
+                            <Button
+                                colorPalette="orange"
+                                variant="outline"
+                                disabled={fixingDueDate}
+                                onClick={handleFixMayDueDate}
+                            >
+                                {fixingDueDate ? 'กำลังแก้ไข...' : 'แก้ไขเลย'}
+                            </Button>
+                        </HStack>
                     </Card.Body>
                 </Card.Root>
 

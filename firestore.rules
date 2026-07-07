@@ -70,7 +70,9 @@ service cloud.firestore {
     }
 
     match /vehicles/{vehicleId} {
-      allow read, write: if isAdminOrOwner();
+      allow read: if isAdminOrOwner() ||
+        (isTenant() && ownsRoom(resource.data.room_id));
+      allow write: if isAdminOrOwner();
     }
 
     match /contracts/{contractId} {

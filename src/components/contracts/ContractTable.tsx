@@ -71,7 +71,7 @@ const addMonths = (date: Date, months: number): Date => {
     return result;
 };
 
-const formatRemainingDuration = (endDate: string): string => {
+export const formatRemainingDuration = (endDate: string): string => {
     const end = new Date(endDate);
     const today = new Date();
     end.setHours(0, 0, 0, 0);
@@ -104,7 +104,7 @@ const formatRemainingDuration = (endDate: string): string => {
     return `เหลือ ${parts.join(' ')}`;
 };
 
-const getExpiryHighlight = (contract: Contract) => {
+export const getExpiryHighlight = (contract: Contract) => {
     if (contract.status !== 'active') return undefined;
 
     const end = new Date(contract.end_date);

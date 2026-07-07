@@ -5,9 +5,10 @@ import {
     LuLayoutDashboard,
     LuFileText,
     LuWrench,
-    LuUser,
     LuLogOut,
-    LuMenu
+    LuMenu,
+    LuBoxes,
+    LuDroplet
 } from 'react-icons/lu';
 import { useAuth } from '../../contexts/AuthContext';
 import { Toaster, toaster } from '../ui/toaster';
@@ -73,9 +74,10 @@ const TenantSidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
                 <VStack align="stretch" gap={1} px={4}>
                     <Text fontSize="xs" color="gray.500" px={2} mb={2} fontWeight="bold">MENU</Text>
                     <SidebarItem icon={<LuLayoutDashboard />} label="หน้าหลัก" to="/tenant" end onClick={onNavigate} />
+                    <SidebarItem icon={<LuDroplet />} label="ยอดมิเตอร์น้ำ" to="/tenant/water-meter" onClick={onNavigate} />
                     <SidebarItem icon={<LuFileText />} label="บิลและการชำระเงิน" to="/tenant/bills" onClick={onNavigate} />
+                    <SidebarItem icon={<LuBoxes />} label="ทะเบียนครุภัณฑ์" to="/tenant/equipment" onClick={onNavigate} />
                     <SidebarItem icon={<LuWrench />} label="แจ้งซ่อม" to="/tenant/maintenance" onClick={onNavigate} />
-                    <SidebarItem icon={<LuUser />} label="ข้อมูลสัญญา" to="/tenant/contract" onClick={onNavigate} />
                 </VStack>
             </Box>
 

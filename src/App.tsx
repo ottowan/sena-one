@@ -31,7 +31,8 @@ import { TenantLayout } from './components/layout/TenantLayout';
 import { TenantDashboardPage } from './pages/tenant/TenantDashboardPage';
 import { MyBillsPage } from './pages/tenant/MyBillsPage';
 import { MyMaintenancePage } from './pages/tenant/MyMaintenancePage';
-import { MyContractPage } from './pages/tenant/MyContractPage';
+import { MyEquipmentPage } from './pages/tenant/MyEquipmentPage';
+import { MyWaterMeterPage } from './pages/tenant/MyWaterMeterPage';
 
 // Create Query Client
 const queryClient = new QueryClient({
@@ -111,7 +112,8 @@ function App() {
                   <Route index element={<TenantDashboardPage />} />
                   <Route path="bills" element={<MyBillsPage />} />
                   <Route path="maintenance" element={<MyMaintenancePage />} />
-                  <Route path="contract" element={<MyContractPage />} />
+                  <Route path="equipment" element={<MyEquipmentPage />} />
+                  <Route path="water-meter" element={<MyWaterMeterPage />} />
                 </Route>
 
                 {/* 404 */}
