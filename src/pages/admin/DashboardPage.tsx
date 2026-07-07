@@ -50,30 +50,30 @@ const StatCard: React.FC<StatCardProps> = ({
             <Card.Body>
                 <HStack justify="space-between" align="start">
                     <VStack align="start" gap={2}>
-                        <Text color="gray.600" fontSize="sm" fontWeight="medium">
+                        <Text color="fg.muted" fontSize="sm" fontWeight="medium">
                             {title}
                         </Text>
                         <Heading size="2xl">{value}</Heading>
                         {trend && (
                             <HStack gap={1} fontSize="sm">
-                                <Icon color={trend.isPositive ? 'success.500' : 'danger.500'}>
+                                <Icon color={trend.isPositive ? 'success.fg' : 'danger.fg'}>
                                     {trend.isPositive ? <LuTrendingUp /> : <LuTrendingDown />}
                                 </Icon>
                                 <Text
-                                    color={trend.isPositive ? 'success.600' : 'danger.600'}
+                                    color={trend.isPositive ? 'success.fg' : 'danger.fg'}
                                     fontWeight="medium"
                                 >
                                     {trend.value}%
                                 </Text>
-                                <Text color="gray.500">จากเดือนที่แล้ว</Text>
+                                <Text color="fg.muted">จากเดือนที่แล้ว</Text>
                             </HStack>
                         )}
                     </VStack>
                     <Box
                         p={3}
                         borderRadius="lg"
-                        bg={`${colorScheme}.100`}
-                        color={`${colorScheme}.600`}
+                        bg={`${colorScheme}.muted`}
+                        color={`${colorScheme}.fg`}
                     >
                         <Icon fontSize="2xl">
                             {icon}
@@ -144,11 +144,11 @@ export const DashboardPage: React.FC = () => {
                 <Heading size="2xl" mb={2}>
                     แดชบอร์ด
                 </Heading>
-                <Text color="gray.600" fontSize="lg">
+                <Text color="fg.muted" fontSize="lg">
                     ภาพรวมระบบจัดการหอพัก Sena-One
                 </Text>
                 {statsLoading && (
-                    <Text color="gray.500" fontSize="sm" mt={2}>
+                    <Text color="fg.muted" fontSize="sm" mt={2}>
                         กำลังอัปเดตข้อมูลสรุป...
                     </Text>
                 )}
@@ -235,7 +235,7 @@ export const DashboardPage: React.FC = () => {
                             </HStack>
                             <HStack justify="space-between">
                                 <HStack gap={2}>
-                                    <Box w={3} h={3} borderRadius="full" bg="gray.300" />
+                                    <Box w={3} h={3} borderRadius="full" bg="gray.emphasized" />
                                     <Text>ห้องทั้งหมด</Text>
                                 </HStack>
                                 <Text fontWeight="bold">{stats.totalRooms} ห้อง</Text>
@@ -261,7 +261,7 @@ export const DashboardPage: React.FC = () => {
                                     {stats.activeTenants}
                                 </Text>
                             </HStack>
-                            <Text color="gray.600" fontSize="sm">
+                            <Text color="fg.muted" fontSize="sm">
                                 อัตราการเข้าพัก: {stats.totalRooms > 0 ? ((stats.occupiedRooms / stats.totalRooms) * 100).toFixed(1) : 0}%
                             </Text>
                         </VStack>
@@ -276,22 +276,22 @@ export const DashboardPage: React.FC = () => {
                 <Card.Body>
                     <VStack align="stretch" gap={4}>
                         {activityLoading ? (
-                            <Text color="gray.500" textAlign="center">
+                            <Text color="fg.muted" textAlign="center">
                                 กำลังโหลดกิจกรรมล่าสุด...
                             </Text>
                         ) : recentActivity.length === 0 ? (
-                            <Text color="gray.500" textAlign="center">
+                            <Text color="fg.muted" textAlign="center">
                                 ไม่มีกิจกรรมล่าสุด
                             </Text>
                         ) : (
                             recentActivity.map((activity) => (
-                                <HStack key={`${activity.type}-${activity.id}`} gap={4} p={4} bg="gray.50" borderRadius="md">
+                                <HStack key={`${activity.type}-${activity.id}`} gap={4} p={4} bg="bg.subtle" borderRadius="md">
                                     <Box
                                         w={10}
                                         h={10}
                                         borderRadius="full"
-                                        bg={activity.type === 'payment' ? 'success.100' : 'warning.100'}
-                                        color={activity.type === 'payment' ? 'success.600' : 'warning.600'}
+                                        bg={activity.type === 'payment' ? 'success.muted' : 'warning.muted'}
+                                        color={activity.type === 'payment' ? 'success.fg' : 'warning.fg'}
                                         display="flex"
                                         alignItems="center"
                                         justifyContent="center"
@@ -302,11 +302,11 @@ export const DashboardPage: React.FC = () => {
                                     </Box>
                                     <VStack align="start" gap={0} flex={1}>
                                         <Text fontWeight="medium">{activity.title}</Text>
-                                        <Text color="gray.600" fontSize="sm">
+                                        <Text color="fg.muted" fontSize="sm">
                                             {activity.description}
                                         </Text>
                                     </VStack>
-                                    <Text color="gray.500" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         {new Date(activity.timestamp).toLocaleDateString('th-TH')}
                                     </Text>
                                 </HStack>

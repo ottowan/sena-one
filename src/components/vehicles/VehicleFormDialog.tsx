@@ -131,13 +131,13 @@ export const VehicleFormDialog: React.FC<VehicleFormDialogProps> = ({ open, onCl
                                         {isEdit ? 'รถคันอื่นในห้องนี้' : 'รถที่มีปัจจุบันในห้องนี้'} ({currentRoomVehicles.length} คัน)
                                     </Text>
                                     {currentRoomVehicles.length === 0 ? (
-                                        <Text color="gray.500" fontSize="sm">
+                                        <Text color="fg.muted" fontSize="sm">
                                             ยังไม่มีรถลงทะเบียนสำหรับห้องนี้
                                         </Text>
                                     ) : (
                                         <VStack align="stretch" gap={1}>
                                             {currentRoomVehicles.map((vehicle) => (
-                                                <HStack key={vehicle.id} fontSize="sm" color="gray.600" justify="space-between">
+                                                <HStack key={vehicle.id} fontSize="sm" color="fg.muted" justify="space-between">
                                                     <Text>{VEHICLE_TYPE_LABELS[vehicle.type]}</Text>
                                                     <Text>{vehicle.plate}</Text>
                                                     <Text>{vehicle.province}</Text>
@@ -172,7 +172,7 @@ export const VehicleFormDialog: React.FC<VehicleFormDialogProps> = ({ open, onCl
                                             p={4}
                                             borderWidth="1px"
                                             borderRadius="md"
-                                            borderColor="gray.200"
+                                            borderColor="border.default"
                                         >
                                             <HStack justify="space-between">
                                                 <Text fontWeight="medium">รถคันที่ {index + 1}</Text>

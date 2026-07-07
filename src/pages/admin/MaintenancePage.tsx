@@ -75,7 +75,7 @@ export const MaintenancePage: React.FC = () => {
             <HStack justify="space-between" mb={6}>
                 <VStack align="start" gap={1}>
                     <Heading size="lg">แจ้งซ่อม / บำรุงรักษา</Heading>
-                    <Text color="gray.600">จัดการรายการแจ้งซ่อมจากผู้เช่า</Text>
+                    <Text color="fg.muted">จัดการรายการแจ้งซ่อมจากผู้เช่า</Text>
                 </VStack>
                 <Button colorPalette="blue" onClick={() => setIsDialogOpen(true)}>
                     <LuPlus /> แจ้งซ่อมใหม่
@@ -123,13 +123,13 @@ export const MaintenancePage: React.FC = () => {
                                             <Table.Cell>
                                                 <VStack align="start" gap={0}>
                                                     <Text fontWeight="medium">ห้อง {req.room?.room_number}</Text>
-                                                    <Text fontSize="sm" color="gray.500">{req.tenant?.full_name || '-'}</Text>
+                                                    <Text fontSize="sm" color="fg.muted">{req.tenant?.full_name || '-'}</Text>
                                                 </VStack>
                                             </Table.Cell>
                                             <Table.Cell>
                                                 <VStack align="start" gap={0}>
                                                     <Text fontWeight="medium">{req.title}</Text>
-                                                    <Text fontSize="sm" color="gray.500" truncate maxW="200px">
+                                                    <Text fontSize="sm" color="fg.muted" truncate maxW="200px">
                                                         {req.description}
                                                     </Text>
                                                 </VStack>

@@ -64,10 +64,14 @@ export const MonthlyLineChart: React.FC<MonthlyLineChartProps> = ({
     return (
         <Box>
             <Text fontWeight="medium" mb={2}>
-                {title} <Text as="span" color="gray.500" fontWeight="normal" fontSize="sm">({unit})</Text>
+                {title} <Text as="span" color="fg.muted" fontWeight="normal" fontSize="sm">({unit})</Text>
             </Text>
             <Box position="relative" w="full">
-                <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} width="100%" height={HEIGHT} style={{ display: 'block', overflow: 'visible' }}>
+                <svg
+                    viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+                    width="100%"
+                    style={{ display: 'block', overflow: 'visible', height: 'auto', aspectRatio: `${WIDTH} / ${HEIGHT}` }}
+                >
                     {gridSteps.map((step) => {
                         const y = PADDING_TOP + plotHeight - step * plotHeight;
                         return (

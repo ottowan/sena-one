@@ -123,7 +123,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                         <HStack justify="space-between" align="start">
                             <VStack align="start" gap={1}>
                                 <Heading size="xl">{tenant.full_name}</Heading>
-                                <Text color="gray.600">ID: {tenant.id_card_number}</Text>
+                                <Text color="fg.muted">ID: {tenant.id_card_number}</Text>
                             </VStack>
                             <Badge colorPalette={statusColor} size="lg">
                                 {statusLabel}
@@ -135,11 +135,11 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                             <Heading size="md">ข้อมูลติดต่อ</Heading>
 
                             <HStack gap={3}>
-                                <Icon color="blue.500">
+                                <Icon color="blue.fg">
                                     <LuPhone />
                                 </Icon>
                                 <VStack align="start" gap={0}>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text fontSize="sm" color="fg.muted">
                                         เบอร์โทร
                                     </Text>
                                     <Text fontWeight="medium">{tenant.phone}</Text>
@@ -148,11 +148,11 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                             {tenant.email && (
                                 <HStack gap={3}>
-                                    <Icon color="blue.500">
+                                    <Icon color="blue.fg">
                                         <LuMail />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             อีเมล
                                         </Text>
                                         <Text fontWeight="medium">{tenant.email}</Text>
@@ -162,11 +162,11 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                             {tenant.room && (
                                 <HStack gap={3}>
-                                    <Icon color="blue.500">
+                                    <Icon color="blue.fg">
                                         <LuMapPin />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             ห้องที่เช่า
                                         </Text>
                                         <Text fontWeight="medium">
@@ -184,14 +184,14 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                                 <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                     <VStack align="start" gap={1}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             ชื่อผู้ติดต่อ
                                         </Text>
                                         <Text fontWeight="medium">{tenant.emergency_contact.name}</Text>
                                     </VStack>
 
                                     <VStack align="start" gap={1}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             เบอร์โทร
                                         </Text>
                                         <Text fontWeight="medium">{tenant.emergency_contact.phone}</Text>
@@ -199,7 +199,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                 </Grid>
 
                                 <VStack align="start" gap={1}>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text fontSize="sm" color="fg.muted">
                                         ความสัมพันธ์
                                     </Text>
                                     <Text fontWeight="medium">{tenant.emergency_contact.relationship}</Text>
@@ -215,7 +215,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                 <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                     {tenant.position_title && (
                                         <VStack align="start" gap={1}>
-                                            <Text fontSize="sm" color="gray.600">
+                                            <Text fontSize="sm" color="fg.muted">
                                                 ชื่อตำแหน่ง
                                             </Text>
                                             <Text fontWeight="medium">{tenant.position_title}</Text>
@@ -224,7 +224,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                                     {tenant.position_level && (
                                         <VStack align="start" gap={1}>
-                                            <Text fontSize="sm" color="gray.600">
+                                            <Text fontSize="sm" color="fg.muted">
                                                 ระดับ
                                             </Text>
                                             <Text fontWeight="medium">{tenant.position_level}</Text>
@@ -234,7 +234,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                                 {tenant.workplace && (
                                     <VStack align="start" gap={1}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             สถานที่ทำงาน
                                         </Text>
                                         <Text fontWeight="medium">{tenant.workplace}</Text>
@@ -255,13 +255,13 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                             p={4}
                                             borderWidth="1px"
                                             borderRadius="md"
-                                            borderColor="gray.200"
-                                            bg="gray.50"
+                                            borderColor="border.default"
+                                            bg="bg.subtle"
                                         >
                                             <VStack align="stretch" gap={2}>
                                                 <HStack justify="space-between">
                                                     <HStack gap={2}>
-                                                        <Icon color="blue.500">
+                                                        <Icon color="blue.fg">
                                                             <LuCar />
                                                         </Icon>
                                                         <Text fontWeight="bold">
@@ -273,14 +273,14 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                                                 <Grid templateColumns="repeat(2, 1fr)" gap={3}>
                                                     <VStack align="start" gap={0}>
-                                                        <Text fontSize="sm" color="gray.600">
+                                                        <Text fontSize="sm" color="fg.muted">
                                                             ทะเบียน
                                                         </Text>
                                                         <Text fontWeight="medium">{vehicle.plate}</Text>
                                                     </VStack>
 
                                                     <VStack align="start" gap={0}>
-                                                        <Text fontSize="sm" color="gray.600">
+                                                        <Text fontSize="sm" color="fg.muted">
                                                             จังหวัด
                                                         </Text>
                                                         <Text fontWeight="medium">{vehicle.province}</Text>
@@ -291,7 +291,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                                     <Grid templateColumns="repeat(2, 1fr)" gap={3}>
                                                         {vehicle.brand && (
                                                             <VStack align="start" gap={0}>
-                                                                <Text fontSize="sm" color="gray.600">
+                                                                <Text fontSize="sm" color="fg.muted">
                                                                     ยี่ห้อ/รุ่น
                                                                 </Text>
                                                                 <Text fontWeight="medium">{vehicle.brand}</Text>
@@ -300,7 +300,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                                                         {vehicle.color && (
                                                             <VStack align="start" gap={0}>
-                                                                <Text fontSize="sm" color="gray.600">
+                                                                <Text fontSize="sm" color="fg.muted">
                                                                     สี
                                                                 </Text>
                                                                 <Text fontWeight="medium">{vehicle.color}</Text>
@@ -329,13 +329,13 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                             p={4}
                                             borderWidth="1px"
                                             borderRadius="md"
-                                            borderColor="gray.200"
-                                            bg="gray.50"
+                                            borderColor="border.default"
+                                            bg="bg.subtle"
                                         >
                                             <VStack align="stretch" gap={2}>
                                                 <HStack justify="space-between">
                                                     <HStack gap={2}>
-                                                        <Icon color="blue.500">
+                                                        <Icon color="blue.fg">
                                                             <LuCar />
                                                         </Icon>
                                                         <Text fontWeight="bold">
@@ -351,14 +351,14 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                                                 <Grid templateColumns="repeat(2, 1fr)" gap={3}>
                                                     <VStack align="start" gap={0}>
-                                                        <Text fontSize="sm" color="gray.600">
+                                                        <Text fontSize="sm" color="fg.muted">
                                                             ทะเบียน
                                                         </Text>
                                                         <Text fontWeight="medium">{vehicle.plate}</Text>
                                                     </VStack>
 
                                                     <VStack align="start" gap={0}>
-                                                        <Text fontSize="sm" color="gray.600">
+                                                        <Text fontSize="sm" color="fg.muted">
                                                             จังหวัด
                                                         </Text>
                                                         <Text fontWeight="medium">{vehicle.province}</Text>
@@ -369,7 +369,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                                     <Grid templateColumns="repeat(2, 1fr)" gap={3}>
                                                         {vehicle.brand && (
                                                             <VStack align="start" gap={0}>
-                                                                <Text fontSize="sm" color="gray.600">
+                                                                <Text fontSize="sm" color="fg.muted">
                                                                     ยี่ห้อ/รุ่น
                                                                 </Text>
                                                                 <Text fontWeight="medium">{vehicle.brand}</Text>
@@ -378,7 +378,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                                                         {vehicle.color && (
                                                             <VStack align="start" gap={0}>
-                                                                <Text fontSize="sm" color="gray.600">
+                                                                <Text fontSize="sm" color="fg.muted">
                                                                     สี
                                                                 </Text>
                                                                 <Text fontWeight="medium">{vehicle.color}</Text>
@@ -391,7 +391,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                     ))}
                                 </VStack>
 
-                                <Text fontSize="xs" color="gray.500">
+                                <Text fontSize="xs" color="fg.subtle">
                                     จัดการรถกลุ่มนี้ได้ที่หน้า "ทะเบียนคุมรถยนต์"
                                 </Text>
                             </VStack>
@@ -405,7 +405,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                 <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                     {tenant.move_in_date && (
                                         <VStack align="start" gap={1}>
-                                            <Text fontSize="sm" color="gray.600">
+                                            <Text fontSize="sm" color="fg.muted">
                                                 วันที่เริ่มเช่า
                                             </Text>
                                             <Text fontWeight="medium">
@@ -416,7 +416,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
 
                                     {tenant.move_out_date && (
                                         <VStack align="start" gap={1}>
-                                            <Text fontSize="sm" color="gray.600">
+                                            <Text fontSize="sm" color="fg.muted">
                                                 วันที่สิ้นสุด
                                             </Text>
                                             <Text fontWeight="medium">
@@ -429,24 +429,24 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                         )}
 
                         {/* Metadata */}
-                        <VStack align="stretch" gap={2} pt={4} borderTop="1px" borderColor="gray.200">
+                        <VStack align="stretch" gap={2} pt={4} borderTop="1px" borderColor="border.default">
                             {/* User Linking Section */}
-                            <HStack justify="space-between" bg="gray.50" p={3} borderRadius="md">
+                            <HStack justify="space-between" bg="bg.subtle" p={3} borderRadius="md">
                                 <VStack align="start" gap={1}>
-                                    <Text fontSize="sm" fontWeight="bold" color="gray.700">
+                                    <Text fontSize="sm" fontWeight="bold" color="fg.default">
                                         บัญชีผู้ใช้งาน
                                     </Text>
                                     {tenant.user_id ? (
                                         <HStack gap={2}>
-                                            <Icon color="green.500">
+                                            <Icon color="green.fg">
                                                 <LuUser />
                                             </Icon>
-                                            <Text fontSize="sm" color="green.600" fontWeight="medium">
+                                            <Text fontSize="sm" color="green.fg" fontWeight="medium">
                                                 ผูกบัญชีเรียบร้อยแล้ว
                                             </Text>
                                         </HStack>
                                     ) : (
-                                        <Text fontSize="sm" color="orange.600">
+                                        <Text fontSize="sm" color="orange.fg">
                                             ยังไม่ได้ผูกบัญชี (ผู้เช่าจะไม่เห็นข้อมูล)
                                         </Text>
                                     )}
@@ -464,11 +464,11 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                 )}
                             </HStack>
 
-                            <Text fontSize="sm" color="gray.500">
+                            <Text fontSize="sm" color="fg.subtle">
                                 สร้างเมื่อ: {new Date(tenant.created_at).toLocaleString('th-TH')}
                             </Text>
                             {tenant.updated_at && (
-                                <Text fontSize="sm" color="gray.500">
+                                <Text fontSize="sm" color="fg.subtle">
                                     อัปเดตล่าสุด: {new Date(tenant.updated_at).toLocaleString('th-TH')}
                                 </Text>
                             )}

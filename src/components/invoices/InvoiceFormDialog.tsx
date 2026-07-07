@@ -359,7 +359,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                             <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                                 {/* Water */}
                                 <VStack align="stretch" gap={2}>
-                                    <Text fontWeight="medium" color="blue.600">น้ำประปา</Text>
+                                    <Text fontWeight="medium" color="blue.fg">น้ำประปา</Text>
                                     <Grid templateColumns="1fr 1fr" gap={2}>
                                         <Field label="มิเตอร์ก่อนหน้า">
                                             <Input
@@ -367,7 +367,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                                                 step="0.01"
                                                 value={formData.water_meter_last}
                                                 readOnly
-                                                bg="gray.50"
+                                                bg="bg.subtle"
                                             />
                                         </Field>
                                         <Field
@@ -396,7 +396,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                                         <Input
                                             value={formData.water_usage}
                                             readOnly
-                                            bg="gray.100"
+                                            bg="bg.muted"
                                             fontWeight="bold"
                                         />
                                     </Field>
@@ -404,7 +404,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
 
                                 {/* Electricity */}
                                 <VStack align="stretch" gap={2}>
-                                    <Text fontWeight="medium" color="orange.600">ไฟฟ้า</Text>
+                                    <Text fontWeight="medium" color="orange.fg">ไฟฟ้า</Text>
                                     <Grid templateColumns="1fr 1fr" gap={2}>
                                         <Field label="มิเตอร์ก่อนหน้า">
                                             <Input
@@ -412,7 +412,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                                                 step="0.01"
                                                 value={formData.electricity_meter_last}
                                                 readOnly
-                                                bg="gray.50"
+                                                bg="bg.subtle"
                                             />
                                         </Field>
                                         <Field
@@ -441,7 +441,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                                         <Input
                                             value={formData.electricity_usage}
                                             readOnly
-                                            bg="gray.100"
+                                            bg="bg.muted"
                                             fontWeight="bold"
                                         />
                                     </Field>
@@ -449,16 +449,16 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                             </Grid>
 
                             {/* Total Summary */}
-                            <Box p={4} bg="gray.50" borderRadius="md">
+                            <Box p={4} bg="bg.subtle" borderRadius="md">
                                 <VStack align="stretch" gap={2}>
                                     <HStack justify="space-between">
-                                        <Text color="gray.600">ค่าเช่าห้อง:</Text>
+                                        <Text color="fg.muted">ค่าเช่าห้อง:</Text>
                                         <Text fontWeight="medium">฿{rentAmount.toLocaleString()}</Text>
                                     </HStack>
 
                                     {/* Water Calculation Display */}
                                     <HStack justify="space-between">
-                                        <Text color="gray.600" fontSize="sm">
+                                        <Text color="fg.muted" fontSize="sm">
                                             ค่าน้ำ ({formData.water_usage || 0} หน่วย x {waterRate} บ.):
                                         </Text>
                                         <Text fontWeight="medium">
@@ -468,7 +468,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
 
                                     {/* Electricity Calculation Display */}
                                     <HStack justify="space-between">
-                                        <Text color="gray.600" fontSize="sm">
+                                        <Text color="fg.muted" fontSize="sm">
                                             ค่าไฟ ({formData.electricity_usage || 0} หน่วย x {electricityRate} บ.):
                                         </Text>
                                         <Text fontWeight="medium">
@@ -479,14 +479,14 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                                     {/* Additional Charges */}
                                     {additionalCharges.filter(c => c.name === 'ค่าส่วนกลาง').map((charge, idx) => (
                                         <HStack key={`common-${idx}`} justify="space-between">
-                                            <Text color="gray.600" fontSize="sm">{charge.name}:</Text>
+                                            <Text color="fg.muted" fontSize="sm">{charge.name}:</Text>
                                             <Text fontWeight="medium">฿{charge.amount.toLocaleString()}</Text>
                                         </HStack>
                                     ))}
 
                                     {additionalCharges.filter(c => c.name === 'ค่าบำรุงมิเตอร์น้ำ').map((charge, idx) => (
                                         <HStack key={`maint-${idx}`} justify="space-between">
-                                            <Text color="gray.600" fontSize="sm">{charge.name}:</Text>
+                                            <Text color="fg.muted" fontSize="sm">{charge.name}:</Text>
                                             <Text fontWeight="medium">฿{charge.amount.toLocaleString()}</Text>
                                         </HStack>
                                     ))}
@@ -494,7 +494,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                                     {/* Other charges */}
                                     {additionalCharges.filter(c => c.name !== 'ค่าส่วนกลาง' && c.name !== 'ค่าบำรุงมิเตอร์น้ำ').length > 0 && (
                                         <HStack justify="space-between">
-                                            <Text color="gray.600" fontSize="sm">อื่นๆ:</Text>
+                                            <Text color="fg.muted" fontSize="sm">อื่นๆ:</Text>
                                             <Text fontWeight="medium">
                                                 ฿{additionalCharges.filter(c => c.name !== 'ค่าส่วนกลาง' && c.name !== 'ค่าบำรุงมิเตอร์น้ำ')
                                                     .reduce((sum, c) => sum + (parseFloat(c.amount as any) || 0), 0).toLocaleString()}
@@ -502,16 +502,16 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                                         </HStack>
                                     )}
 
-                                    <Box h="1px" bg="gray.200" my={1} />
+                                    <Box h="1px" bg="border.default" my={1} />
 
                                     <HStack justify="space-between">
-                                        <Text fontWeight="bold" color="gray.700">ยอดรวมทั้งสิ้น:</Text>
-                                        <Text fontWeight="bold" fontSize="xl" color="blue.600">
+                                        <Text fontWeight="bold" color="fg.default">ยอดรวมทั้งสิ้น:</Text>
+                                        <Text fontWeight="bold" fontSize="xl" color="blue.fg">
                                             ฿{totalAmount.toLocaleString()}
                                         </Text>
                                     </HStack>
                                 </VStack>
-                                <Text fontSize="xs" color="gray.500" mt={2}>
+                                <Text fontSize="xs" color="fg.muted" mt={2}>
                                     *ตวรจสอบรายการคำนวณ: ค่าเช่า + ค่าน้ำ + ค่าไฟ + ค่าส่วนกลาง/บำรุงมิเตอร์
                                 </Text>
                             </Box>

@@ -90,9 +90,9 @@ const getExpiryHighlight = (contract: Contract) => {
     end.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
 
-    if (end.getTime() <= addMonths(today, 1).getTime()) return { bg: 'red.50', border: 'red.400' };
-    if (end.getTime() <= addMonths(today, 2).getTime()) return { bg: 'orange.50', border: 'orange.400' };
-    if (end.getTime() <= addMonths(today, 4).getTime()) return { bg: 'yellow.50', border: 'yellow.400' };
+    if (end.getTime() <= addMonths(today, 1).getTime()) return { bg: 'red.subtle', border: 'red.400' };
+    if (end.getTime() <= addMonths(today, 2).getTime()) return { bg: 'orange.subtle', border: 'orange.400' };
+    if (end.getTime() <= addMonths(today, 4).getTime()) return { bg: 'yellow.subtle', border: 'yellow.400' };
     return undefined;
 };
 
@@ -127,10 +127,10 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                 {contract.tenant?.full_name || 'ไม่ระบุผู้เช่า'}
                             </Heading>
                             <HStack gap={2}>
-                                <Icon color="gray.500" fontSize="sm">
+                                <Icon color="fg.muted" fontSize="sm">
                                     <LuUser />
                                 </Icon>
-                                <Text color="gray.600" fontSize="sm">
+                                <Text color="fg.muted" fontSize="sm">
                                     {contract.tenant?.phone || '-'}
                                 </Text>
                             </HStack>
@@ -162,7 +162,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                     ห้อง
                                 </Text>
                             </HStack>
-                            <Text fontSize="sm" color="gray.600" pl={6}>
+                            <Text fontSize="sm" color="fg.muted" pl={6}>
                                 {contract.room?.room_number || '-'}
                             </Text>
                         </VStack>
@@ -176,7 +176,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                     ค่าเช่า/เดือน
                                 </Text>
                             </HStack>
-                            <Text fontSize="sm" color="gray.600" pl={6}>
+                            <Text fontSize="sm" color="fg.muted" pl={6}>
                                 {(() => {
                                     if (contract.tenant?.position_level && rentRates) {
                                         const rate = rentRates.find(r => r.position_level === contract.tenant?.position_level);
@@ -196,7 +196,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                     เริ่มสัญญา
                                 </Text>
                             </HStack>
-                            <Text fontSize="sm" color="gray.600" pl={6}>
+                            <Text fontSize="sm" color="fg.muted" pl={6}>
                                 {formatThaiShortDate(contract.start_date)}
                             </Text>
                         </VStack>
@@ -210,7 +210,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                                     สิ้นสุดสัญญา
                                 </Text>
                             </HStack>
-                            <Text fontSize="sm" color="gray.600" pl={6}>
+                            <Text fontSize="sm" color="fg.muted" pl={6}>
                                 {formatThaiShortDate(contract.end_date)}
                             </Text>
                         </VStack>
@@ -220,7 +220,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                         <Text fontSize="sm" fontWeight="medium">
                             ค่ามัดจำ
                         </Text>
-                        <Text fontSize="sm" color="gray.600">
+                        <Text fontSize="sm" color="fg.muted">
                             ฿{contract.deposit_amount?.toLocaleString() || '0'}
                         </Text>
                     </VStack>
@@ -230,7 +230,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                         gap={2}
                         pt={2}
                         borderTop="1px"
-                        borderColor="gray.200"
+                        borderColor="border.default"
                     >
                         <Button variant="outline" size="sm" w="full" minW={0} onClick={() => onView(contract)}>
                             <Icon mr={2}>

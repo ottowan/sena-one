@@ -98,13 +98,13 @@ export const CancelContractDialog: React.FC<CancelContractDialogProps> = ({
                 <DialogBody>
                     <form onSubmit={handleSubmit} id="cancel-contract-form">
                         <VStack align="stretch" gap={4}>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 ยกเลิกสัญญาสำหรับ: <strong>{contract.tenant?.full_name}</strong>
                             </Text>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 ห้อง: <strong>{contract.room?.room_number}</strong>
                             </Text>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 ค่ามัดจำ:{' '}
                                 <strong>฿{contract.deposit_amount?.toLocaleString() || '0'}</strong>
                             </Text>
@@ -154,7 +154,7 @@ export const CancelContractDialog: React.FC<CancelContractDialogProps> = ({
                                 </NativeSelectRoot>
                             </Field>
 
-                            <Text fontSize="sm" color="red.600" fontWeight="medium">
+                            <Text fontSize="sm" color="red.fg" fontWeight="medium">
                                 คำเตือน: การยกเลิกสัญญาจะทำให้ห้องกลับมาว่างและผู้เช่าจะมีสถานะเป็น
                                 "ไม่ได้เช่า"
                             </Text>

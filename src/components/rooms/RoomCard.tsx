@@ -86,7 +86,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
                                 borderTopRadius="md"
                                 overflow="hidden"
                                 h="180px"
-                                bg="gray.100"
+                                bg="bg.muted"
                             >
                                 <Image
                                     src={room.images[0]}
@@ -100,12 +100,12 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
                             <Box
                                 borderTopRadius="md"
                                 h="180px"
-                                bg="gray.100"
+                                bg="bg.muted"
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
                             >
-                                <Icon fontSize="4xl" color="gray.400">
+                                <Icon fontSize="4xl" color="fg.subtle">
                                     <LuImage />
                                 </Icon>
                             </Box>
@@ -117,7 +117,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
                             <HStack justify="space-between" align="start">
                                 <VStack align="start" gap={1}>
                                     <Heading size="lg">ห้อง {room.room_number}</Heading>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         {room.room_type}
                                     </Text>
                                 </VStack>
@@ -130,14 +130,14 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
                             <Grid templateColumns="repeat(2, 1fr)" gap={3}>
                                 {room.status === 'occupied' ? (
                                     <HStack gap={2}>
-                                        <Icon color="gray.500">
+                                        <Icon color="fg.muted">
                                             <LuDollarSign />
                                         </Icon>
                                         <VStack align="start" gap={0}>
-                                            <Text fontSize="sm" color="gray.600">
+                                            <Text fontSize="sm" color="fg.muted">
                                                 ค่าเช่า/เดือน
                                             </Text>
-                                            <Text fontWeight="bold" color="brand.600">
+                                            <Text fontWeight="bold" color="brand.fg">
                                                 {(() => {
                                                     // Priority 1: Dynamic Rent
                                                     if (room.current_tenant?.position_level && rentRates) {
@@ -152,14 +152,14 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
                                     </HStack>
                                 ) : (
                                     <HStack gap={2}>
-                                        <Icon color="gray.500">
+                                        <Icon color="fg.muted">
                                             <LuDollarSign />
                                         </Icon>
                                         <VStack align="start" gap={0}>
-                                            <Text fontSize="sm" color="gray.600">
+                                            <Text fontSize="sm" color="fg.muted">
                                                 ค่าเช่า/เดือน
                                             </Text>
-                                            <Text fontWeight="medium" color="gray.400">
+                                            <Text fontWeight="medium" color="fg.subtle">
                                                 -
                                             </Text>
                                         </VStack>
@@ -167,11 +167,11 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
                                 )}
 
                                 <HStack gap={2}>
-                                    <Icon color="gray.500">
+                                    <Icon color="fg.muted">
                                         <LuMaximize />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             ขนาด
                                         </Text>
                                         <Text fontWeight="medium">{room.size_sqm} ตร.ม.</Text>
@@ -179,11 +179,11 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
                                 </HStack>
 
                                 <HStack gap={2}>
-                                    <Icon color="gray.500">
+                                    <Icon color="fg.muted">
                                         <LuMapPin />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             ชั้น
                                         </Text>
                                         <Text fontWeight="medium">ชั้น {room.floor}</Text>
@@ -191,11 +191,11 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
                                 </HStack>
 
                                 <HStack gap={2}>
-                                    <Icon color="gray.500">
+                                    <Icon color="fg.muted">
                                         <LuDollarSign />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             ค่าน้ำ/ไฟ
                                         </Text>
                                         <Text fontWeight="medium" fontSize="sm">
@@ -207,13 +207,13 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
 
                             {/* Description */}
                             {room.description && (
-                                <Text color="gray.600" fontSize="sm">
+                                <Text color="fg.muted" fontSize="sm">
                                     {room.description}
                                 </Text>
                             )}
 
                             {/* Actions */}
-                            <HStack gap={2} pt={2} borderTop="1px" borderColor="gray.200">
+                            <HStack gap={2} pt={2} borderTop="1px" borderColor="border.default">
                                 {onView && (
                                     <Tooltip content="ดูรายละเอียด">
                                         <Button

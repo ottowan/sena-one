@@ -71,7 +71,7 @@ export const TenantTable: React.FC<TenantTableProps> = ({ tenants, onView, onEdi
                                     Linked
                                 </Badge>
                             ) : (
-                                <Text fontSize="xs" color="gray.400">-</Text>
+                                <Text fontSize="xs" color="fg.subtle">-</Text>
                             )}
                         </Table.Cell>
                         <Table.Cell>

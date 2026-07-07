@@ -8,9 +8,8 @@ import {
     HStack,
     VStack,
     Icon,
-    Input,
 } from '@chakra-ui/react';
-import { LuPlus, LuSearch, LuFileText } from 'react-icons/lu';
+import { LuPlus, LuFileText } from 'react-icons/lu';
 import { useContracts, useContractStats } from '../../hooks/useContracts';
 import { useRentRates } from '../../hooks/useSettings';
 import { ContractCard } from '../../components/contracts/ContractCard';
@@ -22,6 +21,7 @@ import { TransferContractDialog } from '../../components/contracts/TransferContr
 import { CancelContractDialog } from '../../components/contracts/CancelContractDialog';
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { Button } from '../../components/ui/button';
+import { SearchInput } from '../../components/common/SearchInput';
 import type { Contract, ContractStatus } from '../../types';
 import {
     NativeSelectField,
@@ -132,7 +132,7 @@ export const ContractsPage: React.FC = () => {
                         <Heading size="2xl" mb={2}>
                             จัดการสัญญาเช่า
                         </Heading>
-                        <Text color="gray.600" fontSize="lg">
+                        <Text color="fg.muted" fontSize="lg">
                             จัดการสัญญาเช่าทั้งหมดในระบบ
                         </Text>
                     </Box>
@@ -156,7 +156,7 @@ export const ContractsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         สัญญาทั้งหมด
                                     </Text>
                                     <Heading size="xl">{stats.total}</Heading>
@@ -167,10 +167,10 @@ export const ContractsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         สัญญาเหลือ 4 เดือน
                                     </Text>
-                                    <Heading size="xl" color="blue.600">
+                                    <Heading size="xl" color="blue.fg">
                                         {stats.remainingFourMonths}
                                     </Heading>
                                 </VStack>
@@ -180,10 +180,10 @@ export const ContractsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         สัญญาเหลือ 2 เดือน
                                     </Text>
-                                    <Heading size="xl" color="orange.600">
+                                    <Heading size="xl" color="orange.fg">
                                         {stats.remainingTwoMonths}
                                     </Heading>
                                 </VStack>
@@ -193,10 +193,10 @@ export const ContractsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         ใกล้หมดอายุ
                                     </Text>
-                                    <Heading size="xl" color="warning.600">
+                                    <Heading size="xl" color="warning.fg">
                                         {stats.expiringSoon}
                                     </Heading>
                                 </VStack>
@@ -206,10 +206,10 @@ export const ContractsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         หมดอายุ
                                     </Text>
-                                    <Heading size="xl" color="red.600">
+                                    <Heading size="xl" color="red.fg">
                                         {stats.expiredByDate}
                                     </Heading>
                                 </VStack>
@@ -228,24 +228,11 @@ export const ContractsPage: React.FC = () => {
                                 }}
                                 gap={4}
                             >
-                                <Box position="relative">
-                                    <Icon
-                                        position="absolute"
-                                        left={3}
-                                        top="50%"
-                                        transform="translateY(-50%)"
-                                        color="gray.400"
-                                        zIndex={1}
-                                    >
-                                        <LuSearch />
-                                    </Icon>
-                                    <Input
-                                        placeholder="ค้นหาชื่อผู้เช่า, เลขห้อง..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        pl={10}
-                                    />
-                                </Box>
+                                <SearchInput
+                                    placeholder="ค้นหาชื่อผู้เช่า, เลขห้อง..."
+                                    value={searchTerm}
+                                    onChange={setSearchTerm}
+                                />
 
                                 <NativeSelectRoot>
                                     <NativeSelectField
@@ -262,7 +249,7 @@ export const ContractsPage: React.FC = () => {
                             </Grid>
 
                             <HStack gap={2} justify="flex-end">
-                                <Text fontSize="sm" color="gray.600">
+                                <Text fontSize="sm" color="fg.muted">
                                     รูปแบบการแสดงผล:
                                 </Text>
                                 <ViewModeToggle value={viewMode} onChange={setViewMode} />
@@ -273,7 +260,7 @@ export const ContractsPage: React.FC = () => {
 
                 {isLoading ? (
                     <Box p={8} textAlign="center">
-                        <Text color="gray.500">กำลังโหลด...</Text>
+                        <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
                 ) : sortedContracts.length > 0 ? (
                     <>
@@ -318,14 +305,14 @@ export const ContractsPage: React.FC = () => {
                     <Card.Root>
                         <Card.Body>
                             <VStack gap={4} py={8}>
-                                <Icon fontSize="4xl" color="gray.400">
+                                <Icon fontSize="4xl" color="fg.subtle">
                                     <LuFileText />
                                 </Icon>
                                 <VStack gap={2}>
-                                    <Heading size="md" color="gray.600">
+                                    <Heading size="md" color="fg.muted">
                                         ยังไม่มีสัญญา
                                     </Heading>
-                                    <Text color="gray.500">
+                                    <Text color="fg.muted">
                                         เริ่มต้นโดยการสร้างสัญญาเช่าแรกของคุณ
                                     </Text>
                                 </VStack>

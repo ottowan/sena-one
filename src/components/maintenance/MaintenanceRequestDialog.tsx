@@ -282,7 +282,7 @@ export const MaintenanceRequestDialog: React.FC<MaintenanceRequestDialogProps> =
                                             </label>
                                         </Button>
                                         {!STORAGE_ENABLED && (
-                                            <Text color="gray.500" fontSize="xs" mt={1}>
+                                            <Text color="fg.muted" fontSize="xs" mt={1}>
                                                 อัปโหลดรูปภาพยังไม่เปิดใช้งาน (รอเปิด Firebase Storage)
                                             </Text>
                                         )}

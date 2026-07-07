@@ -84,7 +84,7 @@ export const MyWaterMeterPage: React.FC = () => {
             {!contractLoading && !contract ? (
                 <Card.Root>
                     <Card.Body>
-                        <Text color="gray.600">ยังไม่พบสัญญาที่กำลังใช้งานสำหรับบัญชีนี้</Text>
+                        <Text color="fg.muted">ยังไม่พบสัญญาที่กำลังใช้งานสำหรับบัญชีนี้</Text>
                     </Card.Body>
                 </Card.Root>
             ) : (

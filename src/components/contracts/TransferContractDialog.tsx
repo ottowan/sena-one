@@ -120,10 +120,10 @@ export const TransferContractDialog: React.FC<TransferContractDialogProps> = ({
                 <DialogBody>
                     <form onSubmit={handleSubmit} id="transfer-contract-form">
                         <VStack align="stretch" gap={4}>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 ย้ายห้องสำหรับ: <strong>{contract.tenant?.full_name}</strong>
                             </Text>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 ห้องปัจจุบัน: <strong>{contract.room?.room_number}</strong>
                             </Text>
 
@@ -150,7 +150,7 @@ export const TransferContractDialog: React.FC<TransferContractDialogProps> = ({
                                     </NativeSelectField>
                                 </NativeSelectRoot>
                                 {availableRooms.length === 0 && (
-                                    <Text fontSize="sm" color="red.500" mt={1}>
+                                    <Text fontSize="sm" color="red.fg" mt={1}>
                                         ไม่มีห้องว่างในขณะนี้
                                     </Text>
                                 )}
@@ -182,7 +182,7 @@ export const TransferContractDialog: React.FC<TransferContractDialogProps> = ({
                                 />
                             </Field>
 
-                            <Text fontSize="sm" color="orange.600" fontWeight="medium">
+                            <Text fontSize="sm" color="orange.fg" fontWeight="medium">
                                 หมายเหตุ: การย้ายห้องจะทำให้ห้องเดิมว่างและห้องใหม่ถูกจอง
                             </Text>
                         </VStack>

@@ -107,7 +107,7 @@ export const EquipmentFormDialog: React.FC<EquipmentFormDialogProps> = ({ open, 
                                     {items.map((item, index) => {
                                         const ItemIcon = getRoomEquipmentIcon(item.name);
                                         return (
-                                            <HStack key={item.id} gap={3} p={2} borderBottomWidth="1px" borderColor="gray.100">
+                                            <HStack key={item.id} gap={3} p={2} borderBottomWidth="1px" borderColor="border.muted">
                                                 <Icon fontSize="xl" color={getRoomEquipmentColor(item.name)}>
                                                     <ItemIcon />
                                                 </Icon>
@@ -155,7 +155,7 @@ export const EquipmentFormDialog: React.FC<EquipmentFormDialogProps> = ({ open, 
                                     </Button>
 
                                     {items.length === 0 && (
-                                        <Text color="gray.500" fontSize="sm">
+                                        <Text color="fg.muted" fontSize="sm">
                                             ยังไม่มีรายการครุภัณฑ์
                                         </Text>
                                     )}

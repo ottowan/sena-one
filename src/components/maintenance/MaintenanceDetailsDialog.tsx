@@ -74,16 +74,16 @@ export const MaintenanceDetailsDialog: React.FC<MaintenanceDetailsDialogProps> =
                 <DialogBody>
                     <VStack align="stretch" gap={6}>
                         {/* Info Header */}
-                        <Box p={4} bg="gray.50" borderRadius="md">
+                        <Box p={4} bg="bg.subtle" borderRadius="md">
                             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.500" fontSize="sm">ห้อง</Text>
+                                    <Text color="fg.muted" fontSize="sm">ห้อง</Text>
                                     <Text fontWeight="medium" fontSize="lg">
                                         {request.room?.room_number}
                                     </Text>
                                 </VStack>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.500" fontSize="sm">ผู้แจ้ง</Text>
+                                    <Text color="fg.muted" fontSize="sm">ผู้แจ้ง</Text>
                                     <Text fontWeight="medium">
                                         {request.tenant?.full_name || 'ไม่ระบุ'}
                                     </Text>
@@ -93,7 +93,7 @@ export const MaintenanceDetailsDialog: React.FC<MaintenanceDetailsDialogProps> =
 
                         <VStack align="stretch" gap={2}>
                             <Text fontWeight="bold" fontSize="lg">{request.title}</Text>
-                            <Text color="gray.600" whiteSpace="pre-wrap">
+                            <Text color="fg.muted" whiteSpace="pre-wrap">
                                 {request.description}
                             </Text>
                         </VStack>

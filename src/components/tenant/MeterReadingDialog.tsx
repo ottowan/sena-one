@@ -164,42 +164,42 @@ export const MeterReadingDialog = ({
                 </DialogHeader>
                 <DialogBody>
                     <VStack gap={4} align="stretch">
-                        <Box p={3} bg="gray.100" borderRadius="md" textAlign="center">
-                            <Text fontSize="sm" color="gray.500">ประจำเดือน</Text>
-                            <Heading size="lg" color="blue.600">
+                        <Box p={3} bg="bg.muted" borderRadius="md" textAlign="center">
+                            <Text fontSize="sm" color="fg.muted">ประจำเดือน</Text>
+                            <Heading size="lg" color="blue.fg">
                                 {formatThaiMonth(selectedMonth)}
                             </Heading>
                         </Box>
 
                         {invoiceIssued && (
-                            <Box p={3} bg="red.50" borderRadius="md" border="1px solid" borderColor="red.100">
-                                <HStack color="red.700">
+                            <Box p={3} bg="red.subtle" borderRadius="md" border="1px solid" borderColor="red.muted">
+                                <HStack color="red.fg">
                                     <Icon><LuFileText /></Icon>
                                     <Text fontSize="sm" fontWeight="medium">
                                         มีการออกใบแจ้งหนี้แล้ว ไม่สามารถแก้ไขได้
                                     </Text>
                                 </HStack>
-                                <Text fontSize="xs" color="red.600" mt={1} ml={6}>
+                                <Text fontSize="xs" color="red.fg" mt={1} ml={6}>
                                     กรุณาติดต่อเจ้าหน้าที่หากต้องการแก้ไขข้อมูล
                                 </Text>
                             </Box>
                         )}
 
                         {!invoiceIssued && isEdit && (
-                            <Box p={3} bg="orange.50" borderRadius="md">
-                                <Text fontSize="sm" color="orange.700">
+                            <Box p={3} bg="orange.subtle" borderRadius="md">
+                                <Text fontSize="sm" color="orange.fg">
                                     เดือนนี้คุณได้บันทึกไปแล้ว ไม่สามารถแก้ไขได้
                                 </Text>
                             </Box>
                         )}
 
-                        <Box p={3} bg="blue.50" borderRadius="md">
+                        <Box p={3} bg="blue.subtle" borderRadius="md">
                             <HStack justify="space-between">
-                                <Text fontSize="sm" color="blue.700">เลขครั้งก่อน ({formatThaiMonth(prevMonthStr)}):</Text>
-                                <Text fontWeight="bold" color="blue.800">{prevWaterMeter.toLocaleString()}</Text>
+                                <Text fontSize="sm" color="blue.fg">เลขครั้งก่อน ({formatThaiMonth(prevMonthStr)}):</Text>
+                                <Text fontWeight="bold" color="blue.fg">{prevWaterMeter.toLocaleString()}</Text>
                             </HStack>
                             {prevWaterMeter === 0 && (
-                                <Text fontSize="xs" color="gray.500" mt={1}>*ไม่พบข้อมูลเดือนก่อนหน้า</Text>
+                                <Text fontSize="xs" color="fg.muted" mt={1}>*ไม่พบข้อมูลเดือนก่อนหน้า</Text>
                             )}
                         </Box>
 
@@ -216,7 +216,7 @@ export const MeterReadingDialog = ({
                         </Box>
 
                         {parseFloat(waterMeter) < prevWaterMeter && waterMeter !== '' && (
-                            <Text color="red.500" fontSize="xs">
+                            <Text color="red.fg" fontSize="xs">
                                 ตัวเลขต่ำกว่าครั้งก่อน ({prevWaterMeter})
                             </Text>
                         )}

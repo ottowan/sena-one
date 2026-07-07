@@ -103,11 +103,11 @@ export const PaymentDialog: React.FC<PaymentDialogProps> = ({
                 <DialogBody>
                     <form onSubmit={handleSubmit} id="payment-form">
                         <VStack align="stretch" gap={4}>
-                            <Box p={4} bg="blue.50" borderRadius="md">
-                                <Text fontSize="sm" color="blue.700" fontWeight="medium">
+                            <Box p={4} bg="blue.subtle" borderRadius="md">
+                                <Text fontSize="sm" color="blue.fg" fontWeight="medium">
                                     ใบแจ้งหนี้รอบ: {new Date(invoice.billing_month).toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })}
                                 </Text>
-                                <Text fontSize="lg" fontWeight="bold" color="blue.800">
+                                <Text fontSize="lg" fontWeight="bold" color="blue.fg">
                                     ยอดชำระ: ฿{invoice.total_amount.toLocaleString()}
                                 </Text>
                             </Box>
@@ -151,7 +151,7 @@ export const PaymentDialog: React.FC<PaymentDialogProps> = ({
                                             maxH="200px"
                                             borderRadius="md"
                                             border="1px solid"
-                                            borderColor="gray.200"
+                                            borderColor="border.default"
                                         />
                                         <Button
                                             size="xs"
@@ -171,20 +171,20 @@ export const PaymentDialog: React.FC<PaymentDialogProps> = ({
                                 ) : (
                                     <Box
                                         border="2px dashed"
-                                        borderColor="gray.300"
+                                        borderColor="border.default"
                                         borderRadius="md"
                                         p={6}
                                         textAlign="center"
                                         cursor={STORAGE_ENABLED ? 'pointer' : 'not-allowed'}
                                         opacity={STORAGE_ENABLED ? 1 : 0.5}
                                         onClick={() => STORAGE_ENABLED && document.getElementById('slip-upload')?.click()}
-                                        _hover={STORAGE_ENABLED ? { borderColor: 'blue.500', bg: 'gray.50' } : undefined}
+                                        _hover={STORAGE_ENABLED ? { borderColor: 'blue.500', bg: 'bg.subtle' } : undefined}
                                     >
                                         <VStack gap={2}>
-                                            <Icon fontSize="2xl" color="gray.400">
+                                            <Icon fontSize="2xl" color="fg.subtle">
                                                 <LuUpload />
                                             </Icon>
-                                            <Text fontSize="sm" color="gray.600">
+                                            <Text fontSize="sm" color="fg.muted">
                                                 {STORAGE_ENABLED
                                                     ? 'คลิกเพื่ออัปโหลดรูปภาพ'
                                                     : 'อัปโหลดรูปภาพยังไม่เปิดใช้งาน (รอเปิด Firebase Storage)'}

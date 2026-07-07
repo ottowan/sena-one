@@ -80,37 +80,37 @@ const InvoiceDetailDialog = ({ invoice }: { invoice: any }) => {
                 <DialogBody>
                     <VStack align="stretch" gap={3}>
                         <HStack justify="space-between">
-                            <Text color="gray.600">ค่าเช่าห้อง:</Text>
+                            <Text color="fg.muted">ค่าเช่าห้อง:</Text>
                             <Text fontWeight="medium">{formatCurrency(invoice.rent_amount)}</Text>
                         </HStack>
 
-                        <Box p={3} bg="blue.50" borderRadius="md">
-                            <Text fontWeight="bold" color="blue.700" mb={1}>ค่าน้ำประปา</Text>
+                        <Box p={3} bg="blue.subtle" borderRadius="md">
+                            <Text fontWeight="bold" color="blue.fg" mb={1}>ค่าน้ำประปา</Text>
                             <HStack justify="space-between" fontSize="sm">
-                                <Text color="gray.600">
+                                <Text color="fg.muted">
                                     มิเตอร์: {invoice.water_meter_last} {'->'} {invoice.water_meter_current}
                                 </Text>
                             </HStack>
                             <HStack justify="space-between" fontSize="sm" mt={1}>
-                                <Text color="gray.600">
+                                <Text color="fg.muted">
                                     การคำนวณ: {invoice.water_usage} หน่วย x {waterRate} บาท
                                 </Text>
-                                <Text fontWeight="medium" color="blue.700">{formatCurrency(invoice.water_cost)}</Text>
+                                <Text fontWeight="medium" color="blue.fg">{formatCurrency(invoice.water_cost)}</Text>
                             </HStack>
                         </Box>
 
-                        <Box p={3} bg="orange.50" borderRadius="md">
-                            <Text fontWeight="bold" color="orange.700" mb={1}>ค่าไฟฟ้า</Text>
+                        <Box p={3} bg="orange.subtle" borderRadius="md">
+                            <Text fontWeight="bold" color="orange.fg" mb={1}>ค่าไฟฟ้า</Text>
                             <HStack justify="space-between" fontSize="sm">
-                                <Text color="gray.600">
+                                <Text color="fg.muted">
                                     มิเตอร์: {invoice.electricity_meter_last} {'->'} {invoice.electricity_meter_current}
                                 </Text>
                             </HStack>
                             <HStack justify="space-between" fontSize="sm" mt={1}>
-                                <Text color="gray.600">
+                                <Text color="fg.muted">
                                     การคำนวณ: {invoice.electricity_usage} หน่วย x {electricityRate} บาท
                                 </Text>
-                                <Text fontWeight="medium" color="orange.700">{formatCurrency(invoice.electricity_cost)}</Text>
+                                <Text fontWeight="medium" color="orange.fg">{formatCurrency(invoice.electricity_cost)}</Text>
                             </HStack>
                         </Box>
 
@@ -118,7 +118,7 @@ const InvoiceDetailDialog = ({ invoice }: { invoice: any }) => {
                             <Box>
                                 <Text fontWeight="medium" mb={1}>ค่าใช้จ่ายอื่น ๆ</Text>
                                 {invoice.additional_charges.map((charge: any, index: number) => (
-                                    <HStack key={index} justify="space-between" pl={2} fontSize="sm" color="gray.600">
+                                    <HStack key={index} justify="space-between" pl={2} fontSize="sm" color="fg.muted">
                                         <Text>- {charge.name}</Text>
                                         <Text>{formatCurrency(charge.amount)}</Text>
                                     </HStack>
@@ -130,7 +130,7 @@ const InvoiceDetailDialog = ({ invoice }: { invoice: any }) => {
 
                         <HStack justify="space-between" pt={2}>
                             <Text fontWeight="bold" fontSize="lg">ยอดรวมสุทธิ</Text>
-                            <Text fontWeight="bold" fontSize="xl" color="blue.600">{formatCurrency(invoice.total_amount)}</Text>
+                            <Text fontWeight="bold" fontSize="xl" color="blue.fg">{formatCurrency(invoice.total_amount)}</Text>
                         </HStack>
                     </VStack>
                 </DialogBody>
@@ -156,12 +156,12 @@ const MobileInvoiceCard = ({ invoice }: { invoice: any }) => {
                         </Badge>
                     </HStack>
 
-                    <HStack justify="space-between" color="gray.600" fontSize="sm">
+                    <HStack justify="space-between" color="fg.muted" fontSize="sm">
                         <Text>ห้อง:</Text>
                         <Text>{getRoomNumber(invoice)}</Text>
                     </HStack>
 
-                    <HStack justify="space-between" color="gray.600" fontSize="sm">
+                    <HStack justify="space-between" color="fg.muted" fontSize="sm">
                         <Text>วันครบกำหนด:</Text>
                         <Text>{invoice.due_date}</Text>
                     </HStack>
@@ -170,7 +170,7 @@ const MobileInvoiceCard = ({ invoice }: { invoice: any }) => {
 
                     <HStack justify="space-between">
                         <Text fontWeight="medium">ยอดชำระ</Text>
-                        <Text fontWeight="bold" fontSize="xl" color="brand.600">{formatCurrency(invoice.total_amount)}</Text>
+                        <Text fontWeight="bold" fontSize="xl" color="brand.fg">{formatCurrency(invoice.total_amount)}</Text>
                     </HStack>
 
                     <InvoiceDetailDialog invoice={invoice} />
@@ -263,7 +263,7 @@ export const MyBillsPage: React.FC = () => {
                 {isLoading ? (
                     <Text textAlign="center">กำลังโหลด...</Text>
                 ) : filteredInvoices.length === 0 ? (
-                    <Text textAlign="center" color="gray.500">ไม่พบประวัติการชำระเงินสำหรับปีนี้</Text>
+                    <Text textAlign="center" color="fg.muted">ไม่พบประวัติการชำระเงินสำหรับปีนี้</Text>
                 ) : (
                     filteredInvoices.map((invoice) => (
                         <MobileInvoiceCard key={invoice.id} invoice={invoice} />

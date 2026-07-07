@@ -309,7 +309,7 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
                                     </NativeSelectField>
                                 </NativeSelectRoot>
                                 {!isEdit && availableTenants.length === 0 && (
-                                    <Text fontSize="sm" color="red.500" mt={1}>
+                                    <Text fontSize="sm" color="red.fg" mt={1}>
                                         ไม่มีผู้เช่าที่สามารถทำสัญญาได้ในขณะนี้
                                     </Text>
                                 )}
@@ -338,12 +338,12 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
                                     </NativeSelectField>
                                 </NativeSelectRoot>
                                 {!isEdit && availableRooms.length === 0 && (
-                                    <Text fontSize="sm" color="red.500" mt={1}>
+                                    <Text fontSize="sm" color="red.fg" mt={1}>
                                         ไม่มีห้องว่างในขณะนี้
                                     </Text>
                                 )}
                                 {isEdit && (
-                                    <Text fontSize="sm" color="gray.500" mt={1}>
+                                    <Text fontSize="sm" color="fg.muted" mt={1}>
                                         แสดงเฉพาะห้องเดิม และห้องว่างที่ไม่มีสัญญาใช้งานอยู่
                                     </Text>
                                 )}

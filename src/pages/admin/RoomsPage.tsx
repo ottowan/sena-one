@@ -8,9 +8,8 @@ import {
     HStack,
     VStack,
     Icon,
-    Input,
 } from '@chakra-ui/react';
-import { LuPlus, LuSearch, LuRefreshCw } from 'react-icons/lu';
+import { LuPlus, LuRefreshCw } from 'react-icons/lu';
 import { useRooms, useRoomStats, useDeleteRoom, useForceReleaseRoom } from '../../hooks/useRooms';
 import { roomService } from '../../services/roomService';
 import { useRentRates } from '../../hooks/useSettings';
@@ -22,6 +21,7 @@ import { RoomDetailsDialog } from '../../components/rooms/RoomDetailsDialog';
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { FloorFilter } from '../../components/common/FloorFilter';
 import { Button } from '../../components/ui/button';
+import { SearchInput } from '../../components/common/SearchInput';
 import type { Room, RoomStatus } from '../../types';
 import {
     NativeSelectField,
@@ -102,7 +102,7 @@ export const RoomsPage: React.FC = () => {
                         <Heading size="2xl" mb={2}>
                             จัดการห้องพัก
                         </Heading>
-                        <Text color="gray.600" fontSize="lg">
+                        <Text color="fg.muted" fontSize="lg">
                             จัดการข้อมูลห้องพักทั้งหมดในระบบ
                         </Text>
                     </Box>
@@ -144,7 +144,7 @@ export const RoomsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         ห้องทั้งหมด
                                     </Text>
                                     <Heading size="xl">{stats.total}</Heading>
@@ -155,10 +155,10 @@ export const RoomsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         ห้องว่าง
                                     </Text>
-                                    <Heading size="xl" color="success.600">
+                                    <Heading size="xl" color="success.fg">
                                         {stats.available}
                                     </Heading>
                                 </VStack>
@@ -168,10 +168,10 @@ export const RoomsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         มีผู้เข้าพัก
                                     </Text>
-                                    <Heading size="xl" color="brand.600">
+                                    <Heading size="xl" color="brand.fg">
                                         {stats.occupied}
                                     </Heading>
                                 </VStack>
@@ -181,10 +181,10 @@ export const RoomsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         จอง
                                     </Text>
-                                    <Heading size="xl" color="warning.600">
+                                    <Heading size="xl" color="warning.fg">
                                         {stats.reserved}
                                     </Heading>
                                 </VStack>
@@ -194,10 +194,10 @@ export const RoomsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         ซ่อมบำรุง
                                     </Text>
-                                    <Heading size="xl" color="danger.600">
+                                    <Heading size="xl" color="danger.fg">
                                         {stats.maintenance}
                                     </Heading>
                                 </VStack>
@@ -217,24 +217,11 @@ export const RoomsPage: React.FC = () => {
                                 }}
                                 gap={4}
                             >
-                                <Box position="relative">
-                                    <Icon
-                                        position="absolute"
-                                        left={3}
-                                        top="50%"
-                                        transform="translateY(-50%)"
-                                        color="gray.400"
-                                        zIndex={1}
-                                    >
-                                        <LuSearch />
-                                    </Icon>
-                                    <Input
-                                        placeholder="ค้นหาเลขห้อง..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        pl={10}
-                                    />
-                                </Box>
+                                <SearchInput
+                                    placeholder="ค้นหาเลขห้อง..."
+                                    value={searchTerm}
+                                    onChange={setSearchTerm}
+                                />
 
                                 <NativeSelectRoot>
                                     <NativeSelectField
@@ -271,7 +258,7 @@ export const RoomsPage: React.FC = () => {
 
                             {/* Floor Filter */}
                             <VStack align="stretch" gap={2}>
-                                <Text fontSize="sm" color="gray.600" fontWeight="medium">
+                                <Text fontSize="sm" color="fg.muted" fontWeight="medium">
                                     กรองตามชั้น:
                                 </Text>
                                 <FloorFilter
@@ -283,7 +270,7 @@ export const RoomsPage: React.FC = () => {
 
                             {/* View Mode Toggle */}
                             <HStack gap={2} justify="flex-end">
-                                <Text fontSize="sm" color="gray.600">
+                                <Text fontSize="sm" color="fg.muted">
                                     รูปแบบการแสดงผล:
                                 </Text>
                                 <ViewModeToggle value={viewMode} onChange={setViewMode} />
@@ -295,7 +282,7 @@ export const RoomsPage: React.FC = () => {
                 {/* Room List */}
                 {isLoading ? (
                     <Box p={8} textAlign="center">
-                        <Text color="gray.500">กำลังโหลด...</Text>
+                        <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
                 ) : rooms && rooms.length > 0 ? (
                     <>
@@ -347,10 +334,10 @@ export const RoomsPage: React.FC = () => {
                         <Card.Body>
                             <VStack gap={4} py={8}>
                                 <VStack gap={2}>
-                                    <Heading size="md" color="gray.600">
+                                    <Heading size="md" color="fg.muted">
                                         ยังไม่มีห้องพัก
                                     </Heading>
-                                    <Text color="gray.500">
+                                    <Text color="fg.muted">
                                         เริ่มต้นโดยการเพิ่มห้องพักแรกของคุณ
                                     </Text>
                                 </VStack>

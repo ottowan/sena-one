@@ -193,7 +193,7 @@ export const UserFormDialog: React.FC<UserFormDialogProps> = ({
                                         </Button>
                                         {changePassword && (
                                             <VStack align="start" gap={2} w="full">
-                                                <Text fontSize="sm" color="blue.600">
+                                                <Text fontSize="sm" color="blue.fg">
                                                     ตั้งรหัสผ่านใหม่สำหรับผู้ใช้
                                                 </Text>
                                                 <HStack w="full">
@@ -214,7 +214,7 @@ export const UserFormDialog: React.FC<UserFormDialogProps> = ({
                                                         </Icon>
                                                     </IconButton>
                                                 </HStack>
-                                                <Text fontSize="xs" color="gray.600">
+                                                <Text fontSize="xs" color="fg.muted">
                                                     รหัสผ่านจะถูกแสดงในการแจ้งเตือนหลังบันทึก
                                                 </Text>
                                             </VStack>

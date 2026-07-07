@@ -12,7 +12,7 @@ import {
     Table,
     Input,
 } from '@chakra-ui/react';
-import { LuUsers, LuSearch, LuShield, LuPencil } from 'react-icons/lu';
+import { LuUsers, LuShield, LuPencil } from 'react-icons/lu';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { withId } from '../../lib/firestoreUtils';
@@ -20,6 +20,7 @@ import type { Profile, UserRole } from '../../types';
 import { UserRole as UserRoleEnum } from '../../types';
 import { formatDate } from '../../lib/utils';
 import { Button } from '../../components/ui/button';
+import { SearchInput } from '../../components/common/SearchInput';
 import {
     DialogRoot,
     DialogContent,
@@ -211,7 +212,7 @@ export const UserManagementPage: React.FC = () => {
                     <Heading size="2xl" mb={2}>
                         จัดการสิทธิ์ผู้ใช้
                     </Heading>
-                    <Text color="gray.600" fontSize="lg">
+                    <Text color="fg.muted" fontSize="lg">
                         จัดการบทบาทและสิทธิ์การเข้าถึงของผู้ใช้ในระบบ
                     </Text>
                 </Box>
@@ -242,7 +243,7 @@ export const UserManagementPage: React.FC = () => {
                     <Card.Body>
                         <HStack justify="space-between">
                             <VStack align="start" gap={1}>
-                                <Text color="gray.600" fontSize="sm">
+                                <Text color="fg.muted" fontSize="sm">
                                     ผู้ใช้ทั้งหมด
                                 </Text>
                                 <Heading size="2xl">{stats.total}</Heading>
@@ -250,8 +251,8 @@ export const UserManagementPage: React.FC = () => {
                             <Box
                                 p={3}
                                 borderRadius="lg"
-                                bg="brand.100"
-                                color="brand.600"
+                                bg="brand.muted"
+                                color="brand.fg"
                             >
                                 <Icon fontSize="2xl">
                                     <LuUsers />
@@ -265,7 +266,7 @@ export const UserManagementPage: React.FC = () => {
                     <Card.Body>
                         <HStack justify="space-between">
                             <VStack align="start" gap={1}>
-                                <Text color="gray.600" fontSize="sm">
+                                <Text color="fg.muted" fontSize="sm">
                                     ผู้ดูแลระบบ
                                 </Text>
                                 <Heading size="2xl">{stats.admins}</Heading>
@@ -273,8 +274,8 @@ export const UserManagementPage: React.FC = () => {
                             <Box
                                 p={3}
                                 borderRadius="lg"
-                                bg="red.100"
-                                color="red.600"
+                                bg="red.subtle"
+                                color="red.fg"
                             >
                                 <Icon fontSize="2xl">
                                     <LuShield />
@@ -288,7 +289,7 @@ export const UserManagementPage: React.FC = () => {
                     <Card.Body>
                         <HStack justify="space-between">
                             <VStack align="start" gap={1}>
-                                <Text color="gray.600" fontSize="sm">
+                                <Text color="fg.muted" fontSize="sm">
                                     เจ้าของหอพัก
                                 </Text>
                                 <Heading size="2xl">{stats.owners}</Heading>
@@ -296,8 +297,8 @@ export const UserManagementPage: React.FC = () => {
                             <Box
                                 p={3}
                                 borderRadius="lg"
-                                bg="blue.100"
-                                color="blue.600"
+                                bg="blue.subtle"
+                                color="blue.fg"
                             >
                                 <Icon fontSize="2xl">
                                     <LuShield />
@@ -311,7 +312,7 @@ export const UserManagementPage: React.FC = () => {
                     <Card.Body>
                         <HStack justify="space-between">
                             <VStack align="start" gap={1}>
-                                <Text color="gray.600" fontSize="sm">
+                                <Text color="fg.muted" fontSize="sm">
                                     ผู้เช่า
                                 </Text>
                                 <Heading size="2xl">{stats.tenants}</Heading>
@@ -319,8 +320,8 @@ export const UserManagementPage: React.FC = () => {
                             <Box
                                 p={3}
                                 borderRadius="lg"
-                                bg="green.100"
-                                color="green.600"
+                                bg="green.subtle"
+                                color="green.fg"
                             >
                                 <Icon fontSize="2xl">
                                     <LuUsers />
@@ -335,23 +336,13 @@ export const UserManagementPage: React.FC = () => {
             <Card.Root>
                 <Card.Body>
                     <HStack gap={4}>
-                        <Box position="relative" flex={1}>
-                            <Icon
-                                position="absolute"
-                                left={3}
-                                top="50%"
-                                transform="translateY(-50%)"
-                                color="gray.400"
-                            >
-                                <LuSearch />
-                            </Icon>
-                            <Input
+                        <Box flex={1}>
+                            <SearchInput
                                 placeholder="ค้นหาชื่อ, เบอร์โทร, หรือบทบาท..."
                                 name="user-search"
                                 autoComplete="off"
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                pl={10}
+                                onChange={setSearchTerm}
                                 size="lg"
                             />
                         </Box>
@@ -360,7 +351,7 @@ export const UserManagementPage: React.FC = () => {
                 {filteredUsers.length > pageSize && (
                     <Card.Footer>
                         <HStack justify="space-between" w="full">
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 แสดง {(page - 1) * pageSize + 1}-{Math.min(page * pageSize, filteredUsers.length)} จาก {filteredUsers.length} รายการ
                             </Text>
                             <HStack gap={2}>
@@ -397,11 +388,11 @@ export const UserManagementPage: React.FC = () => {
                 <Card.Body p={0}>
                     {loading ? (
                         <Box p={8} textAlign="center">
-                            <Text color="gray.500">กำลังโหลด...</Text>
+                            <Text color="fg.muted">กำลังโหลด...</Text>
                         </Box>
                     ) : filteredUsers.length === 0 ? (
                         <Box p={8} textAlign="center">
-                            <Text color="gray.500">ไม่พบผู้ใช้</Text>
+                            <Text color="fg.muted">ไม่พบผู้ใช้</Text>
                         </Box>
                     ) : (
                         <Table.Root variant="line">
@@ -423,13 +414,13 @@ export const UserManagementPage: React.FC = () => {
                                         <Table.Cell>
                                             <VStack align="start" gap={0}>
                                                 <Text fontWeight="medium">{user.full_name}</Text>
-                                                <Text fontSize="sm" color="gray.500">
+                                                <Text fontSize="sm" color="fg.muted">
                                                     ID: {user.id.slice(0, 8)}...
                                                 </Text>
                                             </VStack>
                                         </Table.Cell>
                                         <Table.Cell>
-                                            <Text fontWeight="medium" color="brand.600">
+                                            <Text fontWeight="medium" color="brand.fg">
                                                 {(user as any).username || '-'}
                                             </Text>
                                         </Table.Cell>
@@ -513,7 +504,7 @@ export const UserManagementPage: React.FC = () => {
                         <Text>
                             คุณต้องการลบผู้ใช้ <strong>{userToDelete?.full_name}</strong> ใช่หรือไม่?
                             <br />
-                            <Text as="span" color="red.500" fontSize="sm">
+                            <Text as="span" color="red.fg" fontSize="sm">
                                 * การลบนี้จะลบข้อมูลโปรไฟล์เท่านั้น บัญชีผู้ใช้อาจยังคงอยู่ในระบบ Auth
                             </Text>
                         </Text>
@@ -566,7 +557,7 @@ export const UserManagementPage: React.FC = () => {
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
-                            <Text fontSize="xs" color="gray.500">
+                            <Text fontSize="xs" color="fg.muted">
                                 * รหัสผ่านจะถูกเปลี่ยนในฐานข้อมูล PGlite ทันที ไม่มีการส่งอีเมล
                             </Text>
                         </VStack>

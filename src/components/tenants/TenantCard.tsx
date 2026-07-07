@@ -69,10 +69,10 @@ export const TenantCard: React.FC<TenantCardProps> = ({
                         <VStack align="start" gap={1}>
                             <Heading size="lg">{tenant.full_name}</Heading>
                             <HStack gap={2}>
-                                <Icon color="gray.500" fontSize="sm">
+                                <Icon color="fg.muted" fontSize="sm">
                                     <LuPhone />
                                 </Icon>
-                                <Text color="gray.600" fontSize="sm">
+                                <Text color="fg.muted" fontSize="sm">
                                     {tenant.phone}
                                 </Text>
                             </HStack>
@@ -95,17 +95,17 @@ export const TenantCard: React.FC<TenantCardProps> = ({
                     {/* Details */}
                     <VStack align="stretch" gap={2}>
                         {tenant.email && (
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 📧 {tenant.email}
                             </Text>
                         )}
 
                         {tenant.room && (
                             <HStack gap={2}>
-                                <Icon color="gray.500" fontSize="sm">
+                                <Icon color="fg.muted" fontSize="sm">
                                     <LuMapPin />
                                 </Icon>
-                                <Text fontSize="sm" color="gray.600">
+                                <Text fontSize="sm" color="fg.muted">
                                     ห้อง: {tenant.room.room_number}
                                 </Text>
                             </HStack>
@@ -113,24 +113,24 @@ export const TenantCard: React.FC<TenantCardProps> = ({
 
                         {vehicleCount > 0 && (
                             <HStack gap={2} align="start">
-                                <Icon color="gray.500" fontSize="sm" mt={0.5}>
+                                <Icon color="fg.muted" fontSize="sm" mt={0.5}>
                                     <LuCar />
                                 </Icon>
-                                <Text fontSize="sm" color="gray.600">
+                                <Text fontSize="sm" color="fg.muted">
                                     รถ: {vehiclePlates}
                                 </Text>
                             </HStack>
                         )}
 
                         {tenant.move_in_date && (
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 เริ่มเช่า: {new Date(tenant.move_in_date).toLocaleDateString('th-TH')}
                             </Text>
                         )}
                     </VStack>
 
                     {/* Actions */}
-                    <HStack gap={2} pt={2} borderTop="1px" borderColor="gray.200">
+                    <HStack gap={2} pt={2} borderTop="1px" borderColor="border.default">
                         <Button
                             variant="outline"
                             size="sm"

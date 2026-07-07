@@ -51,7 +51,7 @@ export const MyEquipmentPage: React.FC = () => {
         return (
             <VStack h="50vh" justify="center" align="center">
                 <Spinner size="xl" color="brand.500" />
-                <Text color="gray.500">กำลังโหลด...</Text>
+                <Text color="fg.muted">กำลังโหลด...</Text>
             </VStack>
         );
     }
@@ -67,7 +67,7 @@ export const MyEquipmentPage: React.FC = () => {
             <Card.Root>
                 <Card.Header>
                     <VStack align="start" gap={1}>
-                        <Text color="gray.500" fontSize="sm">ครุภัณฑ์ประจำห้อง</Text>
+                        <Text color="fg.muted" fontSize="sm">ครุภัณฑ์ประจำห้อง</Text>
                         <Heading size="md">
                             {room.room_number} <Badge colorPalette="blue">{room.room_type}</Badge>
                         </Heading>

@@ -128,16 +128,16 @@ export const FinancialReport: React.FC = () => {
             <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4}>
                 <Card.Root>
                     <Card.Body>
-                        <Text color="gray.500" fontSize="sm">ยอดรับจริง (ชำระแล้ว)</Text>
-                        <Text fontSize="2xl" fontWeight="bold" color="green.500">
+                        <Text color="fg.muted" fontSize="sm">ยอดรับจริง (ชำระแล้ว)</Text>
+                        <Text fontSize="2xl" fontWeight="bold" color="green.fg">
                             ฿{totalRevenue.toLocaleString()}
                         </Text>
                     </Card.Body>
                 </Card.Root>
                 <Card.Root>
                     <Card.Body>
-                        <Text color="gray.500" fontSize="sm">ยอดรอชำระ</Text>
-                        <Text fontSize="2xl" fontWeight="bold" color="orange.500">
+                        <Text color="fg.muted" fontSize="sm">ยอดรอชำระ</Text>
+                        <Text fontSize="2xl" fontWeight="bold" color="orange.fg">
                             ฿{pendingRevenue.toLocaleString()}
                         </Text>
                     </Card.Body>

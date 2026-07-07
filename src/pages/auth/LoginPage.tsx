@@ -65,8 +65,8 @@ export const LoginPage: React.FC = () => {
         <Box
             minH="100vh"
             bgGradient="to-br"
-            gradientFrom="brand.50"
-            gradientTo="brand.100"
+            gradientFrom="brand.subtle"
+            gradientTo="brand.muted"
             display="flex"
             alignItems="center"
             justifyContent="center"
@@ -84,7 +84,7 @@ export const LoginPage: React.FC = () => {
                         >
                             Sena-One
                         </Heading>
-                        <Text color="gray.600" fontSize="lg">
+                        <Text color="fg.muted" fontSize="lg">
                             ระบบจัดการหอพัก
                         </Text>
                     </VStack>
@@ -142,7 +142,7 @@ export const LoginPage: React.FC = () => {
                                         {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
                                     </Button>
 
-                                    <Text color="gray.500" fontSize="sm" textAlign="center">
+                                    <Text color="fg.muted" fontSize="sm" textAlign="center">
                                         ติดต่อผู้ดูแลระบบหากไม่สามารถเข้าสู่ระบบได้
                                     </Text>
                                 </VStack>
@@ -150,7 +150,7 @@ export const LoginPage: React.FC = () => {
                         </Card.Body>
                     </Card.Root>
 
-                    <Text color="gray.500" fontSize="sm" textAlign="center">
+                    <Text color="fg.muted" fontSize="sm" textAlign="center">
                         © 2024 Sena-One. All rights reserved.
                     </Text>
                 </VStack>

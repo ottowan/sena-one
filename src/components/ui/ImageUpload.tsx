@@ -86,7 +86,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                         อัปโหลดรูปภาพ ({images.length}/{maxImages})
                     </Button>
                     {!STORAGE_ENABLED && (
-                        <Text color="gray.500" fontSize="xs" mt={1}>
+                        <Text color="fg.muted" fontSize="xs" mt={1}>
                             อัปโหลดรูปภาพยังไม่เปิดใช้งาน (รอเปิด Firebase Storage)
                         </Text>
                     )}
@@ -103,7 +103,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                             borderRadius="md"
                             overflow="hidden"
                             borderWidth="1px"
-                            borderColor="gray.200"
+                            borderColor="border.default"
                         >
                             <Image
                                 src={image}
@@ -133,14 +133,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                     p={8}
                     borderWidth="2px"
                     borderStyle="dashed"
-                    borderColor="gray.300"
+                    borderColor="border.default"
                     borderRadius="md"
                     textAlign="center"
                 >
-                    <Icon fontSize="3xl" color="gray.400" mb={2}>
+                    <Icon fontSize="3xl" color="fg.subtle" mb={2}>
                         <LuUpload />
                     </Icon>
-                    <Text color="gray.500" fontSize="sm">
+                    <Text color="fg.muted" fontSize="sm">
                         ยังไม่มีรูปภาพ
                     </Text>
                 </Box>

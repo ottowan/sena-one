@@ -10,7 +10,7 @@ import {
     Icon,
     Input,
 } from '@chakra-ui/react';
-import { LuPlus, LuSearch, LuFileText, LuDownload, LuFiles, LuCalendar, LuFileSpreadsheet } from 'react-icons/lu';
+import { LuPlus, LuFileText, LuDownload, LuFiles, LuCalendar, LuFileSpreadsheet } from 'react-icons/lu';
 import { exportMonthlyInvoices, exportRoomInvoices } from '../../lib/exportInvoice';
 import { exportService } from '../../services/exportService';
 import { toaster } from '../../components/ui/toaster';
@@ -22,6 +22,7 @@ import { InvoiceDetailsDialog } from '../../components/invoices/InvoiceDetailsDi
 import { BulkInvoiceDialog } from '../../components/invoices/BulkInvoiceDialog';
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { Button } from '../../components/ui/button';
+import { SearchInput } from '../../components/common/SearchInput';
 import { useQueryClient } from '@tanstack/react-query';
 import {
     NativeSelectField,
@@ -195,7 +196,7 @@ export const InvoicesPage: React.FC = () => {
                         <Heading size="2xl" mb={2}>
                             จัดการใบแจ้งหนี้
                         </Heading>
-                        <Text color="gray.600" fontSize="lg">
+                        <Text color="fg.muted" fontSize="lg">
                             ออกใบแจ้งหนี้และติดตามสถานะการชำระเงิน
                         </Text>
                     </Box>
@@ -219,7 +220,7 @@ export const InvoicesPage: React.FC = () => {
                             Export Excel
                         </Button>
                         {effectiveMonthFilter && (
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 (เดือน {new Date(effectiveMonthFilter + '-01').toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })})
                             </Text>
                         )}
@@ -245,24 +246,11 @@ export const InvoicesPage: React.FC = () => {
                                 }}
                                 gap={4}
                             >
-                                <Box position="relative">
-                                    <Icon
-                                        position="absolute"
-                                        left={3}
-                                        top="50%"
-                                        transform="translateY(-50%)"
-                                        color="gray.400"
-                                        zIndex={1}
-                                    >
-                                        <LuSearch />
-                                    </Icon>
-                                    <Input
-                                        placeholder="ค้นหาชื่อผู้เช่า, เลขห้อง..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        pl={10}
-                                    />
-                                </Box>
+                                <SearchInput
+                                    placeholder="ค้นหาชื่อผู้เช่า, เลขห้อง..."
+                                    value={searchTerm}
+                                    onChange={setSearchTerm}
+                                />
 
                                 <NativeSelectRoot>
                                     <NativeSelectField
@@ -286,7 +274,7 @@ export const InvoicesPage: React.FC = () => {
 
                             {/* View Mode Toggle */}
                             <HStack gap={2} justify="flex-end">
-                                <Text fontSize="sm" color="gray.600">
+                                <Text fontSize="sm" color="fg.muted">
                                     รูปแบบการแสดงผล:
                                 </Text>
                                 <ViewModeToggle value={viewMode} onChange={setViewMode} />
@@ -298,7 +286,7 @@ export const InvoicesPage: React.FC = () => {
                 {/* Invoice List */}
                 {isLatestMonthLoading || isLoading ? (
                     <Box p={8} textAlign="center">
-                        <Text color="gray.500">กำลังโหลด...</Text>
+                        <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
                 ) : invoices && invoices.length > 0 ? (
                     <>
@@ -338,14 +326,14 @@ export const InvoicesPage: React.FC = () => {
                     <Card.Root>
                         <Card.Body>
                             <VStack gap={4} py={8}>
-                                <Icon fontSize="4xl" color="gray.400">
+                                <Icon fontSize="4xl" color="fg.subtle">
                                     <LuFileText />
                                 </Icon>
                                 <VStack gap={2}>
-                                    <Heading size="md" color="gray.600">
+                                    <Heading size="md" color="fg.muted">
                                         ยังไม่มีใบแจ้งหนี้
                                     </Heading>
-                                    <Text color="gray.500">
+                                    <Text color="fg.muted">
                                         เริ่มต้นโดยการออกใบแจ้งหนี้ใบแรกของคุณ
                                     </Text>
                                 </VStack>

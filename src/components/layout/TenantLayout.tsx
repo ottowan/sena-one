@@ -29,11 +29,11 @@ const SidebarItem = ({ icon, label, to, end, onClick }: { icon: any; label: stri
                 <Button
                     variant={isActive ? 'subtle' : 'ghost'}
                     colorPalette={isActive ? 'brand' : 'gray'}
-                    bg={isActive ? 'brand.50' : undefined}
-                    color={isActive ? 'brand.800' : undefined}
+                    bg={isActive ? 'brand.subtle' : undefined}
+                    color={isActive ? 'brand.fg' : undefined}
                     borderLeft="3px solid"
                     borderColor={isActive ? 'brand.500' : 'transparent'}
-                    _hover={{ bg: 'brand.50', color: 'brand.800' }}
+                    _hover={{ bg: 'brand.subtle', color: 'brand.fg' }}
                     justifyContent="flex-start"
                     width="full"
                     size="lg"
@@ -61,18 +61,18 @@ const TenantSidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
     };
 
     return (
-        <VStack h="full" justify="space-between" align="stretch" bg="white">
+        <VStack h="full" justify="space-between" align="stretch" bg="bg.panel">
             <Box>
                 <HStack justify="space-between" mb={8} px={6} pt={6} pb={5} borderBottom="1px solid" borderColor="border.default">
                     <Flex align="center" gap={3}>
                         <Box w={8} h={8} bg="brand.600" borderRadius="md" />
-                        <Text fontSize="xl" fontWeight="bold" color="brand.700">Sena-One</Text>
+                        <Text fontSize="xl" fontWeight="bold" color="brand.fg">Sena-One</Text>
                     </Flex>
                     <ColorModeButton />
                 </HStack>
 
                 <VStack align="stretch" gap={1} px={4}>
-                    <Text fontSize="xs" color="gray.500" px={2} mb={2} fontWeight="bold">MENU</Text>
+                    <Text fontSize="xs" color="fg.muted" px={2} mb={2} fontWeight="bold">MENU</Text>
                     <SidebarItem icon={<LuLayoutDashboard />} label="หน้าหลัก" to="/tenant" end onClick={onNavigate} />
                     <SidebarItem icon={<LuDroplet />} label="ยอดมิเตอร์น้ำ" to="/tenant/water-meter" onClick={onNavigate} />
                     <SidebarItem icon={<LuFileText />} label="บิลและการชำระเงิน" to="/tenant/bills" onClick={onNavigate} />
@@ -82,9 +82,9 @@ const TenantSidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
             </Box>
 
             <Box p={4}>
-                <Box p={4} bg="brand.50" borderRadius="md" mb={4}>
+                <Box p={4} bg="brand.subtle" borderRadius="md" mb={4}>
                     <Text fontSize="sm" fontWeight="bold" truncate>{profile?.full_name || 'Tenant'}</Text>
-                    <Text fontSize="xs" color="gray.500">ผู้เช่า</Text>
+                    <Text fontSize="xs" color="fg.muted">ผู้เช่า</Text>
                 </Box>
                 <Button
                     variant="outline"
@@ -113,7 +113,7 @@ export const TenantLayout: React.FC = () => {
                 left={0}
                 right={0}
                 zIndex={100}
-                bg="white"
+                bg="bg.panel"
                 borderBottom="1px"
                 borderColor="border.default"
                 px={4}
@@ -135,7 +135,7 @@ export const TenantLayout: React.FC = () => {
                                 </DrawerBody>
                             </DrawerContent>
                         </DrawerRoot>
-                        <Text fontWeight="bold" fontSize="lg" color="brand.700">Sena-One</Text>
+                        <Text fontWeight="bold" fontSize="lg" color="brand.fg">Sena-One</Text>
                     </HStack>
                     <ColorModeButton />
                 </HStack>
@@ -144,7 +144,7 @@ export const TenantLayout: React.FC = () => {
             {/* Desktop Sidebar */}
             <Box
                 w="250px"
-                bg="white"
+                bg="bg.panel"
                 borderRight="1px solid"
                 borderColor="border.default"
                 display={{ base: 'none', md: 'block' }}
@@ -161,7 +161,7 @@ export const TenantLayout: React.FC = () => {
                 flex="1"
                 position="relative"
                 overflow="hidden"
-                bg="#F8FBFA"
+                bg="bg.canvas"
                 minH="100vh"
             >
                 <Box
@@ -170,7 +170,10 @@ export const TenantLayout: React.FC = () => {
                     left={0}
                     right={0}
                     h={{ base: '170px', md: '230px' }}
-                    bg="linear-gradient(135deg, #D9ECE9 0%, #FFF7ED 54%, #F8FBFA 100%)"
+                    bg={{
+                        base: 'linear-gradient(135deg, #D9ECE9 0%, #FFF7ED 54%, #F8FBFA 100%)',
+                        _dark: 'linear-gradient(135deg, #1F403D 0%, #2F2419 54%, #111827 100%)',
+                    }}
                     borderBottom="1px solid"
                     borderColor="border.muted"
                 />

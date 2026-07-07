@@ -139,7 +139,7 @@ const SettingsPage: React.FC = () => {
                 <Card.Root>
                     <Card.Header>
                         <Heading size="md">อัตราค่าเช่าและค่าส่วนกลางตามตำแหน่ง</Heading>
-                        <Text color="gray.600" fontSize="sm">
+                        <Text color="fg.muted" fontSize="sm">
                             กำหนดค่าเช่าและค่าส่วนกลางสำหรับแต่ละระดับตำแหน่ง
                         </Text>
                     </Card.Header>
@@ -181,7 +181,7 @@ const SettingsPage: React.FC = () => {
                 <Card.Root>
                     <Card.Header>
                         <Heading size="md">ค่าสาธารณูปโภคและค่าธรรมเนียมอื่นๆ</Heading>
-                        <Text color="gray.600" fontSize="sm">
+                        <Text color="fg.muted" fontSize="sm">
                             กำหนดอัตราค่าน้ำ ค่าไฟ และค่าบำรุงมิเตอร์
                         </Text>
                     </Card.Header>
@@ -226,10 +226,10 @@ const SettingsPage: React.FC = () => {
                 </Card.Root>
 
                 {/* One-off data fix tools */}
-                <Card.Root borderColor="orange.200">
+                <Card.Root borderColor="orange.muted">
                     <Card.Header>
                         <Heading size="md">เครื่องมือแก้ไขข้อมูล</Heading>
-                        <Text color="gray.600" fontSize="sm">
+                        <Text color="fg.muted" fontSize="sm">
                             ใช้แก้ไขข้อมูลที่ผิดพลาดเป็นครั้งคราว
                         </Text>
                     </Card.Header>
@@ -237,7 +237,7 @@ const SettingsPage: React.FC = () => {
                         <HStack justify="space-between" align="center">
                             <Box>
                                 <Text fontWeight="medium">แก้วันครบกำหนดบิลเดือน พ.ค. 2569</Text>
-                                <Text color="gray.600" fontSize="sm">
+                                <Text color="fg.muted" fontSize="sm">
                                     เปลี่ยนวันครบกำหนด (due_date) ของบิลเดือน 2026-05 ทุกห้อง เป็น 2026-06-05
                                 </Text>
                             </Box>

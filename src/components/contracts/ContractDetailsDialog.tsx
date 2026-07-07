@@ -95,7 +95,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                     <LuUser />
                                 </Icon>
                                 <VStack align="start" gap={0}>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text fontSize="sm" color="fg.muted">
                                         ชื่อผู้เช่า
                                     </Text>
                                     <Text fontWeight="medium">
@@ -109,7 +109,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                     <LuPhone />
                                 </Icon>
                                 <VStack align="start" gap={0}>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text fontSize="sm" color="fg.muted">
                                         เบอร์โทร
                                     </Text>
                                     <Text fontWeight="medium">
@@ -124,7 +124,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                         <LuMail />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             อีเมล
                                         </Text>
                                         <Text fontWeight="medium">{contract.tenant.email}</Text>
@@ -141,7 +141,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                     <LuMapPin />
                                 </Icon>
                                 <VStack align="start" gap={0}>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text fontSize="sm" color="fg.muted">
                                         เลขห้อง
                                     </Text>
                                     <Text fontWeight="medium">
@@ -156,7 +156,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                         <LuMapPin />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             ประเภทห้อง
                                         </Text>
                                         <Text fontWeight="medium">{contract.room.room_type}</Text>
@@ -178,7 +178,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                             วันที่เริ่มสัญญา
                                         </Text>
                                     </HStack>
-                                    <Text fontSize="sm" color="gray.600" pl={6}>
+                                    <Text fontSize="sm" color="fg.muted" pl={6}>
                                         {formatThaiShortDate(contract.start_date)}
                                     </Text>
                                 </VStack>
@@ -192,7 +192,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                             วันที่สิ้นสุดสัญญา
                                         </Text>
                                     </HStack>
-                                    <Text fontSize="sm" color="gray.600" pl={6}>
+                                    <Text fontSize="sm" color="fg.muted" pl={6}>
                                         {formatThaiShortDate(contract.end_date)}
                                     </Text>
                                 </VStack>
@@ -206,7 +206,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                             ค่าเช่า/เดือน
                                         </Text>
                                     </HStack>
-                                    <Text fontSize="sm" color="gray.600" pl={6}>
+                                    <Text fontSize="sm" color="fg.muted" pl={6}>
                                         ฿{contract.monthly_rent?.toLocaleString() || '0'}
                                     </Text>
                                 </VStack>
@@ -220,7 +220,7 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                                             ค่ามัดจำ
                                         </Text>
                                     </HStack>
-                                    <Text fontSize="sm" color="gray.600" pl={6}>
+                                    <Text fontSize="sm" color="fg.muted" pl={6}>
                                         ฿{contract.deposit_amount?.toLocaleString() || '0'}
                                     </Text>
                                 </VStack>
@@ -231,11 +231,11 @@ export const ContractDetailsDialog: React.FC<ContractDetailsDialogProps> = ({
                             <Heading size="md">ข้อมูลเพิ่มเติม</Heading>
 
                             <HStack gap={3}>
-                                <Icon color="gray.500">
+                                <Icon color="fg.muted">
                                     <LuClock />
                                 </Icon>
                                 <VStack align="start" gap={0}>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text fontSize="sm" color="fg.muted">
                                         สร้างเมื่อ
                                     </Text>
                                     <Text fontSize="sm">

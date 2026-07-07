@@ -8,9 +8,8 @@ import {
     HStack,
     VStack,
     Icon,
-    Input,
 } from '@chakra-ui/react';
-import { LuPlus, LuSearch, LuUsers } from 'react-icons/lu';
+import { LuPlus, LuUsers } from 'react-icons/lu';
 import { useTenants, useTenantStats, useDeleteTenant } from '../../hooks/useTenants';
 import { TenantCard } from '../../components/tenants/TenantCard';
 import { TenantTable } from '../../components/tenants/TenantTable';
@@ -18,6 +17,7 @@ import { TenantFormDialog } from '../../components/tenants/TenantFormDialog';
 import { TenantDetailsDialog } from '../../components/tenants/TenantDetailsDialog';
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { Button } from '../../components/ui/button';
+import { SearchInput } from '../../components/common/SearchInput';
 import type { Tenant } from '../../types';
 import { tenantService } from '../../services/tenantService';
 import { toaster } from '../../components/ui/toaster';
@@ -110,7 +110,7 @@ export const TenantsPage: React.FC = () => {
                         <Heading size="2xl" mb={2}>
                             จัดการผู้เช่า
                         </Heading>
-                        <Text color="gray.600" fontSize="lg">
+                        <Text color="fg.muted" fontSize="lg">
                             จัดการข้อมูลผู้เช่าทั้งหมดในระบบ
                         </Text>
                     </Box>
@@ -135,7 +135,7 @@ export const TenantsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         ผู้เช่าทั้งหมด
                                     </Text>
                                     <Heading size="xl">{stats.total}</Heading>
@@ -146,10 +146,10 @@ export const TenantsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         กำลังเช่า
                                     </Text>
-                                    <Heading size="xl" color="success.600">
+                                    <Heading size="xl" color="success.fg">
                                         {stats.active}
                                     </Heading>
                                 </VStack>
@@ -159,10 +159,10 @@ export const TenantsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         ค้างชำระ
                                     </Text>
-                                    <Heading size="xl" color="danger.600">
+                                    <Heading size="xl" color="danger.fg">
                                         {stats.overdue}
                                     </Heading>
                                 </VStack>
@@ -172,10 +172,10 @@ export const TenantsPage: React.FC = () => {
                         <Card.Root>
                             <Card.Body>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.600" fontSize="sm">
+                                    <Text color="fg.muted" fontSize="sm">
                                         ใกล้หมดสัญญา
                                     </Text>
-                                    <Heading size="xl" color="warning.600">
+                                    <Heading size="xl" color="warning.fg">
                                         {stats.expiringSoon}
                                     </Heading>
                                 </VStack>
@@ -195,29 +195,16 @@ export const TenantsPage: React.FC = () => {
                                 }}
                                 gap={4}
                             >
-                                <Box position="relative">
-                                    <Icon
-                                        position="absolute"
-                                        left={3}
-                                        top="50%"
-                                        transform="translateY(-50%)"
-                                        color="gray.400"
-                                        zIndex={1}
-                                    >
-                                        <LuSearch />
-                                    </Icon>
-                                    <Input
-                                        placeholder="ค้นหาชื่อ, เบอร์โทร, เลขบัตรประชาชน..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        pl={10}
-                                    />
-                                </Box>
+                                <SearchInput
+                                    placeholder="ค้นหาชื่อ, เบอร์โทร, เลขบัตรประชาชน..."
+                                    value={searchTerm}
+                                    onChange={setSearchTerm}
+                                />
 
-                                <Input
+                                <SearchInput
                                     placeholder="ค้นหาทะเบียนรถ..."
                                     value={vehiclePlateFilter}
-                                    onChange={(e) => setVehiclePlateFilter(e.target.value)}
+                                    onChange={setVehiclePlateFilter}
                                 />
 
                                 <NativeSelectRoot>
@@ -237,7 +224,7 @@ export const TenantsPage: React.FC = () => {
 
                             {/* View Mode Toggle */}
                             <HStack gap={2} justify="flex-end">
-                                <Text fontSize="sm" color="gray.600">
+                                <Text fontSize="sm" color="fg.muted">
                                     รูปแบบการแสดงผล:
                                 </Text>
                                 <ViewModeToggle value={viewMode} onChange={setViewMode} />
@@ -249,7 +236,7 @@ export const TenantsPage: React.FC = () => {
                 {/* Tenant List */}
                 {isLoading ? (
                     <Box p={8} textAlign="center">
-                        <Text color="gray.500">กำลังโหลด...</Text>
+                        <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
                 ) : tenants && tenants.length > 0 ? (
                     <>
@@ -285,14 +272,14 @@ export const TenantsPage: React.FC = () => {
                     <Card.Root>
                         <Card.Body>
                             <VStack gap={4} py={8}>
-                                <Icon fontSize="4xl" color="gray.400">
+                                <Icon fontSize="4xl" color="fg.subtle">
                                     <LuUsers />
                                 </Icon>
                                 <VStack gap={2}>
-                                    <Heading size="md" color="gray.600">
+                                    <Heading size="md" color="fg.muted">
                                         ยังไม่มีผู้เช่า
                                     </Heading>
-                                    <Text color="gray.500">
+                                    <Text color="fg.muted">
                                         เริ่มต้นโดยการเพิ่มผู้เช่าคนแรกของคุณ
                                     </Text>
                                 </VStack>

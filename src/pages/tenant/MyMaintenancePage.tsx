@@ -134,15 +134,15 @@ export const MyMaintenancePage: React.FC = () => {
                 {isLoading ? (
                     <Text>กำลังโหลด...</Text>
                 ) : requests.length === 0 ? (
-                    <Text color="gray.500" textAlign="center" py={8}>ไม่พบรายการแจ้งซ่อม</Text>
+                    <Text color="fg.muted" textAlign="center" py={8}>ไม่พบรายการแจ้งซ่อม</Text>
                 ) : requests.map((req) => (
                     <Card.Root key={req.id}>
                         <Card.Body>
                             <HStack justify="space-between" align="start">
                                 <VStack align="start" gap={1}>
                                     <Heading size="sm">{req.title}</Heading>
-                                    <Text color="gray.600" fontSize="sm">{req.description}</Text>
-                                    <Text color="gray.400" fontSize="xs">{new Date(req.created_at).toLocaleDateString('th-TH')}</Text>
+                                    <Text color="fg.muted" fontSize="sm">{req.description}</Text>
+                                    <Text color="fg.subtle" fontSize="xs">{new Date(req.created_at).toLocaleDateString('th-TH')}</Text>
                                 </VStack>
                                 <Badge colorPalette={
                                     req.status === 'completed' ? 'green' :

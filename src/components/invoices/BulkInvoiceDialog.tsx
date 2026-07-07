@@ -281,7 +281,7 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
                                             <Table.Cell maxW="150px" truncate>{row.contract.tenant?.full_name}</Table.Cell>
                                             <Table.Cell>
                                                 <HStack>
-                                                    <Text color="gray.500" fontSize="xs" w="40px">{row.waterMeterLast}</Text>
+                                                    <Text color="fg.muted" fontSize="xs" w="40px">{row.waterMeterLast}</Text>
                                                     <Input
                                                         size="xs"
                                                         width="80px"
@@ -293,7 +293,7 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
                                             </Table.Cell>
                                             <Table.Cell>
                                                 <HStack>
-                                                    <Text color="gray.500" fontSize="xs" w="40px">{row.electricityMeterLast}</Text>
+                                                    <Text color="fg.muted" fontSize="xs" w="40px">{row.electricityMeterLast}</Text>
                                                     <Input
                                                         size="xs"
                                                         width="80px"

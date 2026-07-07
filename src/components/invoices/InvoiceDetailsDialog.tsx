@@ -80,28 +80,28 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                             {/* Header Info */}
                             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.500" fontSize="sm">เดือน/ปี</Text>
+                                    <Text color="fg.muted" fontSize="sm">เดือน/ปี</Text>
                                     <Text fontWeight="medium" fontSize="lg">
                                         {new Date(invoice.billing_month).toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })}
                                     </Text>
                                 </VStack>
                                 <VStack align="start" gap={1}>
-                                    <Text color="gray.500" fontSize="sm">กำหนดชำระ</Text>
+                                    <Text color="fg.muted" fontSize="sm">กำหนดชำระ</Text>
                                     <Text fontWeight="medium" fontSize="lg">
                                         {new Date(invoice.due_date).toLocaleDateString('th-TH')}
                                     </Text>
                                 </VStack>
                             </Grid>
 
-                            <Box p={4} borderWidth="1px" borderRadius="md" bg="gray.50">
+                            <Box p={4} borderWidth="1px" borderRadius="md" bg="bg.subtle">
                                 <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                     <VStack align="start" gap={1}>
-                                        <Text color="gray.500" fontSize="sm">ผู้เช่า</Text>
+                                        <Text color="fg.muted" fontSize="sm">ผู้เช่า</Text>
                                         <Text fontWeight="medium">{invoice.tenant?.full_name}</Text>
-                                        <Text fontSize="sm" color="gray.600">{invoice.tenant?.phone}</Text>
+                                        <Text fontSize="sm" color="fg.muted">{invoice.tenant?.phone}</Text>
                                     </VStack>
                                     <VStack align="start" gap={1}>
-                                        <Text color="gray.500" fontSize="sm">ห้อง</Text>
+                                        <Text color="fg.muted" fontSize="sm">ห้อง</Text>
                                         <Text fontWeight="medium">
                                             {invoice.room?.room_number} ({invoice.room?.room_type})
                                         </Text>
@@ -116,19 +116,19 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                                 <Text fontWeight="bold">รายการเรียกเก็บ</Text>
 
                                 <HStack justify="space-between">
-                                    <Text color="gray.600">ค่าเช่าห้องพัก</Text>
+                                    <Text color="fg.muted">ค่าเช่าห้องพัก</Text>
                                     <Text fontWeight="medium">฿{invoice.rent_amount.toLocaleString()}</Text>
                                 </HStack>
 
                                 <HStack justify="space-between">
-                                    <Text color="gray.600">
+                                    <Text color="fg.muted">
                                         ค่าน้ำประปา ({invoice.water_usage} หน่วย)
                                     </Text>
                                     <Text fontWeight="medium">฿{invoice.water_cost.toLocaleString()}</Text>
                                 </HStack>
 
                                 <HStack justify="space-between">
-                                    <Text color="gray.600">
+                                    <Text color="fg.muted">
                                         ค่าไฟฟ้า ({invoice.electricity_usage} หน่วย)
                                     </Text>
                                     <Text fontWeight="medium">฿{invoice.electricity_cost.toLocaleString()}</Text>
@@ -136,16 +136,16 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
 
                                 {invoice.additional_charges?.map((charge, index) => (
                                     <HStack key={index} justify="space-between">
-                                        <Text color="gray.600">{charge.name}</Text>
+                                        <Text color="fg.muted">{charge.name}</Text>
                                         <Text fontWeight="medium">฿{charge.amount.toLocaleString()}</Text>
                                     </HStack>
                                 ))}
 
                                 <Separator />
 
-                                <HStack justify="space-between" bg="blue.50" p={3} borderRadius="md">
-                                    <Text fontWeight="bold" color="blue.700">ยอดรวมทั้งสิ้น</Text>
-                                    <Text fontWeight="bold" fontSize="xl" color="blue.700">
+                                <HStack justify="space-between" bg="blue.subtle" p={3} borderRadius="md">
+                                    <Text fontWeight="bold" color="blue.fg">ยอดรวมทั้งสิ้น</Text>
+                                    <Text fontWeight="bold" fontSize="xl" color="blue.fg">
                                         ฿{invoice.total_amount.toLocaleString()}
                                     </Text>
                                 </HStack>

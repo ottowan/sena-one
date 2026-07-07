@@ -88,7 +88,7 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                         <HStack justify="space-between">
                             <VStack align="start" gap={0}>
                                 <Heading size="sm">ห้อง {room.room_number}</Heading>
-                                <Text color="gray.600" fontSize="xs">
+                                <Text color="fg.muted" fontSize="xs">
                                     {room.room_type}
                                 </Text>
                             </VStack>
@@ -99,7 +99,7 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
 
                         {/* Price - Only show if occupied */}
                         {room.status === 'occupied' ? (
-                            <Text fontWeight="bold" color="brand.600" fontSize="sm">
+                            <Text fontWeight="bold" color="brand.fg" fontSize="sm">
                                 {(() => {
                                     // Priority 1: Dynamic Rent
                                     if (room.current_tenant?.position_level && rentRates) {
@@ -111,14 +111,14 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                                 })()}/เดือน
                             </Text>
                         ) : (
-                            <Text color="gray.400" fontSize="sm">
+                            <Text color="fg.subtle" fontSize="sm">
                                 -
                             </Text>
                         )}
 
                         {/* Dates - Only show if occupied */}
                         {room.status === 'occupied' && room.current_tenant && (
-                            <VStack align="stretch" gap={1} fontSize="xs" color="gray.600">
+                            <VStack align="stretch" gap={1} fontSize="xs" color="fg.muted">
                                 <HStack gap={1}>
                                     <Icon fontSize="xs">
                                         <LuCalendar />
@@ -139,7 +139,7 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                         )}
 
                         {/* Actions */}
-                        <HStack gap={1} pt={1} borderTop="1px" borderColor="gray.200">
+                        <HStack gap={1} pt={1} borderTop="1px" borderColor="border.default">
                             {onView && (
                                 <Button
                                     variant="ghost"

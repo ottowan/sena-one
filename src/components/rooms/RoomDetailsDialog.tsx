@@ -72,7 +72,7 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
                         <HStack justify="space-between" align="start">
                             <VStack align="start" gap={1}>
                                 <Heading size="xl">ห้อง {room.room_number}</Heading>
-                                <Text color="gray.600">{room.room_type}</Text>
+                                <Text color="fg.muted">{room.room_type}</Text>
                             </VStack>
                             <Badge colorPalette={statusColor} size="lg">
                                 {statusLabel}
@@ -88,7 +88,7 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
                                         borderRadius="md"
                                         overflow="hidden"
                                         borderWidth="1px"
-                                        borderColor="gray.200"
+                                        borderColor="border.default"
                                         h="120px"
                                     >
                                         <Image
@@ -108,11 +108,11 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
                             <Heading size="md">ข้อมูลทั่วไป</Heading>
                             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                 <HStack gap={3}>
-                                    <Icon color="blue.500">
+                                    <Icon color="blue.fg">
                                         <LuMaximize />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             ขนาด
                                         </Text>
                                         <Text fontWeight="medium">{room.size_sqm} ตร.ม.</Text>
@@ -120,11 +120,11 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
                                 </HStack>
 
                                 <HStack gap={3}>
-                                    <Icon color="blue.500">
+                                    <Icon color="blue.fg">
                                         <LuMapPin />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             ชั้น
                                         </Text>
                                         <Text fontWeight="medium">ชั้น {room.floor}</Text>
@@ -138,11 +138,11 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
                             <Heading size="md">ค่าเช่าและค่าน้ำไฟ</Heading>
                             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                 <HStack gap={3}>
-                                    <Icon color="green.500">
+                                    <Icon color="green.fg">
                                         <LuDollarSign />
                                     </Icon>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             ค่าเช่า/เดือน
                                         </Text>
                                         <Text fontWeight="medium">
@@ -154,7 +154,7 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
                                 </HStack>
 
                                 <VStack align="start" gap={0}>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text fontSize="sm" color="fg.muted">
                                         อัตราน้ำ/ไฟ (บาท/หน่วย)
                                     </Text>
                                     <Text fontWeight="medium">
@@ -165,13 +165,13 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
 
                             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                 <VStack align="start" gap={0}>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text fontSize="sm" color="fg.muted">
                                         มิเตอร์น้ำปัจจุบัน
                                     </Text>
                                     <Text fontWeight="medium">{room.current_water_meter ?? '-'}</Text>
                                 </VStack>
                                 <VStack align="start" gap={0}>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text fontSize="sm" color="fg.muted">
                                         มิเตอร์ไฟปัจจุบัน
                                     </Text>
                                     <Text fontWeight="medium">{room.current_electricity_meter ?? '-'}</Text>
@@ -184,12 +184,12 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
                             <VStack align="stretch" gap={3}>
                                 <Heading size="md">ผู้เช่าปัจจุบัน</Heading>
                                 <HStack gap={3}>
-                                    <Icon color="blue.500">
+                                    <Icon color="blue.fg">
                                         <LuUser />
                                     </Icon>
                                     <VStack align="start" gap={0}>
                                         <Text fontWeight="medium">{room.current_tenant.full_name}</Text>
-                                        <HStack gap={1} color="gray.600" fontSize="sm">
+                                        <HStack gap={1} color="fg.muted" fontSize="sm">
                                             <Icon fontSize="xs">
                                                 <LuPhone />
                                             </Icon>
@@ -200,7 +200,7 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
 
                                 <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             วันที่เริ่มสัญญา
                                         </Text>
                                         <Text fontWeight="medium">
@@ -210,7 +210,7 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
                                         </Text>
                                     </VStack>
                                     <VStack align="start" gap={0}>
-                                        <Text fontSize="sm" color="gray.600">
+                                        <Text fontSize="sm" color="fg.muted">
                                             วันที่สิ้นสุดสัญญา
                                         </Text>
                                         <Text fontWeight="medium">
@@ -235,7 +235,7 @@ export const RoomDetailsDialog: React.FC<RoomDetailsDialogProps> = ({ open, onCl
                         {room.description && (
                             <VStack align="stretch" gap={2}>
                                 <Heading size="md">รายละเอียดเพิ่มเติม</Heading>
-                                <Text color="gray.700">{room.description}</Text>
+                                <Text color="fg.default">{room.description}</Text>
                             </VStack>
                         )}
                     </VStack>

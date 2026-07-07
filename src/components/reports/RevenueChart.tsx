@@ -13,13 +13,13 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ stats }) => {
         <Box w="full" h="300px" p={4}>
             <HStack align="flex-end" justify="space-between" h="full" w="full" gap={4}>
                 {stats.length === 0 ? (
-                    <Text color="gray.500" w="full" textAlign="center">ไม่มีข้อมูลรายรับ</Text>
+                    <Text color="fg.muted" w="full" textAlign="center">ไม่มีข้อมูลรายรับ</Text>
                 ) : (
                     stats.map((stat) => {
                         const heightPercentage = (stat.amount / maxAmount) * 100;
                         return (
                             <VStack key={stat.month} flex={1} h="full" justify="flex-end" gap={2}>
-                                <Text fontSize="xs" color="gray.500">฿{stat.amount.toLocaleString()}</Text>
+                                <Text fontSize="xs" color="fg.muted">฿{stat.amount.toLocaleString()}</Text>
                                 <Box
                                     w="full"
                                     maxW="40px"

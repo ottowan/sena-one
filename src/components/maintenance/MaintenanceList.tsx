@@ -87,24 +87,24 @@ export const MaintenanceList: React.FC<MaintenanceListProps> = ({
                                 </Tooltip>
                             </HStack>
 
-                            <Text color="gray.600" fontSize="sm" lineClamp={2} h="40px">
+                            <Text color="fg.muted" fontSize="sm" lineClamp={2} h="40px">
                                 {request.description}
                             </Text>
 
-                            <VStack align="stretch" gap={2} pt={2} borderTopWidth="1px" borderColor="gray.100">
-                                <HStack color="gray.500" fontSize="sm">
+                            <VStack align="stretch" gap={2} pt={2} borderTopWidth="1px" borderColor="border.muted">
+                                <HStack color="fg.muted" fontSize="sm">
                                     <Icon>
                                         <LuBuilding />
                                     </Icon>
                                     <Text>ห้อง {request.room?.room_number || '-'}</Text>
                                 </HStack>
-                                <HStack color="gray.500" fontSize="sm">
+                                <HStack color="fg.muted" fontSize="sm">
                                     <Icon>
                                         <LuUser />
                                     </Icon>
                                     <Text>{request.tenant?.full_name || 'ไม่ระบุ'}</Text>
                                 </HStack>
-                                <HStack color="gray.400" fontSize="xs" justify="space-between">
+                                <HStack color="fg.subtle" fontSize="xs" justify="space-between">
                                     <HStack gap={1}>
                                         <Icon>
                                             <LuClock />

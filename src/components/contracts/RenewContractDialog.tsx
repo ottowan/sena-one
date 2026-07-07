@@ -129,13 +129,13 @@ export const RenewContractDialog: React.FC<RenewContractDialogProps> = ({
                 <DialogBody>
                     <form onSubmit={handleSubmit} id="renew-contract-form">
                         <VStack align="stretch" gap={4}>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 ต่อสัญญาสำหรับ: <strong>{contract.tenant?.full_name}</strong>
                             </Text>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 ห้อง: <strong>{contract.room?.room_number}</strong>
                             </Text>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontSize="sm" color="fg.muted">
                                 สัญญาเดิมสิ้นสุด:{' '}
                                 <strong>
                                     {formatThaiShortDate(contract.end_date)}
@@ -192,7 +192,7 @@ export const RenewContractDialog: React.FC<RenewContractDialogProps> = ({
                                 </Field>
                             </Grid>
 
-                            <Text fontSize="sm" color="orange.600" fontWeight="medium">
+                            <Text fontSize="sm" color="orange.fg" fontWeight="medium">
                                 หมายเหตุ: การต่อสัญญาจะสร้างสัญญาใหม่และทำให้สัญญาเดิมมีสถานะ "ต่ออายุแล้ว"
                             </Text>
                         </VStack>

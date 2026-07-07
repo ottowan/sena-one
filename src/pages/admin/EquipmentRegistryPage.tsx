@@ -1,10 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Box, Card, Heading, HStack, Icon, Input, Text, VStack } from '@chakra-ui/react';
-import { LuBoxes, LuPlus, LuSearch } from 'react-icons/lu';
+import { Box, Card, Heading, HStack, Icon, Text, VStack } from '@chakra-ui/react';
+import { LuBoxes, LuPlus } from 'react-icons/lu';
 import { useRooms, useSeedDefaultEquipment } from '../../hooks/useRooms';
 import { EquipmentFormDialog } from '../../components/equipment/EquipmentFormDialog';
 import { EquipmentTable } from '../../components/equipment/EquipmentTable';
 import { Button } from '../../components/ui/button';
+import { SearchInput } from '../../components/common/SearchInput';
 import type { Room } from '../../types';
 
 export const EquipmentRegistryPage: React.FC = () => {
@@ -52,7 +53,7 @@ export const EquipmentRegistryPage: React.FC = () => {
                         <Heading size="2xl" mb={2}>
                             ทะเบียนคุมครุภัณฑ์
                         </Heading>
-                        <Text color="gray.600" fontSize="lg">
+                        <Text color="fg.muted" fontSize="lg">
                             จัดการรายการครุภัณฑ์ประจำห้องพักทั้งหมด
                         </Text>
                     </Box>
@@ -84,30 +85,17 @@ export const EquipmentRegistryPage: React.FC = () => {
 
                 <Card.Root>
                     <Card.Body>
-                        <Box position="relative">
-                            <Icon
-                                position="absolute"
-                                left={3}
-                                top="50%"
-                                transform="translateY(-50%)"
-                                color="gray.400"
-                                zIndex={1}
-                            >
-                                <LuSearch />
-                            </Icon>
-                            <Input
-                                placeholder="ค้นหาจากชื่อรายการหรือเลขครุภัณฑ์..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                pl={10}
-                            />
-                        </Box>
+                        <SearchInput
+                            placeholder="ค้นหาจากชื่อรายการหรือเลขครุภัณฑ์..."
+                            value={searchTerm}
+                            onChange={setSearchTerm}
+                        />
                     </Card.Body>
                 </Card.Root>
 
                 {isLoading ? (
                     <Box p={8} textAlign="center">
-                        <Text color="gray.500">กำลังโหลด...</Text>
+                        <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
                 ) : roomsWithEquipment.length > 0 ? (
                     <EquipmentTable rooms={roomsWithEquipment} onEdit={handleEdit} />
@@ -115,14 +103,14 @@ export const EquipmentRegistryPage: React.FC = () => {
                     <Card.Root>
                         <Card.Body>
                             <VStack gap={4} py={8}>
-                                <Icon fontSize="4xl" color="gray.400">
+                                <Icon fontSize="4xl" color="fg.subtle">
                                     <LuBoxes />
                                 </Icon>
                                 <VStack gap={2}>
-                                    <Heading size="md" color="gray.600">
+                                    <Heading size="md" color="fg.muted">
                                         ยังไม่มีข้อมูลครุภัณฑ์
                                     </Heading>
-                                    <Text color="gray.500">
+                                    <Text color="fg.muted">
                                         เริ่มต้นโดยการเพิ่มข้อมูล หรือกด "เพิ่มครุภัณฑ์เริ่มต้น" เพื่อเติมรายการมาตรฐานให้ทุกห้อง
                                     </Text>
                                 </VStack>

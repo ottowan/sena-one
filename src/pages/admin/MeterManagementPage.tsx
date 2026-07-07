@@ -150,11 +150,11 @@ export const MeterManagementPage: React.FC = () => {
                     // Use Room Status
                     if (room.status === 'maintenance') {
                         tenantName = 'ห้องชำรุด/ซ่อมบำรุง';
-                        statusColor = 'red.600';
+                        statusColor = 'red.fg';
                     }
                     else if (room.status === 'available') {
                         tenantName = 'ห้องว่าง';
-                        statusColor = 'green.600';
+                        statusColor = 'green.fg';
                     }
                     else if (room.status === 'reserved') tenantName = 'จองแล้ว';
                     else tenantName = `สถานะ: ${room.status}`;
@@ -311,10 +311,10 @@ export const MeterManagementPage: React.FC = () => {
                                 <Table.Row>
                                     <Table.ColumnHeader w="100px">ห้อง</Table.ColumnHeader>
                                     <Table.ColumnHeader w="200px">ผู้เช่า</Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" colSpan={2} bg="blue.50" color="blue.700">
+                                    <Table.ColumnHeader textAlign="center" colSpan={2} bg="blue.subtle" color="blue.fg">
                                         น้ำประปา (Water)
                                     </Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" colSpan={2} bg="orange.50" color="orange.700">
+                                    <Table.ColumnHeader textAlign="center" colSpan={2} bg="orange.subtle" color="orange.fg">
                                         ไฟฟ้า (Electricity)
                                     </Table.ColumnHeader>
                                     <Table.ColumnHeader w="100px">สถานะ</Table.ColumnHeader>
@@ -323,11 +323,11 @@ export const MeterManagementPage: React.FC = () => {
                                     <Table.ColumnHeader></Table.ColumnHeader>
                                     <Table.ColumnHeader></Table.ColumnHeader>
                                     {/* Water Sub-headers */}
-                                    <Table.ColumnHeader textAlign="right" bg="blue.50">ครั้งก่อน</Table.ColumnHeader>
-                                    <Table.ColumnHeader bg="blue.50">ปัจจุบัน</Table.ColumnHeader>
+                                    <Table.ColumnHeader textAlign="right" bg="blue.subtle">ครั้งก่อน</Table.ColumnHeader>
+                                    <Table.ColumnHeader bg="blue.subtle">ปัจจุบัน</Table.ColumnHeader>
                                     {/* Elec Sub-headers */}
-                                    <Table.ColumnHeader textAlign="right" bg="orange.50">ครั้งก่อน</Table.ColumnHeader>
-                                    <Table.ColumnHeader bg="orange.50">ปัจจุบัน</Table.ColumnHeader>
+                                    <Table.ColumnHeader textAlign="right" bg="orange.subtle">ครั้งก่อน</Table.ColumnHeader>
+                                    <Table.ColumnHeader bg="orange.subtle">ปัจจุบัน</Table.ColumnHeader>
                                     <Table.ColumnHeader></Table.ColumnHeader>
                                 </Table.Row>
                             </Table.Header>
@@ -349,7 +349,7 @@ export const MeterManagementPage: React.FC = () => {
                                             </Table.Cell>
 
                                             {/* Water */}
-                                            <Table.Cell textAlign="right" color="gray.500">
+                                            <Table.Cell textAlign="right" color="fg.muted">
                                                 {row.waterMeterPrev}
                                             </Table.Cell>
                                             <Table.Cell>
@@ -358,15 +358,15 @@ export const MeterManagementPage: React.FC = () => {
                                                     type="number"
                                                     value={row.waterMeterCurr}
                                                     onChange={(e) => handleReadingChange(originalIndex, 'water', e.target.value)}
-                                                    borderColor={isLowerThanPrevious(row.waterMeterCurr, row.waterMeterPrev) ? 'red.300' : 'gray.200'}
+                                                    borderColor={isLowerThanPrevious(row.waterMeterCurr, row.waterMeterPrev) ? 'red.300' : 'border.default'}
                                                 />
                                                 {isLowerThanPrevious(row.waterMeterCurr, row.waterMeterPrev) && (
-                                                    <Text fontSize="xs" color="red.500">ต่ำกว่าครั้งก่อน</Text>
+                                                    <Text fontSize="xs" color="red.fg">ต่ำกว่าครั้งก่อน</Text>
                                                 )}
                                             </Table.Cell>
 
                                             {/* Electricity */}
-                                            <Table.Cell textAlign="right" color="gray.500">
+                                            <Table.Cell textAlign="right" color="fg.muted">
                                                 {row.electricityMeterPrev}
                                             </Table.Cell>
                                             <Table.Cell>
@@ -375,10 +375,10 @@ export const MeterManagementPage: React.FC = () => {
                                                     type="number"
                                                     value={row.electricityMeterCurr}
                                                     onChange={(e) => handleReadingChange(originalIndex, 'electricity', e.target.value)}
-                                                    borderColor={isLowerThanPrevious(row.electricityMeterCurr, row.electricityMeterPrev) ? 'red.300' : 'gray.200'}
+                                                    borderColor={isLowerThanPrevious(row.electricityMeterCurr, row.electricityMeterPrev) ? 'red.300' : 'border.default'}
                                                 />
                                                 {isLowerThanPrevious(row.electricityMeterCurr, row.electricityMeterPrev) && (
-                                                    <Text fontSize="xs" color="red.500">ต่ำกว่าครั้งก่อน</Text>
+                                                    <Text fontSize="xs" color="red.fg">ต่ำกว่าครั้งก่อน</Text>
                                                 )}
                                             </Table.Cell>
 

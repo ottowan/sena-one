@@ -9,6 +9,7 @@ import {
   HStack,
   Icon,
   Badge,
+  Button,
 } from "@chakra-ui/react";
 import {
   LuWallet,
@@ -77,6 +78,7 @@ export const TenantDashboardPage: React.FC = () => {
   const [unpaidInvoices, setUnpaidInvoices] = useState<any[]>([]);
   const [yearlyInvoices, setYearlyInvoices] = useState<any[]>([]);
   const [vehicles, setVehicles] = useState<VehicleRegistration[]>([]);
+  const [chartTab, setChartTab] = useState<"due" | "water">("due");
   const [contractLoading, setContractLoading] = useState(true);
   const [invoiceLoading, setInvoiceLoading] = useState(false);
 
@@ -274,223 +276,215 @@ export const TenantDashboardPage: React.FC = () => {
         <Heading size="xl" mb={2}>
           สวัสดี, คุณ{tenant?.full_name || profile?.full_name}
           {positionLabel && (
-            <Text as="span" fontSize="lg" fontWeight="normal" color="gray.500">
+            <Text as="span" fontSize="lg" fontWeight="normal" color="fg.muted">
               {" "}
               ({positionLabel})
             </Text>
           )}
         </Heading>
-        <Text color="gray.600">ยินดีต้อนรับสู่ระบบจัดการหอพัก Sena-One</Text>
+        <Text color="fg.muted">ยินดีต้อนรับสู่ระบบจัดการหอพัก Sena-One</Text>
         {contractLoading && (
-          <Text color="gray.500" fontSize="sm" mt={2}>
+          <Text color="fg.muted" fontSize="sm" mt={2}>
             กำลังโหลดข้อมูลห้องพัก...
           </Text>
         )}
       </Box>
 
-      <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={6}>
-        <Card.Root>
-          <Card.Body>
-            <HStack align="start" justify="space-between">
-              <VStack align="start" gap={1}>
+      {contract && (
+        <Grid
+          templateColumns={{ base: "1fr", lg: "3fr 2fr" }}
+          gap={6}
+          alignItems="start"
+        >
+          <Card.Root>
+            <Card.Header>
+              <HStack justify="space-between" wrap="wrap" gap={3}>
+                <Heading size="lg">แนวโน้มรายปี {currentYear + 543}</Heading>
                 <HStack gap={2}>
-                  <Text color="gray.500" fontSize="sm">
-                    ข้อมูลห้องพัก
-                  </Text>
+                  <Button
+                    size="sm"
+                    variant={chartTab === "due" ? "solid" : "outline"}
+                    colorPalette={chartTab === "due" ? "brand" : "gray"}
+                    onClick={() => setChartTab("due")}
+                  >
+                    ยอดที่ต้องชำระ
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={chartTab === "water" ? "solid" : "outline"}
+                    colorPalette={chartTab === "water" ? "brand" : "gray"}
+                    onClick={() => setChartTab("water")}
+                  >
+                    ปริมาณการใช้น้ำ
+                  </Button>
+                </HStack>
+              </HStack>
+            </Card.Header>
+            <Card.Body>
+              {chartTab === "due" ? (
+                <MonthlyLineChart
+                  title="ยอดที่ต้องชำระรายเดือน"
+                  unit="บาท"
+                  color="#2a78d6"
+                  data={monthlyStats.map((m) => ({
+                    label: m.label,
+                    value: m.due,
+                  }))}
+                  valueFormatter={(v) => formatCurrency(v)}
+                />
+              ) : (
+                <MonthlyLineChart
+                  title="ปริมาณการใช้น้ำรายเดือน"
+                  unit="หน่วย"
+                  color="#1baf7a"
+                  data={monthlyStats.map((m) => ({
+                    label: m.label,
+                    value: m.water,
+                  }))}
+                  valueFormatter={(v) => `${v.toLocaleString()} หน่วย`}
+                />
+              )}
+            </Card.Body>
+          </Card.Root>
 
-                  <Badge colorPalette="blue">
-                    {contract?.room?.room_type || "Standard"}
+          <VStack align="stretch" gap={6}>
+            <Card.Root>
+              <Card.Body>
+                <HStack align="start" justify="space-between">
+                  <VStack align="start" gap={1}>
+                    <HStack gap={2}>
+                      <Text color="fg.muted" fontSize="sm">
+                        ข้อมูลห้องพัก
+                      </Text>
+
+                      <Badge colorPalette="blue">
+                        {contract?.room?.room_type || "Standard"}
+                      </Badge>
+                    </HStack>
+                    <Heading size="2xl">
+                      {contract?.room?.room_number || "-"}
+                    </Heading>
+
+                    {vehicles.length === 0 ? (
+                      <Text color="fg.muted" fontSize="sm">
+                        ยังไม่มีข้อมูลรถของห้องนี้
+                      </Text>
+                    ) : (
+                      <VStack align="stretch" gap={0}>
+                        {vehicles.map((vehicle) => {
+                          return (
+                            <HStack key={vehicle.id} justify="space-between">
+                              <HStack gap={3}>
+                                <VStack align="start" gap={0}>
+                                  <HStack gap={1}>
+                                    <Text fontWeight="medium">
+                                      {vehicle.plate} {vehicle.province}
+                                    </Text>
+
+                                    {vehicle.has_sticker ? (
+                                      <Badge colorPalette="green">
+                                        มีสติ๊กเกอร์
+                                      </Badge>
+                                    ) : (
+                                      <Badge colorPalette="gray">
+                                        ไม่มีสติ๊กเกอร์
+                                      </Badge>
+                                    )}
+                                  </HStack>
+                                  <Text fontSize="sm" color="fg.muted">
+                                    {VEHICLE_TYPE_LABELS[vehicle.type]}
+                                    {vehicle.brand ? ` · ${vehicle.brand}` : ""}
+                                    {vehicle.color ? ` (${vehicle.color})` : ""}
+                                  </Text>
+                                </VStack>
+                              </HStack>
+                            </HStack>
+                          );
+                        })}
+                      </VStack>
+                    )}
+                  </VStack>
+                  <Box p={3} bg="blue.subtle" borderRadius="lg" color="blue.fg">
+                    <Icon fontSize="2xl">
+                      <LuHouse />
+                    </Icon>
+                  </Box>
+                </HStack>
+              </Card.Body>
+            </Card.Root>
+
+            <Card.Root
+              bg={expiryHighlight?.bg}
+              borderLeftWidth={expiryHighlight ? "4px" : undefined}
+              borderLeftColor={expiryHighlight?.border}
+            >
+              <Card.Body>
+                <HStack mb={3} align="start">
+                  <Text fontSize="md" fontWeight="bold" color="fg.default">
+                    รายละเอียดสัญญา
+                  </Text>
+                  <Badge
+                    colorPalette={
+                      expiryHighlight?.badge ||
+                      (contract?.status
+                        ? CONTRACT_STATUS_COLORS[contract.status] || "gray"
+                        : "gray")
+                    }
+                  >
+                    {contract?.status
+                      ? CONTRACT_STATUS_LABELS[contract.status] ||
+                        contract.status
+                      : "-"}
                   </Badge>
                 </HStack>
-                <Heading size="2xl">
-                  {contract?.room?.room_number || "-"}
-                </Heading>
-
-                {vehicles.length === 0 ? (
-                  <Text color="gray.500" fontSize="sm">
-                    ยังไม่มีข้อมูลรถของห้องนี้
-                  </Text>
-                ) : (
-                  <VStack align="stretch" gap={0}>
-                    {vehicles.map((vehicle) => {
-                      return (
-                        <HStack key={vehicle.id} justify="space-between">
-                          <HStack gap={3}>
-                            <VStack align="start" gap={0}>
-                              <HStack gap={1}>
-                                <Text fontWeight="medium">
-                                  {vehicle.plate} {vehicle.province}
-                                </Text>
-
-                                {vehicle.has_sticker ? (
-                                  <Badge colorPalette="green">
-                                    มีสติ๊กเกอร์
-                                  </Badge>
-                                ) : (
-                                  <Badge colorPalette="gray">
-                                    ไม่มีสติ๊กเกอร์
-                                  </Badge>
-                                )}
-                              </HStack>
-                              <Text fontSize="sm" color="gray.500">
-                                {VEHICLE_TYPE_LABELS[vehicle.type]}
-                                {vehicle.brand ? ` · ${vehicle.brand}` : ""}
-                                {vehicle.color ? ` (${vehicle.color})` : ""}
-                              </Text>
-                            </VStack>
-                          </HStack>
-                        </HStack>
-                      );
-                    })}
-                  </VStack>
-                )}
-              </VStack>
-              <Box p={3} bg="blue.50" borderRadius="lg" color="blue.600">
-                <Icon fontSize="2xl">
-                  <LuHouse />
-                </Icon>
-              </Box>
-            </HStack>
-          </Card.Body>
-        </Card.Root>
-
-        <Card.Root>
-          <Card.Body>
-            <HStack align="start" justify="space-between">
-              <VStack align="start" gap={1}>
-                <Text color="gray.500" fontSize="sm">
-                  ยอดค้างชำระ
-                </Text>
-                <Heading
-                  size="2xl"
-                  color={totalDue > 0 ? "red.500" : "green.500"}
-                >
-                  {formatCurrency(totalDue)}
-                </Heading>
-                <Text fontSize="xs" color="gray.500">
-                  {invoiceLoading
-                    ? "กำลังอัปเดต..."
-                    : `${unpaidInvoices.length} รายการที่ต้องชำระ`}
-                </Text>
-              </VStack>
-              <Box
-                p={3}
-                bg={totalDue > 0 ? "red.50" : "green.50"}
-                borderRadius="lg"
-                color={totalDue > 0 ? "red.600" : "green.600"}
-              >
-                <Icon fontSize="2xl">
-                  <LuWallet />
-                </Icon>
-              </Box>
-            </HStack>
-          </Card.Body>
-        </Card.Root>
-
-        <Card.Root
-          bg={expiryHighlight?.bg}
-          borderLeftWidth={expiryHighlight ? "4px" : undefined}
-          borderLeftColor={expiryHighlight?.border}
-        >
-          <Card.Body>
-            <HStack mb={3} align="start">
-              <Text fontSize="md" fontWeight="bold" color="gray.700">
-                รายละเอียดสัญญา
-              </Text>
-              <Badge
-                colorPalette={
-                  expiryHighlight?.badge ||
-                  (contract?.status
-                    ? CONTRACT_STATUS_COLORS[contract.status] || "gray"
-                    : "gray")
-                }
-              >
-                {contract?.status
-                  ? CONTRACT_STATUS_LABELS[contract.status] || contract.status
-                  : "-"}
-              </Badge>
-            </HStack>
-            <VStack align="stretch" gap={3}>
-              <HStack justify="space-between">
-                <Text color="gray.500" fontSize="sm">
-                  วันที่เริ่มสัญญา
-                </Text>
-                <Text fontSize="sm">
-                  {contract?.start_date
-                    ? formatDate(contract.start_date, "long")
-                    : "-"}
-                </Text>
-              </HStack>
-              <HStack justify="space-between" align="start">
-                <Text color="gray.500" fontSize="sm">
-                  วันที่สิ้นสุดสัญญา
-                </Text>
-                <VStack align="end" gap={1}>
-                  <Text fontSize="sm">
-                    {contract?.end_date
-                      ? formatDate(contract.end_date, "long")
-                      : "-"}
-                  </Text>
-                  {contract?.status === "active" && contract?.end_date && (
-                    <Badge
-                      colorPalette={expiryHighlight?.badge || "gray"}
-                      size="xs"
-                    >
-                      {formatRemainingDuration(contract.end_date)}
-                    </Badge>
-                  )}
+                <VStack align="stretch" gap={3}>
+                  <HStack justify="space-between">
+                    <Text color="fg.muted" fontSize="sm">
+                      วันที่เริ่มสัญญา
+                    </Text>
+                    <Text fontSize="sm">
+                      {contract?.start_date
+                        ? formatDate(contract.start_date, "long")
+                        : "-"}
+                    </Text>
+                  </HStack>
+                  <HStack justify="space-between" align="start">
+                    <Text color="fg.muted" fontSize="sm">
+                      วันที่สิ้นสุดสัญญา
+                    </Text>
+                    <VStack align="end" gap={1}>
+                      <Text fontSize="sm">
+                        {contract?.end_date
+                          ? formatDate(contract.end_date, "long")
+                          : "-"}
+                      </Text>
+                      {contract?.status === "active" && contract?.end_date && (
+                        <Badge
+                          colorPalette={expiryHighlight?.badge || "gray"}
+                          size="xs"
+                        >
+                          {formatRemainingDuration(contract.end_date)}
+                        </Badge>
+                      )}
+                    </VStack>
+                  </HStack>
                 </VStack>
-              </HStack>
-            </VStack>
-          </Card.Body>
-        </Card.Root>
-      </Grid>
+              </Card.Body>
+            </Card.Root>
+          </VStack>
+        </Grid>
+      )}
 
       {tenantId && !contractLoading && !contract && (
         <Card.Root>
           <Card.Body>
-            <Text color="gray.600">
+            <Text color="fg.muted">
               ยังไม่พบสัญญาที่กำลังใช้งานสำหรับบัญชีนี้
             </Text>
           </Card.Body>
         </Card.Root>
       )}
 
-      {contract && (
-        <Card.Root>
-          <Card.Header>
-            <Heading size="lg">แนวโน้มรายปี {currentYear + 543}</Heading>
-          </Card.Header>
-          <Card.Body>
-            <Grid
-              templateColumns={{ base: "1fr", lg: "repeat(2, 1fr)" }}
-              gap={8}
-            >
-              <MonthlyLineChart
-                title="ยอดที่ต้องชำระรายเดือน"
-                unit="บาท"
-                color="#2a78d6"
-                data={monthlyStats.map((m) => ({
-                  label: m.label,
-                  value: m.due,
-                }))}
-                valueFormatter={(v) => formatCurrency(v)}
-              />
-              <MonthlyLineChart
-                title="ปริมาณการใช้น้ำรายเดือน"
-                unit="หน่วย"
-                color="#1baf7a"
-                data={monthlyStats.map((m) => ({
-                  label: m.label,
-                  value: m.water,
-                }))}
-                valueFormatter={(v) => `${v.toLocaleString()} หน่วย`}
-              />
-            </Grid>
-          </Card.Body>
-        </Card.Root>
-      )}
-      
       {contract && (
         <Card.Root>
           <Card.Header>
@@ -503,14 +497,14 @@ export const TenantDashboardPage: React.FC = () => {
             >
               <HStack align="start" justify="space-between">
                 <VStack align="start" gap={1}>
-                  <Text color="gray.500" fontSize="sm">
+                  <Text color="fg.muted" fontSize="sm">
                     ค่าเช่า (บาท/เดือน)
                   </Text>
                   <Heading size="xl">
                     {formatCurrency(displayRent || 0)}
                   </Heading>
                 </VStack>
-                <Box p={3} bg="blue.50" borderRadius="lg" color="blue.600">
+                <Box p={3} bg="blue.subtle" borderRadius="lg" color="blue.fg">
                   <Icon fontSize="xl">
                     <LuHouse />
                   </Icon>
@@ -519,14 +513,19 @@ export const TenantDashboardPage: React.FC = () => {
 
               <HStack align="start" justify="space-between">
                 <VStack align="start" gap={1}>
-                  <Text color="gray.500" fontSize="sm">
+                  <Text color="fg.muted" fontSize="sm">
                     ค่าส่วนกลาง (บาท/เดือน)
                   </Text>
                   <Heading size="xl">
                     {formatCurrency(displayCommonFee || 0)}
                   </Heading>
                 </VStack>
-                <Box p={3} bg="purple.50" borderRadius="lg" color="purple.600">
+                <Box
+                  p={3}
+                  bg="purple.subtle"
+                  borderRadius="lg"
+                  color="purple.fg"
+                >
                   <Icon fontSize="xl">
                     <LuUsers />
                   </Icon>
@@ -535,14 +534,14 @@ export const TenantDashboardPage: React.FC = () => {
 
               <HStack align="start" justify="space-between">
                 <VStack align="start" gap={1}>
-                  <Text color="gray.500" fontSize="sm">
+                  <Text color="fg.muted" fontSize="sm">
                     ค่าน้ำประปา (บาท/หน่วย)
                   </Text>
                   <Heading size="xl">
                     {formatCurrency(appSettings?.water_rate || 0)}
                   </Heading>
                 </VStack>
-                <Box p={3} bg="cyan.50" borderRadius="lg" color="cyan.600">
+                <Box p={3} bg="cyan.subtle" borderRadius="lg" color="cyan.fg">
                   <Icon fontSize="xl">
                     <LuDroplet />
                   </Icon>
@@ -552,9 +551,6 @@ export const TenantDashboardPage: React.FC = () => {
           </Card.Body>
         </Card.Root>
       )}
-
-
-
     </VStack>
   );
 };

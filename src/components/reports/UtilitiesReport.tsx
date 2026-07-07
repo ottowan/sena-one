@@ -81,18 +81,18 @@ export const UtilitiesReport: React.FC = () => {
                             <Table.Row>
                                 <Table.ColumnHeader rowSpan={2}>ห้อง</Table.ColumnHeader>
                                 <Table.ColumnHeader rowSpan={2}>ผู้เช่า</Table.ColumnHeader>
-                                <Table.ColumnHeader colSpan={3} textAlign="center" bg="blue.50">น้ำประปา (Water)</Table.ColumnHeader>
-                                <Table.ColumnHeader colSpan={3} textAlign="center" bg="orange.50">ไฟฟ้า (Electricity)</Table.ColumnHeader>
+                                <Table.ColumnHeader colSpan={3} textAlign="center" bg="blue.subtle">น้ำประปา (Water)</Table.ColumnHeader>
+                                <Table.ColumnHeader colSpan={3} textAlign="center" bg="orange.subtle">ไฟฟ้า (Electricity)</Table.ColumnHeader>
                             </Table.Row>
                             <Table.Row>
                                 {/* Water */}
-                                <Table.ColumnHeader textAlign="right" bg="blue.50">ก่อนหน้า</Table.ColumnHeader>
-                                <Table.ColumnHeader textAlign="right" bg="blue.50">ปัจจุบัน</Table.ColumnHeader>
-                                <Table.ColumnHeader textAlign="right" bg="blue.100" fontWeight="bold">ใช้ไป</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="right" bg="blue.subtle">ก่อนหน้า</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="right" bg="blue.subtle">ปัจจุบัน</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="right" bg="blue.muted" fontWeight="bold">ใช้ไป</Table.ColumnHeader>
                                 {/* Elec */}
-                                <Table.ColumnHeader textAlign="right" bg="orange.50">ก่อนหน้า</Table.ColumnHeader>
-                                <Table.ColumnHeader textAlign="right" bg="orange.50">ปัจจุบัน</Table.ColumnHeader>
-                                <Table.ColumnHeader textAlign="right" bg="orange.100" fontWeight="bold">ใช้ไป</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="right" bg="orange.subtle">ก่อนหน้า</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="right" bg="orange.subtle">ปัจจุบัน</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="right" bg="orange.muted" fontWeight="bold">ใช้ไป</Table.ColumnHeader>
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
@@ -109,13 +109,13 @@ export const UtilitiesReport: React.FC = () => {
                                     <Table.Cell fontWeight="medium">{item.room?.room_number}</Table.Cell>
                                     <Table.Cell>{item.tenant_name}</Table.Cell>
 
-                                    <Table.Cell textAlign="right" color="gray.500">{item.water_prev}</Table.Cell>
+                                    <Table.Cell textAlign="right" color="fg.muted">{item.water_prev}</Table.Cell>
                                     <Table.Cell textAlign="right">{item.water_meter}</Table.Cell>
-                                    <Table.Cell textAlign="right" fontWeight="bold" color="blue.600">{item.water_usage}</Table.Cell>
+                                    <Table.Cell textAlign="right" fontWeight="bold" color="blue.fg">{item.water_usage}</Table.Cell>
 
-                                    <Table.Cell textAlign="right" color="gray.500">{item.elec_prev}</Table.Cell>
+                                    <Table.Cell textAlign="right" color="fg.muted">{item.elec_prev}</Table.Cell>
                                     <Table.Cell textAlign="right">{item.electricity_meter}</Table.Cell>
-                                    <Table.Cell textAlign="right" fontWeight="bold" color="orange.600">{item.elec_usage}</Table.Cell>
+                                    <Table.Cell textAlign="right" fontWeight="bold" color="orange.fg">{item.elec_usage}</Table.Cell>
                                 </Table.Row>
                             ))}
                         </Table.Body>

@@ -73,7 +73,7 @@ export const RoomStatusChart: React.FC<RoomStatusChartProps> = ({ stats }) => {
                     transform="translate(-50%, -50%)"
                     w="140px"
                     h="140px"
-                    bg="white"
+                    bg="bg.panel"
                     borderRadius="full"
                     display="flex"
                     alignItems="center"
@@ -81,7 +81,7 @@ export const RoomStatusChart: React.FC<RoomStatusChartProps> = ({ stats }) => {
                     flexDirection="column"
                 >
                     <Text fontSize="3xl" fontWeight="bold">{total}</Text>
-                    <Text fontSize="sm" color="gray.500">ห้องทั้งหมด</Text>
+                    <Text fontSize="sm" color="fg.muted">ห้องทั้งหมด</Text>
                 </Box>
             </Box>
 
@@ -90,9 +90,9 @@ export const RoomStatusChart: React.FC<RoomStatusChartProps> = ({ stats }) => {
                 {Object.entries(stats).map(([key, value]) => (
                     <HStack key={key}>
                         <Box w={3} h={3} borderRadius="full" bg={COLORS[key as keyof typeof COLORS]} />
-                        <Text color="gray.600" minW="80px">{LABELS[key as keyof typeof LABELS]}</Text>
+                        <Text color="fg.muted" minW="80px">{LABELS[key as keyof typeof LABELS]}</Text>
                         <Text fontWeight="bold">{value}</Text>
-                        <Text fontSize="xs" color="gray.400">
+                        <Text fontSize="xs" color="fg.subtle">
                             ({total > 0 ? ((value / total) * 100).toFixed(1) : 0}%)
                         </Text>
                     </HStack>

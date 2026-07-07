@@ -228,7 +228,7 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
                         <VStack gap={6} align="stretch">
                             {/* เลือกผู้ใช้งาน (เฉพาะเพิ่มใหม่) */}
                             {!isEdit && (
-                                <Box p={4} bg="gray.50" borderRadius="md" border="1px dashed" borderColor="gray.300">
+                                <Box p={4} bg="bg.subtle" borderRadius="md" border="1px dashed" borderColor="border.default">
                                     <Heading size="sm" mb={2}>ดึงข้อมูลจากผู้ใช้งาน (Optional)</Heading>
                                     <NativeSelectRoot>
                                         <NativeSelectField
@@ -244,12 +244,12 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
                                         </NativeSelectField>
                                     </NativeSelectRoot>
                                     {debugError && (
-                                        <Text color="red.500" fontSize="xs" mt={1}>
+                                        <Text color="red.fg" fontSize="xs" mt={1}>
                                             System Error: {debugError}
                                         </Text>
                                     )}
                                     {!debugError && tenantUserOptions.length === 0 && (
-                                        <Text color="gray.500" fontSize="xs" mt={1}>
+                                        <Text color="fg.subtle" fontSize="xs" mt={1}>
                                             ไม่พบรายชื่อผู้ใช้งานสำหรับผู้เช่า
                                         </Text>
                                     )}
@@ -282,7 +282,7 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
                                             placeholder="เช่น 0812345678"
                                         />
                                         {matchingUser && (
-                                            <HStack gap={1} mt={1} color="green.600" fontSize="xs">
+                                            <HStack gap={1} mt={1} color="green.fg" fontSize="xs">
                                                 <Icon fontSize="xs">
                                                     <LuUser />
                                                 </Icon>

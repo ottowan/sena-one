@@ -236,7 +236,7 @@ export const RoomFormDialog: React.FC<RoomFormDialogProps> = ({
                             {isEdit && (
                                 <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                                     <Field label="ค่าน้ำ/ไฟ (บาท)">
-                                        <Box fontSize="sm" color="gray.600">
+                                        <Box fontSize="sm" color="fg.muted">
                                             ใช้อัตราจากส่วนกลาง: น้ำ {formData.water_rate}, ไฟ {formData.electricity_rate}
                                         </Box>
                                     </Field>

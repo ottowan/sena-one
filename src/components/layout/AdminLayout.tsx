@@ -73,13 +73,13 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onNavigate }) => {
     };
 
     return (
-        <VStack gap={0} align="stretch" h="full" bg="white">
+        <VStack gap={0} align="stretch" h="full" bg="bg.panel">
             {/* Logo */}
-            <Box p={6} borderBottom="1px" borderColor="border.default" bg="white">
+            <Box p={6} borderBottom="1px" borderColor="border.default" bg="bg.panel">
                 <HStack justify="space-between" mb={1}>
                     <Heading
                         size="xl"
-                        color="brand.700"
+                        color="brand.fg"
                     >
                         Sena-One
                     </Heading>
@@ -104,11 +104,11 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onNavigate }) => {
                             w="full"
                             size="lg"
                             onClick={onNavigate}
-                            bg={isActive ? "brand.50" : undefined}
-                            color={isActive ? "brand.800" : "fg.muted"}
+                            bg={isActive ? "brand.subtle" : undefined}
+                            color={isActive ? "brand.fg" : "fg.muted"}
                             borderLeft="3px solid"
                             borderColor={isActive ? "brand.500" : "transparent"}
-                            _hover={{ bg: isActive ? "brand.100" : "brand.50", color: "brand.800" }}
+                            _hover={{ bg: isActive ? "brand.muted" : "brand.subtle", color: "brand.fg" }}
                         >
                             <RouterLink to={item.path}>
                                 <Icon fontSize="xl" mr={3}>
@@ -150,7 +150,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onNavigate }) => {
                                     <Text fontWeight="medium" fontSize="sm" truncate>
                                         {profile?.full_name}
                                     </Text>
-                                    <Text color="gray.500" fontSize="xs">
+                                    <Text color="fg.muted" fontSize="xs">
                                         {profile?.role === 'admin' ? 'ผู้ดูแลระบบ' : 'เจ้าของหอพัก'}
                                     </Text>
                                 </VStack>
@@ -171,7 +171,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onNavigate }) => {
                             ตั้งค่า
                         </MenuItem>
                         <Separator />
-                        <MenuItem value="logout" color="red.500" onClick={handleSignOut}>
+                        <MenuItem value="logout" color="red.fg" onClick={handleSignOut}>
                             <Icon mr={2}>
                                 <LuLogOut />
                             </Icon>
@@ -203,7 +203,7 @@ export const AdminLayout: React.FC = () => {
                 left={0}
                 right={0}
                 zIndex={100}
-                bg="white"
+                bg="bg.panel"
                 borderBottom="1px"
                 borderColor="border.default"
                 px={4}
@@ -225,7 +225,7 @@ export const AdminLayout: React.FC = () => {
                                 </DrawerBody>
                             </DrawerContent>
                         </DrawerRoot>
-                        <Heading size="md" color="brand.700">Sena-One</Heading>
+                        <Heading size="md" color="brand.fg">Sena-One</Heading>
                     </HStack>
                     <ColorModeButton />
                 </HStack>
@@ -235,7 +235,7 @@ export const AdminLayout: React.FC = () => {
             <Box
                 display={{ base: 'none', lg: 'block' }}
                 w="280px"
-                bg="white"
+                bg="bg.panel"
                 borderRight="1px"
                 borderColor="border.default"
                 boxShadow="sm"
@@ -253,14 +253,17 @@ export const AdminLayout: React.FC = () => {
                 flex={1}
                 w="full"
             >
-                <Box position="relative" minH="100vh" overflow="hidden" bg="#F8FBFA">
+                <Box position="relative" minH="100vh" overflow="hidden" bg="bg.canvas">
                     <Box
                         position="absolute"
                         top={0}
                         left={0}
                         right={0}
                         h={{ base: '170px', md: '230px' }}
-                        bg="linear-gradient(135deg, #D9ECE9 0%, #FFF7ED 54%, #F8FBFA 100%)"
+                        bg={{
+                            base: 'linear-gradient(135deg, #D9ECE9 0%, #FFF7ED 54%, #F8FBFA 100%)',
+                            _dark: 'linear-gradient(135deg, #1F403D 0%, #2F2419 54%, #111827 100%)',
+                        }}
                         borderBottom="1px solid"
                         borderColor="border.muted"
                     />

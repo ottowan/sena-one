@@ -73,7 +73,7 @@ export const RoomTableView: React.FC<RoomTableViewProps> = ({
                         <Table.Cell>{room.room_type}</Table.Cell>
                         <Table.Cell>ชั้น {room.floor}</Table.Cell>
                         <Table.Cell>{room.size_sqm} ตร.ม.</Table.Cell>
-                        <Table.Cell fontWeight="medium" color="brand.600">
+                        <Table.Cell fontWeight="medium" color="brand.fg">
                             {formatCurrency(room.monthly_rent)}
                         </Table.Cell>
                         <Table.Cell>
