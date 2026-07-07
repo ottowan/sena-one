@@ -70,7 +70,14 @@ export const MonthlyLineChart: React.FC<MonthlyLineChartProps> = ({
                 <svg
                     viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
                     width="100%"
-                    style={{ display: 'block', overflow: 'visible', height: 'auto', aspectRatio: `${WIDTH} / ${HEIGHT}` }}
+                    style={{
+                        display: 'block',
+                        overflow: 'visible',
+                        height: 'auto',
+                        aspectRatio: `${WIDTH} / ${HEIGHT}`,
+                        WebkitTextSizeAdjust: '100%',
+                        textSizeAdjust: '100%',
+                    } as React.CSSProperties}
                 >
                     {gridSteps.map((step) => {
                         const y = PADDING_TOP + plotHeight - step * plotHeight;
