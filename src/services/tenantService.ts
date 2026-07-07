@@ -12,7 +12,7 @@ import {
     where,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { fetchByIds, fetchWhereIn, nowIso, withId } from '../lib/firestoreUtils';
+import { fetchByIds, fetchWhereIn, nowIso, stripUndefined, toFirestoreUpdate, withId } from '../lib/firestoreUtils';
 import { normalizePhone } from './authService';
 import type { Tenant, VehicleRegistration } from '../types';
 
@@ -137,13 +137,13 @@ export const tenantService = {
 
         const tenantRef = doc(collection(db, 'tenants'));
         const now = nowIso();
-        const payload = { ...tenant, user_id: userId ?? null, created_at: now, updated_at: now };
+        const payload = stripUndefined({ ...tenant, user_id: userId ?? null, created_at: now, updated_at: now } as Record<string, unknown>);
         await setDoc(tenantRef, payload);
         return { id: tenantRef.id, ...payload } as unknown as Tenant;
     },
 
     async updateTenant(id: string, updates: Partial<Omit<Tenant, 'id' | 'created_at'>>): Promise<Tenant> {
-        await updateDoc(doc(db, 'tenants', id), { ...updates, updated_at: nowIso() } as Record<string, unknown>);
+        await updateDoc(doc(db, 'tenants', id), toFirestoreUpdate({ ...updates, updated_at: nowIso() } as Record<string, unknown>));
         const updated = await getDoc(doc(db, 'tenants', id));
         return withId<Tenant>(updated as any);
     },

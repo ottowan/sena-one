@@ -91,7 +91,11 @@ const SettingsPage: React.FC = () => {
             });
         } catch (error) {
             console.error('Error saving settings:', error);
-            // Toast is handled in hooks mostly, but good to have fallback or specific message
+            toaster.create({
+                title: 'บันทึกการตั้งค่าไม่สำเร็จ',
+                description: error instanceof Error ? error.message : undefined,
+                type: 'error',
+            });
         } finally {
             setSaving(false);
         }

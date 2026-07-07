@@ -3,6 +3,7 @@ import {
     type QueryConstraint,
     type QueryDocumentSnapshot,
     collection,
+    deleteField,
     doc,
     documentId,
     getDoc,
@@ -81,4 +82,26 @@ export async function fetchById<T>(collectionName: string, id: string): Promise<
 
 export function nowIso(): string {
     return new Date().toISOString();
+}
+
+// Firestore's setDoc/addDoc reject literal `undefined` field values outright.
+// Form state commonly uses `value || undefined` for "cleared" optional
+// fields - strip those before a create-style write.
+export function stripUndefined<T extends Record<string, unknown>>(obj: T): T {
+    const result = {} as T;
+    (Object.keys(obj) as (keyof T)[]).forEach((key) => {
+        if (obj[key] !== undefined) result[key] = obj[key];
+    });
+    return result;
+}
+
+// updateDoc has the same restriction, but unlike setDoc it merges by field -
+// omitting a key leaves the old value in place. Map `undefined` to
+// `deleteField()` so clearing an optional field in a form actually clears it.
+export function toFirestoreUpdate<T extends Record<string, unknown>>(obj: T): Record<string, unknown> {
+    const result: Record<string, unknown> = {};
+    Object.keys(obj).forEach((key) => {
+        result[key] = obj[key] === undefined ? deleteField() : obj[key];
+    });
+    return result;
 }

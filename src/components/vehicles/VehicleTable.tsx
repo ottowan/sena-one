@@ -6,6 +6,7 @@ import {
   Highlight,
   Icon,
   IconButton,
+  Link,
   Table,
   Text,
   VStack,
@@ -116,9 +117,19 @@ export const VehicleTable: React.FC<VehicleTableProps> = ({
                             <Icon color="fg.muted">
                               <LuPhone />
                             </Icon>
-                            <Text fontSize="sm" color="fg.muted">
-                              {group[0].room?.current_tenant_phone || "-"}
-                            </Text>
+                            {group[0].room?.current_tenant_phone ? (
+                              <Link
+                                href={`tel:${group[0].room.current_tenant_phone}`}
+                                fontSize="sm"
+                                color="blue.600"
+                              >
+                                {group[0].room.current_tenant_phone}
+                              </Link>
+                            ) : (
+                              <Text fontSize="sm" color="fg.muted">
+                                -
+                              </Text>
+                            )}
                           </HStack>
                         </VStack>
                       </Table.Cell>

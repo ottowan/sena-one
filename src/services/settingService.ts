@@ -1,6 +1,6 @@
 import { collection, doc, documentId, getDoc, getDocs, orderBy, query, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { nowIso } from '../lib/firestoreUtils';
+import { nowIso, stripUndefined } from '../lib/firestoreUtils';
 import type { AppSettings, RentRate } from '../types';
 
 const APP_SETTINGS_DOC_ID = 'singleton';
@@ -39,7 +39,7 @@ export const settingService = {
         delete rest.id;
         await setDoc(
             doc(db, 'app_settings', APP_SETTINGS_DOC_ID),
-            { ...rest, updated_at: nowIso() },
+            stripUndefined({ ...rest, updated_at: nowIso() } as Record<string, unknown>),
             { merge: true }
         );
     },
