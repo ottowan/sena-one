@@ -84,7 +84,7 @@ export const VehicleRegistryPage: React.FC = () => {
                         <Text color="gray.500">กำลังโหลด...</Text>
                     </Box>
                 ) : vehicles && vehicles.length > 0 ? (
-                    <VehicleTable vehicles={vehicles} onEdit={handleEdit} onDelete={handleDelete} />
+                    <VehicleTable vehicles={vehicles} onEdit={handleEdit} onDelete={handleDelete} searchTerm={searchTerm} />
                 ) : (
                     <Card.Root>
                         <Card.Body>

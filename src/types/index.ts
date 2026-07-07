@@ -157,6 +157,7 @@ export interface VehicleRegistration {
         id: string;
         room_number: string;
         current_tenant_name?: string | null;
+        current_tenant_phone?: string | null;
     };
 }
 

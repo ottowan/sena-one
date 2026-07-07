@@ -34,6 +34,7 @@ export const vehicleService = {
                           id: room.id,
                           room_number: room.room_number,
                           current_tenant_name: room.current_tenant?.full_name || null,
+                          current_tenant_phone: room.current_tenant?.phone || null,
                       }
                     : undefined,
             };
