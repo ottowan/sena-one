@@ -76,7 +76,6 @@ export const VehicleTable: React.FC<VehicleTableProps> = ({
       <Table.Root size="sm" variant="outline">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader>ลำดับ</Table.ColumnHeader>
             <Table.ColumnHeader>เลขที่ห้อง</Table.ColumnHeader>
             <Table.ColumnHeader>เจ้าของรถ</Table.ColumnHeader>
             <Table.ColumnHeader>เลขทะเบียนรถ</Table.ColumnHeader>
@@ -87,7 +86,7 @@ export const VehicleTable: React.FC<VehicleTableProps> = ({
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {groups.map((group, groupIndex) =>
+          {groups.map((group) =>
             group.map((vehicle, i) => {
               const TypeIcon = VEHICLE_TYPE_ICONS[vehicle.type];
               const sameTypeCount = group.filter(
@@ -97,9 +96,6 @@ export const VehicleTable: React.FC<VehicleTableProps> = ({
                 <Table.Row key={vehicle.id}>
                   {i === 0 && (
                     <>
-                      <Table.Cell rowSpan={group.length}>
-                        {groupIndex + 1}
-                      </Table.Cell>
                       <Table.Cell rowSpan={group.length} fontWeight="medium">
                         {group[0].room?.room_number || "-"}
                       </Table.Cell>

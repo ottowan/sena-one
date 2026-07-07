@@ -43,11 +43,11 @@ export const TenantTable: React.FC<TenantTableProps> = ({ tenants, onView, onEdi
         <Table.Root size="sm" variant="outline">
             <Table.Header>
                 <Table.Row>
+                    <Table.ColumnHeader>ห้อง</Table.ColumnHeader>
                     <Table.ColumnHeader>ชื่อ-นามสกุล</Table.ColumnHeader>
                     <Table.ColumnHeader>เบอร์โทร</Table.ColumnHeader>
                     <Table.ColumnHeader>อีเมล</Table.ColumnHeader>
                     <Table.ColumnHeader>บัญชี</Table.ColumnHeader>
-                    <Table.ColumnHeader>ห้อง</Table.ColumnHeader>
                     <Table.ColumnHeader>สถานะ</Table.ColumnHeader>
                     <Table.ColumnHeader>วันที่เข้าพัก</Table.ColumnHeader>
                     <Table.ColumnHeader textAlign="center">จัดการ</Table.ColumnHeader>
@@ -56,7 +56,10 @@ export const TenantTable: React.FC<TenantTableProps> = ({ tenants, onView, onEdi
             <Table.Body>
                 {tenants.map((tenant) => (
                     <Table.Row key={tenant.id}>
-                        <Table.Cell fontWeight="medium">{tenant.full_name}</Table.Cell>
+                        <Table.Cell fontWeight="medium">
+                            {tenant.room ? tenant.room.room_number : '-'}
+                        </Table.Cell>
+                        <Table.Cell>{tenant.full_name}</Table.Cell>
                         <Table.Cell>{tenant.phone}</Table.Cell>
                         <Table.Cell>{tenant.email || '-'}</Table.Cell>
                         <Table.Cell>
@@ -70,9 +73,6 @@ export const TenantTable: React.FC<TenantTableProps> = ({ tenants, onView, onEdi
                             ) : (
                                 <Text fontSize="xs" color="gray.400">-</Text>
                             )}
-                        </Table.Cell>
-                        <Table.Cell>
-                            {tenant.room ? tenant.room.room_number : '-'}
                         </Table.Cell>
                         <Table.Cell>
                             <Badge colorPalette={getStatusColor(tenant.status)}>

@@ -34,7 +34,7 @@ export const TenantsPage: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
     const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
-    const [viewMode, setViewMode] = useState<ViewMode>('grid');
+    const [viewMode, setViewMode] = useState<ViewMode>('table');
     const queryClient = useQueryClient();
     const autoLinkRunKey = useRef('');
 
