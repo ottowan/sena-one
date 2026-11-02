@@ -12,11 +12,13 @@ interface SearchInputProps extends Omit<InputProps, 'value' | 'onChange'> {
 export const SearchInput: React.FC<SearchInputProps> = ({ value, onChange, ...inputProps }) => {
     return (
         <InputGroup
+            w="full"
             startElement={<LuSearch color="var(--chakra-colors-fg-subtle)" />}
             endElement={
                 value ? (
                     <CloseButton
                         size="xs"
+                        type="button"
                         onClick={() => onChange('')}
                         aria-label="ล้างคำค้นหา"
                     />

@@ -315,7 +315,7 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
                     <DialogActionTrigger asChild>
                         <Button variant="outline" onClick={onClose}>ยกเลิก</Button>
                     </DialogActionTrigger>
-                    <Button colorPalette="blue" onClick={handleSubmit} loading={isLoading}>
+                    <Button colorPalette="brand" onClick={handleSubmit} loading={isLoading}>
                         ยืนยันสร้าง {rows.filter(r => r.isSelected).length} รายการ
                     </Button>
                 </DialogFooter>

@@ -1,21 +1,54 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react"
 
 const customConfig = defineConfig({
+    globalCss: {
+        'html': { colorPalette: 'brand', scrollPaddingTop: '88px' },
+        'body': { bg: 'bg.canvas', color: 'fg.default', fontFamily: 'body', lineHeight: 1.7 },
+        '::selection': { bg: 'brand.muted', color: 'brand.fg' },
+        'button, input, select, textarea': { fontFamily: 'inherit' },
+        'input, td': { fontVariantNumeric: 'tabular-nums' },
+        'a, button, input, select, textarea': { _focusVisible: { outline: '2px solid', outlineColor: 'brand.focusRing', outlineOffset: '3px' } },
+    },
     theme: {
+        recipes: {
+            button: { base: { borderRadius: 'lg', fontWeight: 'semibold' } },
+            input: { base: { borderRadius: 'lg', bg: 'bg.panel', borderColor: 'border.default', '--focus-color': 'colors.brand.solid' } },
+            textarea: { base: { borderRadius: 'lg', bg: 'bg.panel', '--focus-color': 'colors.brand.solid' } },
+            heading: { base: { fontWeight: 'semibold', lineHeight: 1.4, letterSpacing: '-0.025em' } },
+            badge: { base: { borderRadius: 'full', px: '2.5', py: '1', fontWeight: 'medium', lineHeight: 1.3 } },
+        },
+        slotRecipes: {
+            card: {
+                slots: ['root', 'header', 'body', 'footer', 'title', 'description'],
+                base: { root: { borderRadius: 'xl', minW: 0 }, body: { minW: 0 } },
+                variants: { variant: { outline: { root: { bg: 'bg.panel', borderColor: 'border.default', boxShadow: 'sm' } } } },
+            },
+            table: {
+                slots: ['root', 'header', 'body', 'footer', 'row', 'cell', 'columnHeader', 'caption'],
+                base: {
+                    root: { fontSize: 'sm' },
+                    columnHeader: { bg: 'bg.subtle', color: 'fg.muted', fontWeight: 'semibold', whiteSpace: 'nowrap', py: '3.5' },
+                    cell: { verticalAlign: 'middle', borderColor: 'border.muted', py: '3.5' },
+                    row: { transition: 'background 120ms', _hover: { bg: 'bg.subtle' } },
+                },
+            },
+            dialog: { slots: ['trigger', 'positioner', 'backdrop', 'content', 'closeTrigger', 'title', 'description', 'header', 'body', 'footer'], base: { content: { borderRadius: '2xl', bg: 'bg.panel' }, header: { borderBottomWidth: '1px', borderColor: 'border.muted', pb: '5' } } },
+            nativeSelect: { slots: ['root', 'field', 'indicator'], base: { field: { borderRadius: 'lg', bg: 'bg.panel', '--focus-color': 'colors.brand.solid' } } },
+        },
         tokens: {
             colors: {
                 brand: {
-                    50: { value: "#F0F7F6" },
-                    100: { value: "#D9ECE9" },
-                    200: { value: "#B8DCD6" },
-                    300: { value: "#8FC7BD" },
-                    400: { value: "#62AB9D" },
-                    500: { value: "#3F8F83" },
-                    600: { value: "#2F746B" },
-                    700: { value: "#285F59" },
-                    800: { value: "#234D49" },
-                    900: { value: "#1F403D" },
-                    950: { value: "#102624" },
+                    50: { value: "#F0FDFA" },
+                    100: { value: "#CCFBF1" },
+                    200: { value: "#99F6E4" },
+                    300: { value: "#5EEAD4" },
+                    400: { value: "#2DD4BF" },
+                    500: { value: "#0F766E" },
+                    600: { value: "#0D665F" },
+                    700: { value: "#115E59" },
+                    800: { value: "#134E4A" },
+                    900: { value: "#153E3C" },
+                    950: { value: "#082F2C" },
                 },
                 accent: {
                     50: { value: "#FFF7ED" },
@@ -67,8 +100,8 @@ const customConfig = defineConfig({
                 },
             },
             fonts: {
-                heading: { value: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" },
-                body: { value: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" },
+                heading: { value: "'Noto Sans Thai', 'Inter', Tahoma, sans-serif" },
+                body: { value: "'Noto Sans Thai', 'Inter', Tahoma, sans-serif" },
             },
             radii: {
                 sm: { value: "0.375rem" },
@@ -79,7 +112,7 @@ const customConfig = defineConfig({
                 full: { value: "9999px" },
             },
             shadows: {
-                sm: { value: "0 1px 2px 0 rgba(0, 0, 0, 0.05)" },
+                sm: { value: "0 2px 8px rgba(20, 46, 58, 0.035)" },
                 md: { value: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" },
                 lg: { value: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" },
                 xl: { value: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" },
@@ -89,6 +122,12 @@ const customConfig = defineConfig({
         },
         semanticTokens: {
             colors: {
+                nav: {
+                    bg: { value: { base: '#142E3A', _dark: '#0C1B24' } },
+                    fg: { value: '#D4E2E8' },
+                    muted: { value: '#9BB3C0' },
+                    active: { value: '#254A57' },
+                },
                 primary: {
                     solid: { value: "{colors.brand.500}" },
                     contrast: { value: "white" },
@@ -99,38 +138,41 @@ const customConfig = defineConfig({
                 },
                 bg: {
                     canvas: {
-                        value: { base: "#F7FAF9", _dark: "#111827" }
+                        value: { base: "#F4F7FA", _dark: "#101C28" }
                     },
                     panel: {
-                        value: { base: "#FFFFFF", _dark: "#1B2624" }
+                        value: { base: "#FFFFFF", _dark: "#172735" }
                     },
                     subtle: {
-                        value: { base: "#EEF5F3", _dark: "#182322" }
+                        value: { base: "#F1F5F8", _dark: "#1B2E3D" }
                     },
                     muted: {
-                        value: { base: "#E2ECE9", _dark: "#263433" }
+                        value: { base: "#E5EDF2", _dark: "#233847" }
                     }
                 },
                 fg: {
+                    DEFAULT: { value: { base: '#1B3442', _dark: '#EAF2F7' } },
                     default: {
-                        value: { base: "#172321", _dark: "#F3F6F5" }
+                        value: { base: "#1B3442", _dark: "#EAF2F7" }
                     },
                     muted: {
-                        value: { base: "#586866", _dark: "#AEBAB8" }
+                        value: { base: "#546B7A", _dark: "#ACC0CF" }
                     },
                     subtle: {
-                        value: { base: "#71817E", _dark: "#84918F" }
+                        value: { base: "#657D8D", _dark: "#8BA3B3" }
                     }
                 },
                 border: {
+                    DEFAULT: { value: { base: '#DCE6ED', _dark: '#314859' } },
                     default: {
-                        value: { base: "#D7E2DF", _dark: "#334240" }
+                        value: { base: "#DCE6ED", _dark: "#314859" }
                     },
                     muted: {
-                        value: { base: "#EAF1EF", _dark: "#263433" }
+                        value: { base: "#EBF0F5", _dark: "#233847" }
                     }
                 },
                 brand: {
+                    focusRing: { value: { base: '{colors.brand.600}', _dark: '{colors.brand.300}' } },
                     subtle: {
                         value: { base: "{colors.brand.50}", _dark: "{colors.brand.900}" }
                     },
@@ -141,13 +183,13 @@ const customConfig = defineConfig({
                         value: { base: "{colors.brand.200}", _dark: "{colors.brand.700}" }
                     },
                     solid: {
-                        value: { base: "{colors.brand.500}", _dark: "{colors.brand.400}" }
+                        value: { base: "{colors.brand.500}", _dark: "{colors.brand.300}" }
                     },
                     fg: {
                         value: { base: "{colors.brand.700}", _dark: "{colors.brand.200}" }
                     },
                     contrast: {
-                        value: "white"
+                        value: { base: "white", _dark: "{colors.brand.950}" }
                     }
                 },
                 accent: {

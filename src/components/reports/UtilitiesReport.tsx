@@ -69,7 +69,7 @@ export const UtilitiesReport: React.FC = () => {
                 </HStack>
 
                 <Button colorPalette="green" onClick={handleExport} disabled={isLoading || data.length === 0}>
-                    Export Excel
+                    ส่งออก Excel
                 </Button>
             </HStack>
 

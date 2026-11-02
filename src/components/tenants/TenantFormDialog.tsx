@@ -444,7 +444,7 @@ export const TenantFormDialog: React.FC<TenantFormDialogProps> = ({
                         </DialogActionTrigger>
                         <Button
                             type="submit"
-                            colorPalette="blue"
+                            colorPalette="brand"
                             disabled={createTenant.isPending || updateTenant.isPending}
                         >
                             {isEdit ? 'บันทึก' : 'เพิ่มผู้เช่า'}

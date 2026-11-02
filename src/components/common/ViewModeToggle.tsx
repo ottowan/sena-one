@@ -12,10 +12,11 @@ interface ViewModeToggleProps {
 
 export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({ value, onChange }) => {
     return (
-        <HStack gap={1}>
+        <HStack gap={1} p={1} bg="bg.subtle" borderWidth="1px" borderColor="border.default" borderRadius="lg" aria-label="รูปแบบการแสดงผล">
             <Tooltip content="แสดงแบบการ์ด">
                 <IconButton
-                    aria-label="Grid view"
+                    aria-label="แสดงแบบการ์ด"
+                    aria-pressed={value === 'grid'}
                     size="sm"
                     variant={value === 'grid' ? 'solid' : 'outline'}
                     colorPalette={value === 'grid' ? 'brand' : 'gray'}
@@ -27,7 +28,8 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({ value, onChange 
 
             <Tooltip content="แสดงแบบรายการ">
                 <IconButton
-                    aria-label="List view"
+                    aria-label="แสดงแบบรายการ"
+                    aria-pressed={value === 'list'}
                     size="sm"
                     variant={value === 'list' ? 'solid' : 'outline'}
                     colorPalette={value === 'list' ? 'brand' : 'gray'}
@@ -39,7 +41,8 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({ value, onChange 
 
             <Tooltip content="แสดงแบบตาราง">
                 <IconButton
-                    aria-label="Table view"
+                    aria-label="แสดงแบบตาราง"
+                    aria-pressed={value === 'table'}
                     size="sm"
                     variant={value === 'table' ? 'solid' : 'outline'}
                     colorPalette={value === 'table' ? 'brand' : 'gray'}

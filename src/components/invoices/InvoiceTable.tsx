@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Badge, HStack, IconButton, Icon } from '@chakra-ui/react';
+import { Table, Badge, HStack, IconButton, Icon, VStack, Box, Text, Card, Button } from '@chakra-ui/react';
 import { LuEye, LuTrash2, LuDownload } from 'react-icons/lu';
 import type { Invoice } from '../../types';
 import { Tooltip } from '../ui/tooltip';
@@ -59,6 +59,28 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({
     const selectedSet = selectedInvoiceSet || new Set(selectedInvoices);
 
     return (
+        <>
+        <VStack align="stretch" gap={3} display={{ base: 'flex', md: 'none' }}>
+            {onSelectAll && <HStack p={2}><Checkbox checked={selectedInvoices.length === invoices.length && invoices.length > 0} onCheckedChange={onSelectAll}>เลือกทั้งหมด ({invoices.length})</Checkbox></HStack>}
+            {invoices.map(invoice => <Card.Root key={invoice.id}><Card.Body p={4} gap={3}>
+                <HStack justify="space-between">
+                    <HStack gap={2}>{onSelectInvoice && <Checkbox aria-label={`เลือกบิลห้อง ${invoice.room?.room_number || '-'}`} checked={selectedSet.has(invoice.id)} onCheckedChange={() => onSelectInvoice(invoice.id)} />}
+                        <Text fontWeight="semibold" fontSize="lg">ห้อง {invoice.room?.room_number || '-'}</Text></HStack>
+                    <Badge colorPalette={getStatusColor(invoice.status)}>{getStatusLabel(invoice.status)}</Badge>
+                </HStack>
+                <Text fontSize="sm" color="fg.muted">{invoice.tenant?.full_name || '-'} · {new Date(invoice.billing_month).toLocaleDateString('th-TH', { month: 'short', year: 'numeric' })}</Text>
+                <HStack justify="space-between" align="end">
+                    <Box><Text fontSize="xs" color="fg.muted">ยอดรวม</Text><Text fontSize="2xl" fontWeight="semibold">฿{invoice.total_amount.toLocaleString('th-TH')}</Text></Box>
+                    <Text fontSize="xs" color="fg.muted">ครบกำหนด {new Date(invoice.due_date).toLocaleDateString('th-TH')}</Text>
+                </HStack>
+                <HStack pt={2} borderTopWidth="1px" borderColor="border.muted">
+                    <Button size="sm" variant="subtle" colorPalette="brand" flex={1} onClick={() => onView(invoice)}><LuEye /> ดูรายละเอียด</Button>
+                    {onExportRoom && invoice.room?.room_number && <IconButton aria-label="ดาวน์โหลดบิลห้องนี้" size="sm" variant="ghost" onClick={() => onExportRoom(invoice.room!.room_number)}><LuDownload /></IconButton>}
+                    {onDelete && invoice.status !== 'paid' && <IconButton aria-label="ลบใบแจ้งหนี้" size="sm" variant="ghost" colorPalette="red" onClick={() => onDelete(invoice)}><LuTrash2 /></IconButton>}
+                </HStack>
+            </Card.Body></Card.Root>)}
+        </VStack>
+        <div className="table-panel invoice-desktop">
         <Table.Root size="sm" variant="outline">
             <Table.Header>
                 <Table.Row>
@@ -160,5 +182,7 @@ export const InvoiceTable: React.FC<InvoiceTableProps> = ({
                 ))}
             </Table.Body>
         </Table.Root>
+        </div>
+        </>
     );
 };

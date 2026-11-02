@@ -17,6 +17,18 @@ function load(file, requireModule = require) {
 }
 const helpers = load('src/lib/meterPaste.ts');
 const { parseMeterPaste, meterHistoryReadings } = helpers;
+const { meterProgress, meterNeedsReview } = load('src/lib/meterProgress.ts');
+
+test('meter progress counts partial readings, explicit zero, review and edited rooms', () => {
+    const row = { waterMeterPrev: 0, electricityMeterPrev: 0, waterMeterCurr: '', electricityMeterCurr: '' };
+    assert.deepEqual(meterProgress([]), { total: 0, water: 0, electricity: 0, complete: 0, pending: 0, review: 0, changed: 0, percent: 0 });
+    assert.deepEqual(meterProgress([
+        { ...row, waterMeterCurr: 0, electricityMeterCurr: 0 },
+        { ...row, waterMeterCurr: 10, isDirty: true }, row,
+        { ...row, waterMeterPrev: 100, waterMeterCurr: 90, electricityMeterCurr: 1, isDirty: true },
+    ]), { total: 4, water: 3, electricity: 2, complete: 2, pending: 2, review: 1, changed: 2, percent: 63 });
+    assert.equal(meterNeedsReview({ ...row, waterMeterCurr: NaN }), true);
+});
 
 test('the supplied Markdown table yields 14 rooms with one identical duplicate', () => {
     const sample = `| เลขห้อง | ยอดการใช้งาน (มิเตอร์น้ำ 4 ตัวแรก) |
@@ -70,6 +82,7 @@ function harness(file, initialState, overrides = {}) {
         if (name in overrides) return overrides[name];
         if (name === 'react/jsx-runtime') return require(name);
         if (name.includes('meterPaste')) return helpers;
+        if (name.includes('meterProgress')) return load('src/lib/meterProgress.ts');
         if (name === 'react') return {
             useState: initial => {
                 const i = cursor++;
@@ -97,7 +110,7 @@ function harness(file, initialState, overrides = {}) {
 
 const room = { roomNumber: '315', roomId: 'id315', waterMeterPrev: 2000, waterMeterCurr: '', electricityMeterPrev: 100, electricityMeterCurr: 150, hasHistory: false };
 const importProps = { month: '2026-11', rows: [room], disabled: false, onApply: () => {} };
-const applyButton = nodes => nodes.find(n => n?.type === 'Button' && n.props.colorPalette === 'blue');
+const applyButton = nodes => nodes.find(n => n?.type === 'Button' && n.props.colorPalette === 'brand');
 
 test('unknown rooms block apply, and lower or overwritten readings need confirmation', () => {
     const h = harness('src/components/meters/MeterPasteImport.tsx', ['999\t10', 'water', false]);
@@ -146,7 +159,7 @@ test('page applies by room number despite a room filter, saves changed rooms onl
     assert.equal(h.state[2][1].waterMeterCurr, 631);
     assert.equal(writes.length, 0, 'Applying a paste must not save automatically');
     nodes = h.render();
-    await nodes.find(n => n?.type === 'Button' && n.props.size === 'xl').props.onClick();
+    await nodes.find(n => n?.type === 'Button' && n.props.onClick?.name === 'handleSave').props.onClick();
     assert.equal(writes.length, 1);
     assert.equal(writes[0][0], 'history_meter/id315_2026-11');
     assert.equal(writes[0][1].water_meter, 2083);

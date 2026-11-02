@@ -273,7 +273,7 @@ export const VehicleFormDialog: React.FC<VehicleFormDialogProps> = ({ open, onCl
                         </DialogActionTrigger>
                         <Button
                             type="submit"
-                            colorPalette="blue"
+                            colorPalette="brand"
                             disabled={!roomId || addVehicles.isPending || updateVehicle.isPending}
                         >
                             บันทึก

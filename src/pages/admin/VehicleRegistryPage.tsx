@@ -7,6 +7,7 @@ import { VehicleTable } from '../../components/vehicles/VehicleTable';
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
 import { DataLoadError } from '../../components/common/DataLoadError';
+import { FilterSummary } from '../../components/common/FilterSummary';
 import type { VehicleRegistration } from '../../types';
 
 export const VehicleRegistryPage: React.FC = () => {
@@ -40,8 +41,8 @@ export const VehicleRegistryPage: React.FC = () => {
 
     return (
         <>
-            <VStack align="stretch" gap={8}>
-                <HStack justify="space-between">
+            <VStack align="stretch" gap={6}>
+                <HStack className="page-header" justify="space-between">
                     <Box>
                         <Heading size="2xl" mb={2}>
                             ทะเบียนคุมรถยนต์
@@ -50,7 +51,7 @@ export const VehicleRegistryPage: React.FC = () => {
                             จัดการข้อมูลรถของผู้พักอาศัยแยกตามเลขห้อง
                         </Text>
                     </Box>
-                    <Button colorPalette="blue" size="lg" onClick={handleAdd}>
+                    <Button colorPalette="brand" size="lg" onClick={handleAdd}>
                         <Icon mr={2}>
                             <LuPlus />
                         </Icon>
@@ -68,6 +69,7 @@ export const VehicleRegistryPage: React.FC = () => {
                     </Card.Body>
                 </Card.Root>
 
+                {!isLoading && !isError && <FilterSummary count={vehicles?.length ?? 0} unit="คัน" filtered={Boolean(searchTerm.trim())} onClear={() => setSearchTerm('')} />}
                 {isLoading ? (
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
@@ -89,7 +91,7 @@ export const VehicleRegistryPage: React.FC = () => {
                                     </Heading>
                                     <Text color="fg.muted">{searchTerm.trim() ? 'ลองเปลี่ยนหรือล้างคำค้นหา' : 'เริ่มต้นโดยการเพิ่มข้อมูลรถคันแรก'}</Text>
                                 </VStack>
-                                <Button colorPalette="blue" onClick={handleAdd}>
+                                <Button colorPalette="brand" onClick={handleAdd}>
                                     <Icon mr={2}>
                                         <LuPlus />
                                     </Icon>

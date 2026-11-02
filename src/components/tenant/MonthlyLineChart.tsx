@@ -88,10 +88,10 @@ export const MonthlyLineChart: React.FC<MonthlyLineChartProps> = ({
                                     x2={WIDTH - PADDING_RIGHT}
                                     y1={y}
                                     y2={y}
-                                    stroke="#e1e0d9"
+                                    stroke="var(--chakra-colors-border-default)"
                                     strokeWidth={1}
                                 />
-                                <text x={PADDING_LEFT - 8} y={y} textAnchor="end" dominantBaseline="middle" fontSize={10} fill="#898781">
+                                <text x={PADDING_LEFT - 8} y={y} textAnchor="end" dominantBaseline="middle" fontSize={10} fill="var(--chakra-colors-fg-muted)">
                                     {Math.round(maxValue * step).toLocaleString()}
                                 </text>
                             </g>
@@ -105,7 +105,7 @@ export const MonthlyLineChart: React.FC<MonthlyLineChartProps> = ({
                             y={HEIGHT - 8}
                             textAnchor="middle"
                             fontSize={10}
-                            fill="#898781"
+                            fill="var(--chakra-colors-fg-muted)"
                         >
                             {i % 2 === 0 || data.length <= 6 ? p.label : ''}
                         </text>
@@ -119,18 +119,18 @@ export const MonthlyLineChart: React.FC<MonthlyLineChartProps> = ({
                             x2={hovered.x}
                             y1={PADDING_TOP}
                             y2={PADDING_TOP + plotHeight}
-                            stroke="#c3c2b7"
+                            stroke="var(--chakra-colors-border-default)"
                             strokeWidth={1}
                         />
                     )}
 
-                    <circle cx={lastPoint.x} cy={lastPoint.y} r={5} fill={color} stroke="#fcfcfb" strokeWidth={2} />
-                    <text x={lastPoint.x} y={lastPoint.y - 10} textAnchor="end" fontSize={11} fontWeight={600} fill="#0b0b0b">
+                    <circle cx={lastPoint.x} cy={lastPoint.y} r={5} fill={color} stroke="var(--chakra-colors-bg-panel)" strokeWidth={2} />
+                    <text x={lastPoint.x} y={lastPoint.y - 10} textAnchor="end" fontSize={11} fontWeight={600} fill="var(--chakra-colors-fg-default)">
                         {valueFormatter(lastPoint.value)}
                     </text>
 
                     {hovered && (
-                        <circle cx={hovered.x} cy={hovered.y} r={5} fill={color} stroke="#fcfcfb" strokeWidth={2} />
+                        <circle cx={hovered.x} cy={hovered.y} r={5} fill={color} stroke="var(--chakra-colors-bg-panel)" strokeWidth={2} />
                     )}
 
                     <rect

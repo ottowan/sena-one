@@ -103,7 +103,7 @@ export const MyMaintenancePage: React.FC = () => {
 
                 <DialogRoot open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e.open)}>
                     <DialogTrigger asChild>
-                        <Button colorPalette="blue">
+                        <Button colorPalette="brand">
                             <LuPlus /> แจ้งซ่อมใหม่
                         </Button>
                     </DialogTrigger>

@@ -297,7 +297,7 @@ export const MaintenanceRequestDialog: React.FC<MaintenanceRequestDialogProps> =
                     <Button
                         type="submit"
                         form="maintenance-form"
-                        colorPalette="blue"
+                        colorPalette="brand"
                         loading={isSubmitting || mutation.isPending}
                     >
                         บันทึก

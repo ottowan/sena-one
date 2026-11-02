@@ -68,7 +68,7 @@ const InvoiceDetailDialog = ({ invoice }: { invoice: any }) => {
         <DialogRoot size="lg">
             <DialogBackdrop />
             <DialogTrigger asChild>
-                <Button size="xs" variant="ghost" colorPalette="blue">
+                <Button size="xs" variant="ghost" colorPalette="brand">
                     <LuFileText /> รายละเอียด
                 </Button>
             </DialogTrigger>

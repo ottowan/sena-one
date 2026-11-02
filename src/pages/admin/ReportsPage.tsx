@@ -8,6 +8,7 @@ import { reportService } from '../../services/reportService';
 import type { RoomStatusStats, RevenueStats } from '../../services/reportService';
 import { toaster } from '../../components/ui/toaster';
 import { LuLayoutDashboard, LuDollarSign, LuActivity } from 'react-icons/lu';
+import { PageHeader } from '../../components/common/PageHeader';
 
 const ReportsPage: React.FC = () => {
     // Overview Data State
@@ -39,11 +40,11 @@ const ReportsPage: React.FC = () => {
     }, []);
 
     return (
-        <Box p={6}>
-            <Heading size="lg" mb={6}>รายงานและสถิติ (Reports & Statistics)</Heading>
+        <Box>
+            <Box mb={6}><PageHeader title="รายงานและสถิติ" description="ติดตามภาพรวม รายรับ และการใช้สาธารณูปโภค" /></Box>
 
             <Tabs.Root defaultValue="overview" variant="enclosed">
-                <Tabs.List mb={4}>
+                <Tabs.List mb={4} overflowX="auto">
                     <Tabs.Trigger value="overview">
                         <LuLayoutDashboard /> ภาพรวม (Overview)
                     </Tabs.Trigger>
@@ -58,7 +59,7 @@ const ReportsPage: React.FC = () => {
                 {/* OVERVIEW TAB */}
                 <Tabs.Content value="overview">
                     {isLoading ? (
-                        <Box p={6}>กำลังโหลดข้อมูล...</Box>
+                        <Box>กำลังโหลดข้อมูล...</Box>
                     ) : (
                         <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={6}>
                             {/* Room Status Chart */}

@@ -1,190 +1,88 @@
 import React from 'react';
-import { Box, Flex, VStack, Text, Button, Container, Icon, HStack, IconButton } from '@chakra-ui/react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import {
-    LuLayoutDashboard,
-    LuFileText,
-    LuWrench,
-    LuLogOut,
-    LuMenu,
-    LuBoxes,
-    LuDroplet
-} from 'react-icons/lu';
+import { Box, Flex, VStack, Text, Button, HStack, IconButton } from '@chakra-ui/react';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { LuLayoutDashboard, LuFileText, LuWrench, LuLogOut, LuMenu, LuBoxes, LuDroplet, LuBuilding2 } from 'react-icons/lu';
 import { useAuth } from '../../contexts/AuthContext';
-import { Toaster, toaster } from '../ui/toaster';
+import { toaster } from '../ui/toaster';
 import { ColorModeButton } from '../ui/color-mode';
-import {
-    DrawerBackdrop,
-    DrawerBody,
-    DrawerCloseTrigger,
-    DrawerContent,
-    DrawerRoot,
-    DrawerTrigger,
-} from '../../components/ui/drawer';
+import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerRoot, DrawerTrigger } from '../ui/drawer';
 
-const SidebarItem = ({ icon, label, to, end, onClick }: { icon: any; label: string; to: string; end?: boolean; onClick?: () => void }) => {
-    return (
-        <NavLink to={to} end={end} style={{ width: '100%' }} onClick={onClick}>
-            {({ isActive }) => (
-                <Button
-                    variant={isActive ? 'subtle' : 'ghost'}
-                    colorPalette={isActive ? 'brand' : 'gray'}
-                    bg={isActive ? 'brand.subtle' : undefined}
-                    color={isActive ? 'brand.fg' : undefined}
-                    borderLeft="3px solid"
-                    borderColor={isActive ? 'brand.500' : 'transparent'}
-                    _hover={{ bg: 'brand.subtle', color: 'brand.fg' }}
-                    justifyContent="flex-start"
-                    width="full"
-                    size="lg"
-                >
-                    <Icon mr={2}>{icon}</Icon>
-                    {label}
-                </Button>
-            )}
-        </NavLink>
-    );
-};
+const items = [
+    { icon: LuLayoutDashboard, label: 'หน้าหลัก', to: '/tenant' },
+    { icon: LuFileText, label: 'บิลและการชำระเงิน', to: '/tenant/bills' },
+    { icon: LuDroplet, label: 'มิเตอร์น้ำ', to: '/tenant/water-meter' },
+    { icon: LuWrench, label: 'แจ้งซ่อม', to: '/tenant/maintenance' },
+    { icon: LuBoxes, label: 'ครุภัณฑ์', to: '/tenant/equipment' },
+];
 
-const TenantSidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
+function TenantSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     const { signOut, profile } = useAuth();
     const navigate = useNavigate();
-
-    const handleSignOut = async () => {
-        try {
-            await signOut();
-            navigate('/login');
-        } catch (error) {
-            console.error('Error signing out:', error);
-            toaster.create({ title: 'เกิดข้อผิดพลาดในการออกจากระบบ', type: 'error' });
-        }
-    };
-
+    const location = useLocation();
     return (
-        <VStack h="full" justify="space-between" align="stretch" bg="bg.panel">
-            <Box>
-                <HStack justify="space-between" mb={8} px={6} pt={6} pb={5} borderBottom="1px solid" borderColor="border.default">
-                    <Flex align="center" gap={3}>
-                        <Box w={8} h={8} bg="brand.600" borderRadius="md" />
-                        <Text fontSize="xl" fontWeight="bold" color="brand.fg">Sena-One</Text>
-                    </Flex>
-                    <ColorModeButton />
-                </HStack>
-
-                <VStack align="stretch" gap={1} px={4}>
-                    <Text fontSize="xs" color="fg.muted" px={2} mb={2} fontWeight="bold">MENU</Text>
-                    <SidebarItem icon={<LuLayoutDashboard />} label="หน้าหลัก" to="/tenant" end onClick={onNavigate} />
-                    <SidebarItem icon={<LuDroplet />} label="ยอดมิเตอร์น้ำ" to="/tenant/water-meter" onClick={onNavigate} />
-                    <SidebarItem icon={<LuFileText />} label="บิลและการชำระเงิน" to="/tenant/bills" onClick={onNavigate} />
-                    <SidebarItem icon={<LuBoxes />} label="ทะเบียนครุภัณฑ์" to="/tenant/equipment" onClick={onNavigate} />
-                    <SidebarItem icon={<LuWrench />} label="แจ้งซ่อม" to="/tenant/maintenance" onClick={onNavigate} />
-                </VStack>
-            </Box>
-
-            <Box p={4}>
-                <Box p={4} bg="brand.subtle" borderRadius="md" mb={4}>
-                    <Text fontSize="sm" fontWeight="bold" truncate>{profile?.full_name || 'Tenant'}</Text>
-                    <Text fontSize="xs" color="fg.muted">ผู้เช่า</Text>
-                </Box>
-                <Button
-                    variant="outline"
-                    colorPalette="red"
-                    width="full"
-                    onClick={handleSignOut}
-                >
-                    <Icon mr={2}><LuLogOut /></Icon>
-                    ออกจากระบบ
-                </Button>
+        <VStack h="full" align="stretch" gap={0} bg="nav.bg" color="nav.fg">
+            <HStack px={5} py={6} gap={3}>
+                <Flex w={10} h={10} bg="brand.500" color="white" borderRadius="xl" align="center" justify="center"><LuBuilding2 size={23} /></Flex>
+                <Box><Text fontSize="xl" fontWeight="semibold" color="white">Sena-One<span style={{ color: '#5EEAD4' }}>.</span></Text><Text fontSize="xs" color="nav.muted">พื้นที่ผู้พักอาศัย</Text></Box>
+            </HStack>
+            <VStack as="nav" aria-label="เมนูผู้พักอาศัย" align="stretch" gap={1} px={3} flex={1}>
+                <Text fontSize="xs" color="nav.muted" px={3} my={2}>บริการสำหรับคุณ</Text>
+                {items.map(item => {
+                    const active = location.pathname === item.to;
+                    return <Button key={item.to} asChild variant="ghost" justifyContent="flex-start" h="44px" fontSize="sm"
+                        bg={active ? 'nav.active' : 'transparent'} color={active ? 'white' : 'nav.fg'} fontWeight={active ? 'semibold' : 'normal'}
+                        _hover={{ bg: 'nav.active', color: 'white' }} onClick={onNavigate}>
+                        <Link to={item.to} aria-current={active ? 'page' : undefined}><item.icon size={19} />{item.label}</Link>
+                    </Button>;
+                })}
+            </VStack>
+            <Box p={4} borderTopWidth="1px" borderColor="whiteAlpha.100">
+                <Text fontSize="sm" fontWeight="semibold" truncate>{profile?.full_name || 'ผู้พักอาศัย'}</Text>
+                <Text color="nav.muted" fontSize="xs" mb={3}>บัญชีผู้พักอาศัย</Text>
+                <Button variant="ghost" color="nav.fg" _hover={{ bg: 'nav.active' }} justifyContent="flex-start" w="full" onClick={async () => {
+                    try { await signOut(); navigate('/login'); }
+                    catch { toaster.create({ title: 'ออกจากระบบไม่สำเร็จ กรุณาลองอีกครั้ง', type: 'error' }); }
+                }}><LuLogOut /> ออกจากระบบ</Button>
             </Box>
         </VStack>
     );
-};
+}
 
 export const TenantLayout: React.FC = () => {
     const [open, setOpen] = React.useState(false);
-
+    const location = useLocation();
+    const current = items.find(item => item.to === location.pathname);
     return (
-        <Flex minH="100vh" bg="bg.canvas">
-            {/* Mobile Header */}
-            <Box
-                display={{ base: 'block', md: 'none' }}
-                position="fixed"
-                top={0}
-                left={0}
-                right={0}
-                zIndex={100}
-                bg="bg.panel"
-                borderBottom="1px"
-                borderColor="border.default"
-                px={4}
-                py={3}
-            >
-                <HStack justify="space-between">
-                    <HStack>
-                        <DrawerRoot open={open} onOpenChange={(e) => setOpen(e.open)} placement="start">
-                            <DrawerBackdrop />
-                            <DrawerTrigger asChild>
-                                <IconButton variant="ghost" aria-label="Open menu">
-                                    <Icon><LuMenu /></Icon>
-                                </IconButton>
-                            </DrawerTrigger>
-                            <DrawerContent>
-                                <DrawerCloseTrigger />
-                                <DrawerBody p={0}>
-                                    <TenantSidebarContent onNavigate={() => setOpen(false)} />
-                                </DrawerBody>
-                            </DrawerContent>
-                        </DrawerRoot>
-                        <Text fontWeight="bold" fontSize="lg" color="brand.fg">Sena-One</Text>
+        <Flex minH="100dvh" bg="bg.canvas">
+            <Box className="app-sidebar" display={{ base: 'none', lg: 'block' }} w="248px" position="fixed" inset="0 auto 0 0" h="100dvh">
+                <TenantSidebarContent />
+            </Box>
+            <Box className="app-main" ml={{ base: 0, lg: '248px' }} flex={1} minW={0}>
+                <HStack as="header" className="app-topbar" bg="bg.panel" borderBottomWidth="1px" borderColor="border.default" h="72px" px={{ base: 4, md: 7 }}
+                    position="sticky" top={0} zIndex={30} justify="space-between">
+                    <HStack gap={3}>
+                        <Box display={{ base: 'block', lg: 'none' }}>
+                            <DrawerRoot open={open} onOpenChange={e => setOpen(e.open)} placement="start">
+                                <DrawerBackdrop /><DrawerTrigger asChild><IconButton variant="ghost" aria-label="เปิดเมนู"><LuMenu /></IconButton></DrawerTrigger>
+                                <DrawerContent maxW="290px"><DrawerCloseTrigger color="white" /><DrawerBody p={0}><TenantSidebarContent onNavigate={() => setOpen(false)} /></DrawerBody></DrawerContent>
+                            </DrawerRoot>
+                        </Box>
+                        <Text fontWeight="semibold" fontSize="sm">{current?.label || 'Sena-One'}</Text>
                     </HStack>
                     <ColorModeButton />
                 </HStack>
+                <Box as="main" className="app-page" maxW="1440px" mx="auto" p={{ base: 4, md: 7 }} pb={{ base: '100px', lg: 8 }}><Outlet /></Box>
             </Box>
-
-            {/* Desktop Sidebar */}
-            <Box
-                w="250px"
-                bg="bg.panel"
-                borderRight="1px solid"
-                borderColor="border.default"
-                display={{ base: 'none', md: 'block' }}
-                position="fixed"
-                h="100vh"
-            >
-                <TenantSidebarContent />
-            </Box>
-
-            {/* Main Content */}
-            <Box
-                ml={{ base: 0, md: '250px' }}
-                mt={{ base: '60px', md: 0 }}
-                flex="1"
-                position="relative"
-                overflow="hidden"
-                bg="bg.canvas"
-                minH="100vh"
-            >
-                <Box
-                    position="absolute"
-                    top={0}
-                    left={0}
-                    right={0}
-                    h={{ base: '170px', md: '230px' }}
-                    bg={{
-                        base: 'linear-gradient(135deg, #D9ECE9 0%, #FFF7ED 54%, #F8FBFA 100%)',
-                        _dark: 'linear-gradient(135deg, #1F403D 0%, #2F2419 54%, #111827 100%)',
-                    }}
-                    borderBottom="1px solid"
-                    borderColor="border.muted"
-                />
-                <Box position="relative" zIndex={1} p={{ base: 4, md: 8 }}>
-                    <Container maxW="container.xl">
-                        <Outlet />
-                    </Container>
-                </Box>
-            </Box>
-
-            <Toaster />
+            <HStack as="nav" aria-label="เมนูด่วน" className="mobile-nav" display={{ base: 'flex', lg: 'none' }} position="fixed" bottom={0} left={0} right={0}
+                zIndex={40} bg="bg.panel" borderTopWidth="1px" borderColor="border.default" px={2} pt={2} pb="max(8px, env(safe-area-inset-bottom))" justify="space-around">
+                {items.slice(0, 4).map(item => {
+                    const active = location.pathname === item.to;
+                    return <Flex key={item.to} asChild direction="column" align="center" gap={1} py={1} px={2} minW="64px" borderRadius="lg"
+                        bg={active ? 'brand.subtle' : undefined} color={active ? 'brand.fg' : 'fg.muted'}>
+                        <Link to={item.to} aria-current={active ? 'page' : undefined}><item.icon size={21} /><Text fontSize="10px">{item.label === 'บิลและการชำระเงิน' ? 'บิลของฉัน' : item.label}</Text></Link>
+                    </Flex>;
+                })}
+            </HStack>
         </Flex>
     );
 };

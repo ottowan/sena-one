@@ -170,7 +170,7 @@ export const EquipmentFormDialog: React.FC<EquipmentFormDialogProps> = ({ open, 
                                 ยกเลิก
                             </Button>
                         </DialogActionTrigger>
-                        <Button type="submit" colorPalette="blue" disabled={!roomId || updateRoomEquipment.isPending}>
+                        <Button type="submit" colorPalette="brand" disabled={!roomId || updateRoomEquipment.isPending}>
                             บันทึก
                         </Button>
                     </DialogFooter>

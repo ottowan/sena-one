@@ -3,21 +3,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     Box,
     Button,
-    Container,
-    Heading,
     Table,
-    Input,
     Text,
     HStack,
     VStack,
     Card,
     Badge,
     createListCollection,
+    Grid,
+    Flex,
 } from '@chakra-ui/react';
 import {
     SelectContent,
     SelectItem,
-    SelectLabel,
     SelectRoot,
     SelectTrigger,
     SelectValueText,
@@ -29,6 +27,12 @@ import { fetchByIds, nowIso } from '../../lib/firestoreUtils';
 import { ContractStatus } from '../../types';
 import { MeterPasteImport } from '../../components/meters/MeterPasteImport';
 import { meterHistoryReadings, type MeterKind, type PastedMeterReading } from '../../lib/meterPaste';
+import { meterProgress, meterNeedsReview } from '../../lib/meterProgress';
+import { PageHeader } from '../../components/common/PageHeader';
+import { SummaryCard } from '../../components/common/SummaryCard';
+import { SearchInput } from '../../components/common/SearchInput';
+import { MeterReadingEditor } from '../../components/meters/MeterReadingEditor';
+import { LuClipboardPaste, LuDroplets, LuZap, LuCircleCheck, LuTriangleAlert, LuSave } from 'react-icons/lu';
 
 interface MeterRow {
     roomId: string;
@@ -82,13 +86,18 @@ export const MeterManagementPage: React.FC = () => {
     const [roomOptions, setRoomOptions] = useState<any>(createListCollection({ items: [] }));
     const [pasteOpen, setPasteOpen] = useState(false);
     const [loadedMonth, setLoadedMonth] = useState('');
+    const [rowFilter, setRowFilter] = useState('all');
+    const [searchTerm, setSearchTerm] = useState('');
     const loadRequestId = useRef(0);
     const dataReady = Boolean(selectedMonth) && loadedMonth === selectedMonth && !isLoading;
 
-    const filteredRows = rows.filter(row => {
-        if (selectedRoom.length === 0) return true;
-        return selectedRoom.includes(row.roomId);
-    });
+    const progress = meterProgress(rows);
+    const filteredRows = rows.filter(row =>
+        (!selectedRoom.length || selectedRoom.includes(row.roomId)) &&
+        (!searchTerm.trim() || `${row.roomNumber} ${row.tenantName}`.toLowerCase().includes(searchTerm.trim().toLowerCase())) &&
+        (rowFilter === 'all' || (rowFilter === 'pending' && (row.waterMeterCurr === '' || row.electricityMeterCurr === '')) ||
+            (rowFilter === 'review' && meterNeedsReview(row)) || (rowFilter === 'changed' && row.isDirty && (row.waterMeterCurr !== '' || row.electricityMeterCurr !== '')))
+    );
 
     useEffect(() => {
         void fetchMeterData();
@@ -259,8 +268,6 @@ export const MeterManagementPage: React.FC = () => {
         toaster.create({ title: `นำค่ามิเตอร์ ${readings.length} ห้องใส่ในตารางแล้ว กรุณากดบันทึก`, type: 'success' });
     };
 
-    const isLowerThanPrevious = (value: number | '', previous: number) => value !== '' && value < previous;
-
     const handleSave = async () => {
         if (!dataReady || isSaving) return;
         const changedRows = rows.filter(row => row.isDirty && (row.waterMeterCurr !== '' || row.electricityMeterCurr !== ''));
@@ -302,168 +309,110 @@ export const MeterManagementPage: React.FC = () => {
         }
     };
 
+    const editor = (row: MeterRow, kind: MeterKind) => (
+        <MeterReadingEditor kind={kind} roomNumber={row.roomNumber}
+            previous={kind === 'water' ? row.waterMeterPrev : row.electricityMeterPrev}
+            current={kind === 'water' ? row.waterMeterCurr : row.electricityMeterCurr}
+            disabled={!dataReady || isSaving}
+            onChange={value => handleReadingChange(rows.findIndex(item => item.roomId === row.roomId), kind, value)} />
+    );
+    const statusBadge = (row: MeterRow) => (
+        <Badge colorPalette={meterNeedsReview(row) ? 'red' : row.isDirty ? 'orange' : row.hasHistory ? 'green' : 'gray'}>
+            {meterNeedsReview(row) ? 'ต้องตรวจสอบ' : row.isDirty ? 'ยังไม่บันทึก' : row.hasHistory ? 'บันทึกแล้ว' : 'รอกรอก'}
+        </Badge>
+    );
+
     return (
-        <Container maxW="container.xl" py={8}>
-            <VStack gap={6} align="stretch">
-                <HStack justify="space-between">
-                    <Heading size="lg">จัดการมิเตอร์ (Meter Management)</Heading>
-                    <HStack>
-                        <HStack>
-                            <Text fontWeight="medium" whiteSpace="nowrap">เลือกห้อง:</Text>
-                            <SelectRoot
-                                collection={roomOptions}
-                                value={selectedRoom}
-                                onValueChange={(e) => setSelectedRoom(e.value)}
-                                width="200px"
-                            >
-                                <SelectTrigger clearable>
-                                    <SelectValueText placeholder="ทั้งหมด" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {roomOptions.items.map((movie: any) => (
-                                        <SelectItem item={movie} key={movie.value}>
-                                            {movie.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
+        <VStack gap={6} align="stretch">
+            <PageHeader title="จัดการมิเตอร์" eyebrow="งานประจำเดือน"
+                description="กรอกเลขหน้าปัด ดูยอดใช้ และตรวจสอบก่อนบันทึกในที่เดียว"
+                actions={<>
+                    <Box minW="190px"><ThaiDatePicker type="month" value={selectedMonth} disabled={isSaving}
+                        onChange={e => {
+                            if (e.target.value !== selectedMonth && progress.changed && !window.confirm('มีข้อมูลที่ยังไม่บันทึก ต้องการเปลี่ยนเดือนและละทิ้งการแก้ไขหรือไม่?')) return;
+                            setSelectedMonth(e.target.value);
+                        }} /></Box>
+                    <Button variant="outline" colorPalette="brand" disabled={!dataReady || isSaving} onClick={() => setPasteOpen(open => !open)}>
+                        <LuClipboardPaste />{pasteOpen ? 'ปิดช่องวางข้อมูล' : 'วางข้อมูลจากตาราง'}
+                    </Button>
+                </>} />
+            <Grid templateColumns={{ base: 'repeat(2, 1fr)', xl: 'repeat(4, 1fr)' }} gap={3}>
+                <SummaryCard label="ห้องทั้งหมด" value={dataReady ? progress.total : '—'} hint="ห้องพักในระบบ" icon={<LuCircleCheck />} />
+                <SummaryCard label="กรอกมิเตอร์น้ำ" value={dataReady ? `${progress.water} / ${progress.total}` : '—'} hint="ห้องที่มีเลขหน้าปัดน้ำ" tone="blue" icon={<LuDroplets />} />
+                <SummaryCard label="กรอกมิเตอร์ไฟ" value={dataReady ? `${progress.electricity} / ${progress.total}` : '—'} hint="ห้องที่มีเลขหน้าปัดไฟ" tone="orange" icon={<LuZap />} />
+                <SummaryCard label="ต้องตรวจสอบ" value={dataReady ? progress.review : '—'} hint="ค่าต่ำกว่าครั้งก่อนหรือไม่ถูกต้อง" tone={progress.review ? 'danger' : 'brand'} icon={<LuTriangleAlert />} />
+            </Grid>
+            {pasteOpen && <MeterPasteImport key={selectedMonth} month={selectedMonth} rows={rows} disabled={!dataReady || isSaving} onApply={handlePasteApply} />}
+            <Card.Root>
+                <Card.Body gap={4} p={{ base: 4, md: 5 }}>
+                    <Flex gap={3} direction={{ base: 'column', md: 'row' }}>
+                        <Box flex={1}><SearchInput placeholder="ค้นหาเลขห้องหรือชื่อผู้เช่า..." value={searchTerm} onChange={setSearchTerm} /></Box>
+                        <Box minW={{ md: '200px' }}>
+                            <SelectRoot collection={roomOptions} value={selectedRoom} onValueChange={e => setSelectedRoom(e.value)}>
+                                <SelectTrigger clearable><SelectValueText placeholder="ห้องทั้งหมด" /></SelectTrigger>
+                                <SelectContent>{roomOptions.items.map((item: any) => <SelectItem item={item} key={item.value}>{item.label}</SelectItem>)}</SelectContent>
                             </SelectRoot>
-
-                            <Text fontWeight="medium" ml={4}>เลือกเดือน:</Text>
-                            <ThaiDatePicker
-                                type="month"
-                                value={selectedMonth}
-                                disabled={isSaving}
-                                onChange={(e) => setSelectedMonth(e.target.value)}
-                                w="200px"
-                            />
+                        </Box>
+                    </Flex>
+                    <Flex justify="space-between" gap={3} wrap="wrap" align="center">
+                        <HStack wrap="wrap" gap={2}>
+                            {[
+                                { value: 'all', label: 'ทั้งหมด', count: progress.total },
+                                { value: 'pending', label: 'ยังกรอกไม่ครบ', count: progress.pending },
+                                { value: 'review', label: 'ต้องตรวจสอบ', count: progress.review },
+                                { value: 'changed', label: 'มีการแก้ไข', count: progress.changed },
+                            ].map(item => <Button key={item.value} type="button" size="sm" variant={rowFilter === item.value ? 'subtle' : 'ghost'}
+                                colorPalette={item.value === 'review' ? 'red' : 'brand'} aria-pressed={rowFilter === item.value} onClick={() => setRowFilter(item.value)}>
+                                {item.label}<Badge colorPalette={item.value === 'review' ? 'red' : 'gray'}>{item.count}</Badge>
+                            </Button>)}
                         </HStack>
-                    </HStack>
-
-                </HStack>
-
-                <HStack wrap="wrap">
-                    <Button variant="outline" disabled={!dataReady || isSaving} onClick={() => setPasteOpen(open => !open)}>
-                        {pasteOpen ? 'ปิดช่องวางข้อมูล' : 'วางข้อมูลมิเตอร์จากตาราง'}
-                    </Button>
-                    <Text fontSize="sm" color="fg.muted">ช่องมิเตอร์ที่เว้นว่างจะไม่ถูกบันทึกเป็นศูนย์</Text>
-                </HStack>
-                {pasteOpen && (
-                    <MeterPasteImport key={selectedMonth} month={selectedMonth} rows={rows}
-                        disabled={!dataReady || isSaving} onApply={handlePasteApply} />
-                )}
-
-                <Card.Root>
-                    <Card.Body overflowX="auto">
-                        <Table.Root size="sm" interactive stickyHeader>
-                            <Table.Header>
-                                <Table.Row>
-                                    <Table.ColumnHeader w="100px">ห้อง</Table.ColumnHeader>
-                                    <Table.ColumnHeader w="200px">ผู้เช่า</Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" colSpan={2} bg="blue.subtle" color="blue.fg">
-                                        น้ำประปา (Water)
-                                    </Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" colSpan={2} bg="orange.subtle" color="orange.fg">
-                                        ไฟฟ้า (Electricity)
-                                    </Table.ColumnHeader>
-                                    <Table.ColumnHeader w="100px">สถานะ</Table.ColumnHeader>
-                                </Table.Row>
-                                <Table.Row>
-                                    <Table.ColumnHeader></Table.ColumnHeader>
-                                    <Table.ColumnHeader></Table.ColumnHeader>
-                                    {/* Water Sub-headers */}
-                                    <Table.ColumnHeader textAlign="right" bg="blue.subtle">ครั้งก่อน</Table.ColumnHeader>
-                                    <Table.ColumnHeader bg="blue.subtle">ปัจจุบัน</Table.ColumnHeader>
-                                    {/* Elec Sub-headers */}
-                                    <Table.ColumnHeader textAlign="right" bg="orange.subtle">ครั้งก่อน</Table.ColumnHeader>
-                                    <Table.ColumnHeader bg="orange.subtle">ปัจจุบัน</Table.ColumnHeader>
-                                    <Table.ColumnHeader></Table.ColumnHeader>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                                {isLoading ? (
-                                    <Table.Row>
-                                        <Table.Cell colSpan={7} textAlign="center" py={8}>
-                                            กำลังโหลดข้อมูล...
-                                        </Table.Cell>
-                                    </Table.Row>
-                                ) : filteredRows.map((row) => {
-                                    // Find index in original rows to update
-                                    const originalIndex = rows.findIndex(r => r.roomId === row.roomId);
-                                    return (
-                                        <Table.Row key={row.roomId}>
-                                            <Table.Cell fontWeight="bold">{row.roomNumber}</Table.Cell>
-                                            <Table.Cell color={row.statusColor} fontWeight={row.statusColor ? 'bold' : 'normal'}>
-                                                {row.tenantName}
-                                            </Table.Cell>
-
-                                            {/* Water */}
-                                            <Table.Cell textAlign="right" color="fg.muted">
-                                                {row.waterMeterPrev}
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                <Input
-                                                    size="sm"
-                                                    type="number"
-                                                    min={0}
-                                                    disabled={!dataReady || isSaving}
-                                                    value={row.waterMeterCurr}
-                                                    onChange={(e) => handleReadingChange(originalIndex, 'water', e.target.value)}
-                                                    borderColor={isLowerThanPrevious(row.waterMeterCurr, row.waterMeterPrev) ? 'red.300' : 'border.default'}
-                                                />
-                                                {isLowerThanPrevious(row.waterMeterCurr, row.waterMeterPrev) && (
-                                                    <Text fontSize="xs" color="red.fg">ต่ำกว่าครั้งก่อน</Text>
-                                                )}
-                                            </Table.Cell>
-
-                                            {/* Electricity */}
-                                            <Table.Cell textAlign="right" color="fg.muted">
-                                                {row.electricityMeterPrev}
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                <Input
-                                                    size="sm"
-                                                    type="number"
-                                                    min={0}
-                                                    disabled={!dataReady || isSaving}
-                                                    value={row.electricityMeterCurr}
-                                                    onChange={(e) => handleReadingChange(originalIndex, 'electricity', e.target.value)}
-                                                    borderColor={isLowerThanPrevious(row.electricityMeterCurr, row.electricityMeterPrev) ? 'red.300' : 'border.default'}
-                                                />
-                                                {isLowerThanPrevious(row.electricityMeterCurr, row.electricityMeterPrev) && (
-                                                    <Text fontSize="xs" color="red.fg">ต่ำกว่าครั้งก่อน</Text>
-                                                )}
-                                            </Table.Cell>
-
-                                            <Table.Cell>
-                                                {row.isDirty ? (
-                                                    <Badge colorPalette="orange">มีการแก้ไข ยังไม่บันทึก</Badge>
-                                                ) : row.hasHistory ? (
-                                                    <Badge colorPalette="green">บันทึกแล้ว</Badge>
-                                                ) : (
-                                                    <Badge colorPalette="gray">รอการบันทึก</Badge>
-                                                )}
-                                            </Table.Cell>
-                                        </Table.Row>
-                                    )
-                                })}
-                            </Table.Body>
+                        <Text fontSize="xs" color="fg.muted">แสดง {filteredRows.length} ห้อง</Text>
+                    </Flex>
+                    <Box h="5px" bg="bg.muted" borderRadius="full" overflow="hidden" role="progressbar"
+                        aria-label="ความคืบหน้าการกรอกมิเตอร์" aria-valuenow={progress.percent} aria-valuemin={0} aria-valuemax={100}>
+                        <Box h="full" w={`${progress.percent}%`} bg="brand.solid" borderRadius="full" />
+                    </Box>
+                </Card.Body>
+            </Card.Root>
+            {isLoading ? <Card.Root><Card.Body py={12}><Text textAlign="center" color="fg.muted">กำลังโหลดข้อมูลมิเตอร์...</Text></Card.Body></Card.Root> :
+                !dataReady ? <Card.Root><Card.Body alignItems="center" gap={3} py={10}>
+                    <Text color="fg.muted">{selectedMonth ? 'ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่' : 'เลือกเดือนเพื่อเริ่มจดมิเตอร์'}</Text>
+                    {selectedMonth && <Button variant="outline" onClick={() => { void fetchMeterData(); }}>ลองอีกครั้ง</Button>}
+                </Card.Body></Card.Root> :
+                !filteredRows.length ? <Card.Root><Card.Body py={10}><Text textAlign="center" color="fg.muted">ไม่พบห้องตามเงื่อนไข ลองเปลี่ยนตัวกรองหรือคำค้นหา</Text></Card.Body></Card.Root> : <>
+                    <Box className="table-panel" display={{ base: 'none', md: 'block' }} maxH="70vh">
+                        <Table.Root size="sm" interactive stickyHeader minW="850px">
+                            <Table.Header><Table.Row>
+                                <Table.ColumnHeader w="210px" position="sticky" left={0} zIndex={1}>ห้อง / ผู้เช่า</Table.ColumnHeader>
+                                <Table.ColumnHeader bg="blue.subtle" color="blue.fg">มิเตอร์น้ำ</Table.ColumnHeader>
+                                <Table.ColumnHeader bg="orange.subtle" color="orange.fg">มิเตอร์ไฟฟ้า</Table.ColumnHeader>
+                                <Table.ColumnHeader>สถานะ</Table.ColumnHeader>
+                            </Table.Row></Table.Header>
+                            <Table.Body>{filteredRows.map(row => <Table.Row key={row.roomId}>
+                                <Table.Cell position="sticky" left={0} bg="bg.panel" zIndex={1}>
+                                    <Text fontSize="lg" fontWeight="semibold">{row.roomNumber}</Text>
+                                    <Text fontSize="xs" color={row.statusColor || 'fg.muted'} maxW="185px" lineClamp={2}>{row.tenantName}</Text>
+                                </Table.Cell>
+                                <Table.Cell minW="230px">{editor(row, 'water')}</Table.Cell>
+                                <Table.Cell minW="230px">{editor(row, 'electricity')}</Table.Cell>
+                                <Table.Cell>{statusBadge(row)}</Table.Cell>
+                            </Table.Row>)}</Table.Body>
                         </Table.Root>
-                    </Card.Body>
-                </Card.Root>
-
-                <Box textAlign="right">
-                    <Button
-                        size="xl"
-                        colorPalette="blue"
-                        onClick={handleSave}
-                        loading={isSaving}
-                        disabled={!dataReady || !rows.some(row => row.isDirty && (row.waterMeterCurr !== '' || row.electricityMeterCurr !== ''))}
-                        px={8}
-                    >
-                        บันทึกการเปลี่ยนแปลง (Save Changes)
-                    </Button>
-                </Box>
-            </VStack>
-        </Container>
+                    </Box>
+                    <VStack align="stretch" gap={3} display={{ base: 'flex', md: 'none' }}>
+                        {filteredRows.map(row => <Card.Root key={row.roomId}><Card.Body p={4} gap={4}>
+                            <HStack justify="space-between"><Box><Text fontSize="lg" fontWeight="semibold">ห้อง {row.roomNumber}</Text><Text fontSize="xs" color={row.statusColor || 'fg.muted'}>{row.tenantName}</Text></Box>{statusBadge(row)}</HStack>
+                            <Grid templateColumns="repeat(2, minmax(0, 1fr))" gap={3}>{editor(row, 'water')}{editor(row, 'electricity')}</Grid>
+                        </Card.Body></Card.Root>)}
+                    </VStack>
+                </>}
+            <Flex className="save-bar" position="sticky" bottom={4} zIndex={10} bg="bg.panel" borderWidth="1px" borderColor={progress.changed ? 'brand.emphasized' : 'border.default'}
+                borderRadius="xl" boxShadow="lg" p={{ base: 3, md: 4 }} gap={3} align="center" justify="space-between">
+                <Box><Text fontWeight="semibold" fontSize="sm">{progress.changed ? `มี ${progress.changed} ห้องที่ยังไม่บันทึก` : 'ข้อมูลการจดมิเตอร์'}</Text>
+                    <Text fontSize="xs" color="fg.muted" display={{ base: 'none', md: 'block' }}>บันทึกเฉพาะห้องที่แก้ไข · ช่องว่างจะไม่กลายเป็นศูนย์</Text></Box>
+                <Button size="lg" colorPalette="brand" onClick={handleSave} loading={isSaving}
+                    disabled={!dataReady || !progress.changed}><LuSave /><Box as="span" display={{ base: 'none', md: 'inline' }}>บันทึกการเปลี่ยนแปลง</Box><Box as="span" display={{ base: 'inline', md: 'none' }}>บันทึก</Box></Button>
+            </Flex>
+        </VStack>
     );
 };

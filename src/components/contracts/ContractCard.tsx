@@ -240,7 +240,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                         </Button>
                         <Button
                             variant="outline"
-                            colorPalette="blue"
+                            colorPalette="brand"
                             size="sm"
                             w="full"
                             minW={0}
@@ -255,7 +255,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                             <>
                                 <Button
                                     variant="outline"
-                                    colorPalette="blue"
+                                    colorPalette="brand"
                                     size="sm"
                                     w="full"
                                     minW={0}

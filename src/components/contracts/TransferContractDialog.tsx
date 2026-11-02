@@ -197,7 +197,7 @@ export const TransferContractDialog: React.FC<TransferContractDialogProps> = ({
                     <Button
                         type="submit"
                         form="transfer-contract-form"
-                        colorPalette="blue"
+                        colorPalette="brand"
                         disabled={transferContract.isPending || availableRooms.length === 0}
                     >
                         ย้ายห้อง

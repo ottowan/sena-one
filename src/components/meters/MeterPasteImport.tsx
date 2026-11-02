@@ -88,7 +88,7 @@ export function MeterPasteImport({ month, rows, disabled, onApply }: Props) {
                         </label>
                     )}
                     <HStack wrap="wrap">
-                        <Button colorPalette="blue" disabled={!canApply} onClick={() => {
+                        <Button colorPalette="brand" disabled={!canApply} onClick={() => {
                             onApply(kind, parsed.readings);
                             setText('');
                             setConfirmed(false);

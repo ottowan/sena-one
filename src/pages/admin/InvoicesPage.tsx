@@ -24,6 +24,8 @@ import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeT
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
 import { DataLoadError } from '../../components/common/DataLoadError';
+import { SummaryCard } from '../../components/common/SummaryCard';
+import { FilterSummary } from '../../components/common/FilterSummary';
 import { useQueryClient } from '@tanstack/react-query';
 import {
     NativeSelectField,
@@ -55,6 +57,7 @@ export const InvoicesPage: React.FC = () => {
 
     const { data: latestInvoiceMonth, isLoading: isLatestMonthLoading, isError: isLatestMonthError, refetch: refetchLatestMonth } = useLatestInvoiceMonth();
     const effectiveMonthFilter = monthFilter === undefined ? latestInvoiceMonth : monthFilter;
+    const monthReady = monthFilter !== undefined || (!isLatestMonthLoading && !isLatestMonthError);
 
     const { data: invoices, isLoading, isError, refetch } = useInvoices({
         searchTerm: debouncedSearchTerm || undefined,
@@ -63,6 +66,12 @@ export const InvoicesPage: React.FC = () => {
         enabled: monthFilter !== undefined || latestInvoiceMonth !== undefined,
     });
     const selectedInvoiceSet = useMemo(() => new Set(selectedInvoices), [selectedInvoices]);
+    const invoiceSummary = useMemo(() => (invoices ?? []).reduce((summary, invoice) => {
+        summary.total += invoice.total_amount || 0;
+        if (invoice.status === 'paid') summary.paid += invoice.total_amount || 0;
+        if (invoice.status === 'pending' || invoice.status === 'overdue') summary.pending += invoice.total_amount || 0;
+        return summary;
+    }, { total: 0, paid: 0, pending: 0 }), [invoices]);
 
     const deleteInvoice = useDeleteInvoice();
 
@@ -190,9 +199,9 @@ export const InvoicesPage: React.FC = () => {
 
     return (
         <>
-            <VStack align="stretch" gap={8}>
+            <VStack align="stretch" gap={6}>
                 {/* Header */}
-                <HStack justify="space-between">
+                <HStack className="page-header" justify="space-between">
                     <Box>
                         <Heading size="2xl" mb={2}>
                             จัดการใบแจ้งหนี้
@@ -218,23 +227,24 @@ export const InvoicesPage: React.FC = () => {
                             colorPalette="green"
                         >
                             <Icon mr={2}><LuFileSpreadsheet /></Icon>
-                            Export Excel
+                            ส่งออก Excel
                         </Button>
-                        {effectiveMonthFilter && (
-                            <Text fontSize="sm" color="fg.muted">
-                                (เดือน {new Date(effectiveMonthFilter + '-01').toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })})
-                            </Text>
-                        )}
-                        <Button colorPalette="blue" variant="subtle" onClick={() => setBulkDialogOpen(true)}>
+                        <Button colorPalette="brand" variant="subtle" onClick={() => setBulkDialogOpen(true)}>
                             <Icon mr={2}><LuFiles /></Icon>
                             สร้างหลายรายการ
                         </Button>
-                        <Button colorPalette="blue" size="lg" onClick={handleAddInvoice}>
+                        <Button colorPalette="brand" size="lg" onClick={handleAddInvoice}>
                             <Icon mr={2}><LuPlus /></Icon>
                             ออกใบแจ้งหนี้
                         </Button>
                     </HStack>
                 </HStack>
+
+                <Grid templateColumns={{ base: 'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))' }} gap={3}>
+                    <Box gridColumn={{ base: '1 / -1', md: 'auto' }}><SummaryCard label="ยอดรวมรายการที่แสดง" value={isLoading || isError || !monthReady ? '—' : `฿${invoiceSummary.total.toLocaleString('th-TH')}`} hint="ตามเดือนและตัวกรองที่เลือก" /></Box>
+                    <SummaryCard label="ชำระแล้ว" value={isLoading || isError || !monthReady ? '—' : `฿${invoiceSummary.paid.toLocaleString('th-TH')}`} tone="success" />
+                    <SummaryCard label="รอชำระ / เกินกำหนด" value={isLoading || isError || !monthReady ? '—' : `฿${invoiceSummary.pending.toLocaleString('th-TH')}`} tone="warning" />
+                </Grid>
 
                 {/* Filters */}
                 <Card.Root>
@@ -283,6 +293,10 @@ export const InvoicesPage: React.FC = () => {
                         </VStack>
                     </Card.Body>
                 </Card.Root>
+
+                {!isLoading && !isError && monthReady && <FilterSummary count={invoices?.length ?? 0} filtered={Boolean(debouncedSearchTerm || statusFilter || effectiveMonthFilter)} onClear={() => {
+                    setSearchTerm(''); setDebouncedSearchTerm(''); setStatusFilter(''); setMonthFilter('');
+                }} />}
 
                 {/* Invoice List */}
                 {isError || (monthFilter === undefined && isLatestMonthError) ? (
@@ -346,7 +360,7 @@ export const InvoicesPage: React.FC = () => {
                                         {debouncedSearchTerm || statusFilter || effectiveMonthFilter ? 'ลองเปลี่ยนหรือล้างตัวกรอง' : 'เริ่มต้นโดยการออกใบแจ้งหนี้ใบแรกของคุณ'}
                                     </Text>
                                 </VStack>
-                                <Button colorPalette="blue" onClick={handleAddInvoice}>
+                                <Button colorPalette="brand" onClick={handleAddInvoice}>
                                     <Icon mr={2}>
                                         <LuPlus />
                                     </Icon>

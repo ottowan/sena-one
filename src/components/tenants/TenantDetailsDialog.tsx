@@ -455,7 +455,7 @@ export const TenantDetailsDialog: React.FC<TenantDetailsDialogProps> = ({
                                     <Button
                                         size="xs"
                                         variant="outline"
-                                        colorPalette="blue"
+                                        colorPalette="brand"
                                         onClick={handleLinkUser}
                                         loading={linking}
                                     >

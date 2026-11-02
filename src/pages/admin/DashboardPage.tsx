@@ -18,7 +18,12 @@ import {
     LuUsers,
     LuTrendingUp,
     LuTrendingDown,
+    LuActivity,
+    LuFilePlus2,
+    LuArrowUpRight,
 } from 'react-icons/lu';
+import { Link } from 'react-router-dom';
+import { PageHeader } from '../../components/common/PageHeader';
 import { formatCurrency } from '../../lib/utils';
 import { reportService } from '../../services/reportService';
 
@@ -49,11 +54,11 @@ const StatCard: React.FC<StatCardProps> = ({
         <Card.Root>
             <Card.Body>
                 <HStack justify="space-between" align="start">
-                    <VStack align="start" gap={2}>
+                    <VStack align="start" gap={2} minW={0}>
                         <Text color="fg.muted" fontSize="sm" fontWeight="medium">
                             {title}
                         </Text>
-                        <Heading size="2xl">{value}</Heading>
+                        <Heading size={{ base: 'xl', md: '2xl' }} overflowWrap="anywhere">{value}</Heading>
                         {trend && (
                             <HStack gap={1} fontSize="sm">
                                 <Icon color={trend.isPositive ? 'success.fg' : 'danger.fg'}>
@@ -81,7 +86,7 @@ const StatCard: React.FC<StatCardProps> = ({
                     </Box>
                 </HStack>
                 {badge && (
-                    <Badge colorPalette={badge.colorScheme} mt={3}>
+                    <Badge colorPalette={badge.colorScheme} mt={3} alignSelf="flex-start">
                         {badge.text}
                     </Badge>
                 )}
@@ -139,14 +144,10 @@ export const DashboardPage: React.FC = () => {
     }, []);
 
     return (
-        <VStack align="stretch" gap={8} p={6}>
+        <VStack align="stretch" gap={6}>
             <Box>
-                <Heading size="2xl" mb={2}>
-                    แดชบอร์ด
-                </Heading>
-                <Text color="fg.muted" fontSize="lg">
-                    ภาพรวมระบบจัดการหอพัก Sena-One
-                </Text>
+                <PageHeader title="ภาพรวมอาคาร" eyebrow="SENA-ONE / ภาพรวม"
+                    description="ดูสถานะสำคัญ และเริ่มงานประจำวันได้จากที่นี่" />
                 {statsLoading && (
                     <Text color="fg.muted" fontSize="sm" mt={2}>
                         กำลังอัปเดตข้อมูลสรุป...
@@ -154,13 +155,27 @@ export const DashboardPage: React.FC = () => {
                 )}
             </Box>
 
+            <Grid templateColumns={{ base: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(4, minmax(0, 1fr))' }} gap={3}>
+                {[
+                    { to: '/admin/meters', title: 'จดมิเตอร์', detail: 'กรอกและนำเข้าเลขมิเตอร์', icon: LuActivity, tone: 'blue' },
+                    { to: '/admin/invoices', title: 'ออกใบแจ้งหนี้', detail: 'เรียกเก็บและติดตามการชำระ', icon: LuFilePlus2, tone: 'brand' },
+                    { to: '/admin/rooms', title: 'ดูห้องพัก', detail: 'ห้องว่างและข้อมูลผู้พัก', icon: LuDoorOpen, tone: 'brand' },
+                    { to: '/admin/maintenance', title: 'ติดตามแจ้งซ่อม', detail: 'ตรวจงานที่รอดำเนินการ', icon: LuWrench, tone: 'orange' },
+                ].map(item => <Card.Root asChild key={item.to} _hover={{ borderColor: 'brand.emphasized', boxShadow: 'md' }} transition="all 150ms">
+                    <Link to={item.to}><Card.Body p={4} gap={3}>
+                        <HStack justify="space-between"><Box color={`${item.tone}.fg`} bg={`${item.tone}.subtle`} p={2} borderRadius="lg"><item.icon size={20} /></Box><Icon color="fg.subtle"><LuArrowUpRight /></Icon></HStack>
+                        <Box><Text fontWeight="semibold" fontSize="sm">{item.title}</Text><Text fontSize="xs" color="fg.muted" mt={1}>{item.detail}</Text></Box>
+                    </Card.Body></Link>
+                </Card.Root>)}
+            </Grid>
+
             <Grid
                 templateColumns={{
-                    base: '1fr',
+                    base: 'repeat(2, minmax(0, 1fr))',
                     md: 'repeat(2, 1fr)',
                     lg: 'repeat(4, 1fr)',
                 }}
-                gap={6}
+                gap={3}
             >
                 <StatCard
                     title="ห้องว่าง"
@@ -212,7 +227,7 @@ export const DashboardPage: React.FC = () => {
                     </Card.Header>
                     <Card.Body>
                         <VStack align="stretch" gap={4}>
-                            <HStack justify="space-between">
+                            <HStack className="page-header" justify="space-between">
                                 <HStack gap={2}>
                                     <Box w={3} h={3} borderRadius="full" bg="success.500" />
                                     <Text>ห้องว่าง</Text>

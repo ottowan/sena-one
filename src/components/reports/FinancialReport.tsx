@@ -90,7 +90,7 @@ export const FinancialReport: React.FC = () => {
         <VStack gap={6} align="stretch" py={4}>
             {/* Filters */}
             <HStack wrap="wrap" justify="space-between">
-                <HStack>
+                <HStack wrap="wrap" gap={3}>
                     <Text fontWeight="medium" whiteSpace="nowrap">เดือน:</Text>
                     <ThaiDatePicker
                         type="month"
@@ -99,7 +99,7 @@ export const FinancialReport: React.FC = () => {
                         w="200px"
                     />
 
-                    <Text fontWeight="medium" ml={4} whiteSpace="nowrap">สถานะ:</Text>
+                    <Text fontWeight="medium" whiteSpace="nowrap">สถานะ:</Text>
                     <SelectRoot
                         collection={statusOptions}
                         value={status}
@@ -120,7 +120,7 @@ export const FinancialReport: React.FC = () => {
                 </HStack>
 
                 <Button colorPalette="green" onClick={handleExport} disabled={isLoading || data.length === 0}>
-                    Export Excel
+                    ส่งออก Excel
                 </Button>
             </HStack>
 

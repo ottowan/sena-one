@@ -527,7 +527,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                     <Button
                         type="submit"
                         form="invoice-form"
-                        colorPalette="blue"
+                        colorPalette="brand"
                         disabled={createInvoice.isPending}
                     >
                         บันทึก

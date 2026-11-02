@@ -205,9 +205,9 @@ export const UserManagementPage: React.FC = () => {
     }, [page, totalPages]);
 
     return (
-        <VStack align="stretch" gap={8}>
+        <VStack align="stretch" gap={6}>
             {/* Header */}
-            <HStack justify="space-between">
+            <HStack className="page-header" justify="space-between">
                 <Box>
                     <Heading size="2xl" mb={2}>
                         จัดการสิทธิ์ผู้ใช้
@@ -217,7 +217,7 @@ export const UserManagementPage: React.FC = () => {
                     </Text>
                 </Box>
                 <Button
-                    colorPalette="blue"
+                    colorPalette="brand"
                     onClick={() => {
                         setSelectedUser(null);
                         setDialogOpen(true);
@@ -233,7 +233,7 @@ export const UserManagementPage: React.FC = () => {
             {/* Stats */}
             <Grid
                 templateColumns={{
-                    base: '1fr',
+                    base: 'repeat(2, minmax(0, 1fr))',
                     md: 'repeat(2, 1fr)',
                     lg: 'repeat(4, 1fr)',
                 }}
@@ -451,7 +451,7 @@ export const UserManagementPage: React.FC = () => {
                                                 <Button
                                                     size="xs"
                                                     variant="ghost"
-                                                    colorPalette="blue"
+                                                    colorPalette="brand"
                                                     onClick={() => {
                                                         setUserToReset(user);
                                                         setNewPassword('');
@@ -575,7 +575,7 @@ export const UserManagementPage: React.FC = () => {
                             ยกเลิก
                         </Button>
                         <Button
-                            colorPalette="blue"
+                            colorPalette="brand"
                             loading={isMutating}
                             onClick={handleResetPassword}
                             disabled={!newPassword || !confirmPassword}

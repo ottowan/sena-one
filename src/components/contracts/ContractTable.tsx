@@ -177,6 +177,7 @@ export const ContractTable: React.FC<ContractTableProps> = ({
     onCancel,
 }) => {
     return (
+        <div className="table-panel">
         <Table.Root size="sm" variant="outline">
             <Table.Header>
                 <Table.Row>
@@ -337,5 +338,6 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                 })}
             </Table.Body>
         </Table.Root>
+        </div>
     );
 };

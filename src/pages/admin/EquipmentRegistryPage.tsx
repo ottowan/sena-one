@@ -7,6 +7,7 @@ import { EquipmentTable } from '../../components/equipment/EquipmentTable';
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
 import { DataLoadError } from '../../components/common/DataLoadError';
+import { FilterSummary } from '../../components/common/FilterSummary';
 import type { Room } from '../../types';
 
 export const EquipmentRegistryPage: React.FC = () => {
@@ -47,8 +48,8 @@ export const EquipmentRegistryPage: React.FC = () => {
 
     return (
         <>
-            <VStack align="stretch" gap={8}>
-                <HStack justify="space-between">
+            <VStack align="stretch" gap={6}>
+                <HStack className="page-header" justify="space-between">
                     <Box>
                         <Heading size="2xl" mb={2}>
                             ทะเบียนคุมครุภัณฑ์
@@ -74,7 +75,7 @@ export const EquipmentRegistryPage: React.FC = () => {
                             </Icon>
                             เพิ่มครุภัณฑ์เริ่มต้น
                         </Button>
-                        <Button colorPalette="blue" size="lg" onClick={handleAdd}>
+                        <Button colorPalette="brand" size="lg" onClick={handleAdd}>
                             <Icon mr={2}>
                                 <LuPlus />
                             </Icon>
@@ -93,6 +94,7 @@ export const EquipmentRegistryPage: React.FC = () => {
                     </Card.Body>
                 </Card.Root>
 
+                {!isLoading && !isError && <FilterSummary count={roomsWithEquipment.length} unit="ห้อง" filtered={Boolean(searchTerm.trim())} onClear={() => setSearchTerm('')} />}
                 {isLoading ? (
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
@@ -116,7 +118,7 @@ export const EquipmentRegistryPage: React.FC = () => {
                                         {searchTerm.trim() ? 'ลองเปลี่ยนหรือล้างคำค้นหา' : 'เริ่มต้นโดยการเพิ่มข้อมูล หรือกด "เพิ่มครุภัณฑ์เริ่มต้น" เพื่อเติมรายการมาตรฐานให้ทุกห้อง'}
                                     </Text>
                                 </VStack>
-                                <Button colorPalette="blue" onClick={handleAdd}>
+                                <Button colorPalette="brand" onClick={handleAdd}>
                                     <Icon mr={2}>
                                         <LuPlus />
                                     </Icon>

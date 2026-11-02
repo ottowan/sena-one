@@ -7,6 +7,7 @@ import { toaster } from '../../components/ui/toaster';
 import type { RentRate, AppSettings } from '../../types';
 import { PositionLevel } from '../../types';
 import { useRentRates, useUpdateRentRate, useAppSettings, useUpdateAppSettings } from '../../hooks/useSettings';
+import { PageHeader } from '../../components/common/PageHeader';
 
 const SettingsPage: React.FC = () => {
     // Queries
@@ -128,12 +129,12 @@ const SettingsPage: React.FC = () => {
         }
     };
 
-    if (ratesLoading || settingsLoading) return <Box p={6}>กำลังโหลด...</Box>;
+    if (ratesLoading || settingsLoading) return <Box>กำลังโหลด...</Box>;
 
     return (
-        <Box p={6}>
+        <Box>
             <VStack align="stretch" gap={6}>
-                <Heading size="lg">ตั้งค่าระบบ</Heading>
+                <PageHeader title="ตั้งค่าระบบ" description="จัดการอัตราค่าเช่า ค่าสาธารณูปโภค และค่าธรรมเนียมของอาคาร" />
 
                 {/* Rent Rates */}
                 <Card.Root>
@@ -234,7 +235,7 @@ const SettingsPage: React.FC = () => {
                         </Text>
                     </Card.Header>
                     <Card.Body>
-                        <HStack justify="space-between" align="center">
+                        <HStack justify="space-between" align="center" wrap="wrap" gap={3}>
                             <Box>
                                 <Text fontWeight="medium">แก้วันครบกำหนดบิลเดือน พ.ค. 2569</Text>
                                 <Text color="fg.muted" fontSize="sm">
@@ -253,13 +254,14 @@ const SettingsPage: React.FC = () => {
                     </Card.Body>
                 </Card.Root>
 
-                <HStack justify="flex-end" w="full">
+                <HStack className="save-bar" position="sticky" bottom={4} zIndex={10} bg="bg.panel" p={4} borderWidth="1px" borderColor="border.default" borderRadius="xl" boxShadow="md" justify="flex-end" w="full">
                     <Button
-                        colorPalette="blue"
+                        colorPalette="brand"
                         size="lg"
                         disabled={saving}
                         onClick={handleSave}
                         minW="200px"
+                        w={{ base: 'full', md: 'auto' }}
                     >
                         {saving ? 'กำลังบันทึก...' : 'บันทึกการเปลี่ยนแปลงทั้งหมด'}
                     </Button>

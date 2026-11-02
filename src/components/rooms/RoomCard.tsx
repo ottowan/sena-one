@@ -254,7 +254,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({ room, rentRates, onView, onE
                                 )}
                                 <Button
                                     variant="outline"
-                                    colorPalette="blue"
+                                    colorPalette="brand"
                                     size="sm"
                                     onClick={() => setHistoryOpen(true)}
                                 >

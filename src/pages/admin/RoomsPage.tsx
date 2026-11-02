@@ -22,6 +22,7 @@ import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeT
 import { FloorFilter } from '../../components/common/FloorFilter';
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
+import { FilterSummary } from '../../components/common/FilterSummary';
 import type { Room, RoomStatus } from '../../types';
 import {
     NativeSelectField,
@@ -109,9 +110,9 @@ export const RoomsPage: React.FC = () => {
 
     return (
         <>
-            <VStack align="stretch" gap={8}>
+            <VStack align="stretch" gap={6}>
                 {/* Header */}
-                <HStack justify="space-between">
+                <HStack className="page-header" justify="space-between">
                     <Box>
                         <Heading size="2xl" mb={2}>
                             จัดการห้องพัก
@@ -149,7 +150,7 @@ export const RoomsPage: React.FC = () => {
                 {stats && (
                     <Grid
                         templateColumns={{
-                            base: '1fr',
+                            base: 'repeat(2, minmax(0, 1fr))',
                             md: 'repeat(2, 1fr)',
                             lg: 'repeat(5, 1fr)',
                         }}
@@ -293,6 +294,8 @@ export const RoomsPage: React.FC = () => {
                     </Card.Body>
                 </Card.Root>
 
+                {!isLoading && !isError && <FilterSummary count={rooms.length} unit="ห้อง" filtered={hasFilters} onClear={clearFilters} />}
+
                 {/* Room List */}
                 {isLoading ? (
                     <Box p={8} textAlign="center">
@@ -321,8 +324,8 @@ export const RoomsPage: React.FC = () => {
                             <Grid
                                 templateColumns={{
                                     base: '1fr',
-                                    md: viewMode === 'grid' ? 'repeat(4, 1fr)' : 'repeat(2, 1fr)',
-                                    lg: viewMode === 'grid' ? 'repeat(6, 1fr)' : 'repeat(3, 1fr)',
+                                    md: viewMode === 'grid' ? 'repeat(3, minmax(0, 1fr))' : 'repeat(2, minmax(0, 1fr))',
+                                    lg: viewMode === 'grid' ? 'repeat(4, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))',
                                 }}
                                 gap={viewMode === 'grid' ? 3 : 6}
                             >

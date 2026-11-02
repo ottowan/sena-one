@@ -52,6 +52,7 @@ export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, 
     return (
         <>
         <Box overflowX="auto">
+        <div className="table-panel">
         <Table.Root size="sm" variant="outline">
             <Table.Header>
                 <Table.Row>
@@ -182,6 +183,7 @@ export const RoomTable: React.FC<RoomTableProps> = ({ rooms, rentRates, onView, 
                 })}
             </Table.Body>
         </Table.Root>
+        </div>
         </Box>
 
         {historyRoom && (

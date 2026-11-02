@@ -23,6 +23,7 @@ import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeT
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
 import { DataLoadError } from '../../components/common/DataLoadError';
+import { FilterSummary } from '../../components/common/FilterSummary';
 import type { Contract, ContractStatus } from '../../types';
 import {
     NativeSelectField,
@@ -127,8 +128,8 @@ export const ContractsPage: React.FC = () => {
 
     return (
         <>
-            <VStack align="stretch" gap={8}>
-                <HStack justify="space-between">
+            <VStack align="stretch" gap={6}>
+                <HStack className="page-header" justify="space-between">
                     <Box>
                         <Heading size="2xl" mb={2}>
                             จัดการสัญญาเช่า
@@ -137,7 +138,7 @@ export const ContractsPage: React.FC = () => {
                             จัดการสัญญาเช่าทั้งหมดในระบบ
                         </Text>
                     </Box>
-                    <Button colorPalette="blue" size="lg" onClick={handleAddContract}>
+                    <Button colorPalette="brand" size="lg" onClick={handleAddContract}>
                         <Icon mr={2}>
                             <LuPlus />
                         </Icon>
@@ -148,7 +149,7 @@ export const ContractsPage: React.FC = () => {
                 {stats && (
                     <Grid
                         templateColumns={{
-                            base: '1fr',
+                            base: 'repeat(2, minmax(0, 1fr))',
                             md: 'repeat(2, 1fr)',
                             lg: 'repeat(5, 1fr)',
                         }}
@@ -259,6 +260,8 @@ export const ContractsPage: React.FC = () => {
                     </Card.Body>
                 </Card.Root>
 
+                {!isLoading && !isError && <FilterSummary count={sortedContracts.length} filtered={Boolean(searchTerm.trim() || statusFilter)}
+                    onClear={() => { setSearchTerm(''); setStatusFilter(''); }} />}
                 {isLoading ? (
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
@@ -319,7 +322,7 @@ export const ContractsPage: React.FC = () => {
                                         {searchTerm.trim() || statusFilter ? 'ลองเปลี่ยนหรือล้างตัวกรอง' : 'เริ่มต้นโดยการสร้างสัญญาเช่าแรกของคุณ'}
                                     </Text>
                                 </VStack>
-                                <Button colorPalette="blue" onClick={handleAddContract}>
+                                <Button colorPalette="brand" onClick={handleAddContract}>
                                     <Icon mr={2}>
                                         <LuPlus />
                                     </Icon>

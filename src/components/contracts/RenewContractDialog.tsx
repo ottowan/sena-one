@@ -207,7 +207,7 @@ export const RenewContractDialog: React.FC<RenewContractDialogProps> = ({
                     <Button
                         type="submit"
                         form="renew-contract-form"
-                        colorPalette="blue"
+                        colorPalette="brand"
                         disabled={renewContract.isPending}
                     >
                         ต่อสัญญา

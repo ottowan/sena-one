@@ -1,68 +1,25 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html { min-width: 320px; -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+#root { min-height: 100dvh; }
+* { box-sizing: border-box; }
+.app-page { min-width: 0; }
+.page-header { flex-wrap: wrap; align-items: flex-start; gap: 20px; }
+.page-header > :last-child { flex-wrap: wrap; gap: 8px; }
+.page-header h2 { font-size: clamp(1.4rem, 2.2vw, 1.9rem); }
+.page-header p { font-size: 0.9rem; }
+.table-panel { overflow: auto; border: 1px solid var(--chakra-colors-border-default); border-radius: 16px; background: var(--chakra-colors-bg-panel); }
+.table-panel table { min-width: 720px; }
+@media (max-width: 767px) {
+  .invoice-desktop { display: none; }
+  .page-header > * { width: 100%; }
+  .page-header > :last-child { justify-content: flex-start; }
+  .page-header button { min-height: 40px; }
+  .app-page input, .app-page textarea, .app-page select { font-size: 16px; }
 }
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+@media print {
+  .app-sidebar, .app-topbar, .mobile-nav, .save-bar { display: none !important; }
+  .app-main { margin: 0 !important; }
 }

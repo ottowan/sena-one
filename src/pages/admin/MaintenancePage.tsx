@@ -72,19 +72,19 @@ export const MaintenancePage: React.FC = () => {
     };
 
     return (
-        <Box p={6}>
-            <HStack justify="space-between" mb={6}>
+        <Box>
+            <HStack className="page-header" justify="space-between" mb={6}>
                 <VStack align="start" gap={1}>
                     <Heading size="lg">แจ้งซ่อม / บำรุงรักษา</Heading>
                     <Text color="fg.muted">จัดการรายการแจ้งซ่อมจากผู้เช่า</Text>
                 </VStack>
-                <Button colorPalette="blue" onClick={() => setIsDialogOpen(true)}>
+                <Button colorPalette="brand" onClick={() => setIsDialogOpen(true)}>
                     <LuPlus /> แจ้งซ่อมใหม่
                 </Button>
             </HStack>
 
             <Tabs.Root value={selectedStatus} onValueChange={(e) => setSelectedStatus(e.value)} mb={6}>
-                <Tabs.List>
+                <Tabs.List overflowX="auto">
                     <Tabs.Trigger value="all">ทั้งหมด</Tabs.Trigger>
                     <Tabs.Trigger value="pending">รอรับเรื่อง</Tabs.Trigger>
                     <Tabs.Trigger value="in_progress">กำลังดำเนินการ</Tabs.Trigger>
@@ -95,7 +95,7 @@ export const MaintenancePage: React.FC = () => {
             <Card.Root>
                 <Card.Body p={0}>
                     {isLoading ? (
-                        <Box p={8} textAlign="center"><Text>Loading...</Text></Box>
+                        <Box p={8} textAlign="center"><Text>กำลังโหลดรายการแจ้งซ่อม...</Text></Box>
                     ) : isError ? (
                         <DataLoadError onRetry={() => { void refetch(); }} />
                     ) : requests?.length === 0 ? (
@@ -156,7 +156,7 @@ export const MaintenancePage: React.FC = () => {
                                                     {req.status === 'pending' && (
                                                         <IconButton
                                                             variant="ghost"
-                                                            colorPalette="blue"
+                                                            colorPalette="brand"
                                                             size="xs"
                                                             title="รับเรื่อง"
                                                             onClick={() => handleUpdateStatus(req.id, MaintenanceStatus.IN_PROGRESS)}

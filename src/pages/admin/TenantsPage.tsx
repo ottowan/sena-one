@@ -19,6 +19,7 @@ import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeT
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
 import { DataLoadError } from '../../components/common/DataLoadError';
+import { FilterSummary } from '../../components/common/FilterSummary';
 import type { Tenant } from '../../types';
 import { tenantService } from '../../services/tenantService';
 import { toaster } from '../../components/ui/toaster';
@@ -104,9 +105,9 @@ export const TenantsPage: React.FC = () => {
 
     return (
         <>
-            <VStack align="stretch" gap={8}>
+            <VStack align="stretch" gap={6}>
                 {/* Header */}
-                <HStack justify="space-between">
+                <HStack className="page-header" justify="space-between">
                     <Box>
                         <Heading size="2xl" mb={2}>
                             จัดการผู้เช่า
@@ -115,7 +116,7 @@ export const TenantsPage: React.FC = () => {
                             จัดการข้อมูลผู้เช่าทั้งหมดในระบบ
                         </Text>
                     </Box>
-                    <Button colorPalette="blue" size="lg" onClick={handleAddTenant}>
+                    <Button colorPalette="brand" size="lg" onClick={handleAddTenant}>
                         <Icon mr={2}>
                             <LuPlus />
                         </Icon>
@@ -127,7 +128,7 @@ export const TenantsPage: React.FC = () => {
                 {stats && (
                     <Grid
                         templateColumns={{
-                            base: '1fr',
+                            base: 'repeat(2, minmax(0, 1fr))',
                             md: 'repeat(2, 1fr)',
                             lg: 'repeat(4, 1fr)',
                         }}
@@ -235,6 +236,8 @@ export const TenantsPage: React.FC = () => {
                 </Card.Root>
 
                 {/* Tenant List */}
+                {!isLoading && !isError && <FilterSummary count={tenants?.length ?? 0} unit="คน" filtered={Boolean(searchTerm.trim() || statusFilter || vehiclePlateFilter.trim())}
+                    onClear={() => { setSearchTerm(''); setStatusFilter(''); setVehiclePlateFilter(''); }} />}
                 {isLoading ? (
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
@@ -286,7 +289,7 @@ export const TenantsPage: React.FC = () => {
                                         {searchTerm.trim() || statusFilter || vehiclePlateFilter.trim() ? 'ลองเปลี่ยนหรือล้างตัวกรอง' : 'เริ่มต้นโดยการเพิ่มผู้เช่าคนแรกของคุณ'}
                                     </Text>
                                 </VStack>
-                                <Button colorPalette="blue" onClick={handleAddTenant}>
+                                <Button colorPalette="brand" onClick={handleAddTenant}>
                                     <Icon mr={2}>
                                         <LuPlus />
                                     </Icon>

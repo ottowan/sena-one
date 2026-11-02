@@ -224,7 +224,7 @@ export const MeterHistoryDialog: React.FC<MeterHistoryDialogProps> = ({
                     <DialogActionTrigger asChild>
                         <Button variant="outline" onClick={onClose}>ปิด</Button>
                     </DialogActionTrigger>
-                    <Button onClick={handleSave} loading={saving} colorPalette="blue">
+                    <Button onClick={handleSave} loading={saving} colorPalette="brand">
                         <LuSave /> บันทึก
                     </Button>
                 </DialogFooter>

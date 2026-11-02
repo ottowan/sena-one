@@ -391,7 +391,7 @@ export const ContractFormDialog: React.FC<ContractFormDialogProps> = ({
                     <Button
                         type="submit"
                         form="contract-form"
-                        colorPalette="blue"
+                        colorPalette="brand"
                         disabled={createContract.isPending || updateContract.isPending}
                     >
                         {isEdit ? 'บันทึก' : 'สร้างสัญญา'}

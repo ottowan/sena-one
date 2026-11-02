@@ -179,7 +179,7 @@ export const RoomCompactCard: React.FC<RoomCompactCardProps> = ({
                             )}
                             <Button
                                 variant="ghost"
-                                colorPalette="blue"
+                                colorPalette="brand"
                                 size="xs"
                                 onClick={() => setHistoryOpen(true)}
                                 title="ประวัติมิเตอร์"
