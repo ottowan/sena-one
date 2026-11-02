@@ -43,7 +43,12 @@ service cloud.firestore {
     // Login identity + role. Merges the old `users`+`profiles` tables.
     match /users/{uid} {
       allow read: if isSelf(uid) || isAdminOrOwner();
-      allow create, update: if isAdminOrOwner() || isSelf(uid);
+      allow create: if isAdminOrOwner();
+      // A resident must not be able to promote their own role to open surveys.
+      allow update: if isAdminOrOwner() || (isSelf(uid) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'full_name', 'phone', 'email', 'id_card_number', 'id_card_image_url', 'updated_at'
+        ]));
       allow delete: if isAdminOrOwner();
     }
 
@@ -73,6 +78,16 @@ service cloud.firestore {
       allow read: if isAdminOrOwner() ||
         (isTenant() && ownsRoom(resource.data.room_id));
       allow write: if isAdminOrOwner();
+    }
+
+    match /equipment_survey_rounds/{year} {
+      allow read: if isAdminOrOwner() || isTenant();
+      // Open/close and validated submissions go through callable functions.
+      allow write: if false;
+      match /rooms/{roomId} {
+        allow read: if isAdminOrOwner() || (isTenant() && ownsRoom(roomId));
+        allow write: if false;
+      }
     }
 
     match /contracts/{contractId} {

@@ -6,6 +6,7 @@ import { setGlobalOptions } from 'firebase-functions/v2';
 
 initializeApp();
 setGlobalOptions({ region: 'asia-southeast1' });
+export { adminOpenEquipmentSurvey, adminSetEquipmentSurveyStatus, submitEquipmentSurvey } from './equipmentSurveys';
 
 const db = getFirestore();
 const auth = getAuth();
@@ -22,8 +23,7 @@ async function assertCallerIsAdminOrOwner(callerUid: string | undefined): Promis
 }
 
 // Resets another user's password. Firebase's client SDK can only let a user
-// change their own password, so this needs the Admin SDK - the sole reason
-// this app runs 2 Cloud Functions instead of staying 100% client-only.
+// change their own password, so account administration needs the Admin SDK.
 export const adminResetUserPassword = onCall<{ uid: string; newPassword: string }>(async (request) => {
     await assertCallerIsAdminOrOwner(request.auth?.uid);
 

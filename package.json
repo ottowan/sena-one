@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test": "node --test scripts/filter-regression.test.cjs scripts/meter-paste.test.cjs scripts/thai-date-picker.test.cjs",
+    "test": "node --test scripts/filter-regression.test.cjs scripts/meter-paste.test.cjs scripts/thai-date-picker.test.cjs scripts/equipment-survey.test.cjs",
+    "test:surveys": "npm --prefix functions run build && node scripts/test-survey-rules.cjs",
+    "import:assets": "node scripts/import-room-assets.cjs",
     "test:ui": "playwright test --workers=2",
     "dev": "vite --host",
     "build": "vite build",
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@playwright/test": "^1.64.1",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",

@@ -17,6 +17,9 @@ playwright-report/
 .env.*
 !.env.example
 backups/
+# Source spreadsheets may contain residents' personal information.
+asset/*.xlsx
+asset/*.xls
 data/
 service-account*.json
 *firebase-adminsdk*.json

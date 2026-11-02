@@ -8,12 +8,15 @@ import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
 import { DataLoadError } from '../../components/common/DataLoadError';
 import { FilterSummary } from '../../components/common/FilterSummary';
+import { EquipmentSurveyAdminPanel } from '../../components/equipment/EquipmentSurveyAdminPanel';
+import { EquipmentAssetImportDialog } from '../../components/equipment/EquipmentAssetImportDialog';
 import type { Room } from '../../types';
 
 export const EquipmentRegistryPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+    const [importOpen, setImportOpen] = useState(false);
 
     const { data: rooms, isLoading, isError, refetch } = useRooms();
     const seedDefaultEquipment = useSeedDefaultEquipment();
@@ -59,6 +62,7 @@ export const EquipmentRegistryPage: React.FC = () => {
                         </Text>
                     </Box>
                     <HStack>
+                        <Button variant="outline" colorPalette="brand" size="lg" onClick={() => setImportOpen(true)} disabled={isLoading || isError}>นำเข้าเลขจาก Excel</Button>
                         <Button
                             colorPalette="gray"
                             variant="outline"
@@ -83,6 +87,8 @@ export const EquipmentRegistryPage: React.FC = () => {
                         </Button>
                     </HStack>
                 </HStack>
+
+                <EquipmentSurveyAdminPanel />
 
                 <Card.Root>
                     <Card.Body>
@@ -131,6 +137,7 @@ export const EquipmentRegistryPage: React.FC = () => {
             </VStack>
 
             <EquipmentFormDialog open={dialogOpen} onClose={handleCloseDialog} room={selectedRoom} />
+            {importOpen && <EquipmentAssetImportDialog open={importOpen} onClose={() => setImportOpen(false)} rooms={rooms || []} />}
         </>
     );
 };

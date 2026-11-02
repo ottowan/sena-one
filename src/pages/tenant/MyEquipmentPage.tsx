@@ -5,6 +5,7 @@ import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firesto
 import { db } from '../../lib/firebase';
 import { EquipmentList } from '../../components/rooms/EquipmentList';
 import type { Room } from '../../types';
+import { EquipmentSurveyTenantPanel } from '../../components/equipment/EquipmentSurveyTenantPanel';
 
 export const MyEquipmentPage: React.FC = () => {
     const { profile } = useAuth();
@@ -63,6 +64,8 @@ export const MyEquipmentPage: React.FC = () => {
     return (
         <VStack align="stretch" gap={6} py={4}>
             <Heading size="lg">ทะเบียนครุภัณฑ์</Heading>
+
+            <EquipmentSurveyTenantPanel roomId={room.id} userId={profile?.id || ''} />
 
             <Card.Root>
                 <Card.Header>

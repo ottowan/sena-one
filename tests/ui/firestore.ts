@@ -41,16 +41,28 @@ const tables: Record<string, any[]> = {
     app_settings: [{ id: 'singleton', water_rate: 18, electricity_rate: 8, common_fee: 0, water_maintenance_fee: 0 }],
     position_rent_rates: [{ id: 'ปฏิบัติการ', rent_amount: 2500, common_fee: 0 }],
 };
+const surveyYear = today.getFullYear();
+tables.equipment_survey_rounds = [surveyYear, surveyYear - 1].map(year => ({ id: String(year), year, status: year === surveyYear ? 'open' : 'closed', room_count: rooms.length, opened_at: created, opened_by: 'preview' }));
+for (const year of [surveyYear, surveyYear - 1]) {
+    tables[`equipment_survey_rounds/${year}/rooms`] = rooms.map((room, i) => ({
+        id: room.id, room_id: room.id, room_number: room.room_number, year, occupied_at_open: i < 10,
+        status: year < surveyYear || i === 1 ? 'submitted' : 'pending',
+        items: [{ id: 'asset1', name: 'เครื่องปรับอากาศ', asset_number: year < surveyYear ? 'OLD-AC-101' : 'AC-101' }, { id: 'asset2', name: 'ตู้เสื้อผ้า', asset_number: 'C-101' }],
+        answers: year < surveyYear || i === 1 ? [{ equipment_id: 'asset1', condition: 'normal', reason: '' }, { equipment_id: 'asset2', condition: 'deteriorated', reason: 'บานพับเสื่อมสภาพจากการใช้งาน' }] : [],
+        ...(year < surveyYear || i === 1 ? { submitted_at: created, submitted_by: 'preview', submitted_by_name: 'สมชาย ใจดี' } : {}),
+    }));
+}
+export { tables };
 type Ref = { name: string; id?: string; constraints?: any[] };
-export const collection = (_: unknown, name: string): Ref => ({ name });
-export const doc = (ref: any, name?: string, id?: string): Ref => ref?.name ? { name: ref.name, id: name || 'new' } : { name: name!, id };
+export const collection = (_: unknown, ...parts: string[]): Ref => ({ name: parts.join('/') });
+export const doc = (ref: any, ...parts: string[]): Ref => ref?.name ? { name: ref.name, id: parts[0] || 'new' } : { name: parts.slice(0, -1).join('/'), id: parts.at(-1) };
 export const documentId = () => 'id';
 export const where = (field: string, op: string, value: any) => ({ field, op, value });
 export const orderBy = (field: string, direction = 'asc') => ({ field, direction });
 export const limit = (count: number) => ({ count });
 export const query = (ref: Ref, ...constraints: any[]) => ({ ...ref, constraints });
-const snapshot = (row: any) => ({ id: row?.id, data: () => row, exists: () => !!row });
-export async function getDoc(ref: Ref) { return snapshot((tables[ref.name] || []).find(row => row.id === ref.id)); }
+const snapshot = (row: any, name: string) => ({ id: row?.id, ref: { name, id: row?.id }, data: () => row, exists: () => !!row });
+export async function getDoc(ref: Ref) { return snapshot((tables[ref.name] || []).find(row => row.id === ref.id), ref.name); }
 export async function getDocs(ref: Ref) {
     let rows = [...(tables[ref.name] || [])];
     for (const c of ref.constraints || []) {
@@ -67,7 +79,7 @@ export async function getDocs(ref: Ref) {
             return true;
         });
     }
-    const docs = rows.map(snapshot);
+    const docs = rows.map(row => snapshot(row, ref.name));
     return { docs, size: docs.length, empty: !docs.length, forEach: (fn: any) => docs.forEach(fn) };
 }
 export const getCountFromServer = async (ref: Ref) => {
