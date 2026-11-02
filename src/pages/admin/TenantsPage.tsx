@@ -18,6 +18,7 @@ import { TenantDetailsDialog } from '../../components/tenants/TenantDetailsDialo
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
+import { DataLoadError } from '../../components/common/DataLoadError';
 import type { Tenant } from '../../types';
 import { tenantService } from '../../services/tenantService';
 import { toaster } from '../../components/ui/toaster';
@@ -38,7 +39,7 @@ export const TenantsPage: React.FC = () => {
     const queryClient = useQueryClient();
     const autoLinkRunKey = useRef('');
 
-    const { data: tenants, isLoading } = useTenants({
+    const { data: tenants, isLoading, isError, refetch } = useTenants({
         searchTerm: searchTerm || undefined,
         status: statusFilter || undefined,
         vehiclePlate: vehiclePlateFilter || undefined,
@@ -238,6 +239,8 @@ export const TenantsPage: React.FC = () => {
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
+                ) : isError ? (
+                    <DataLoadError onRetry={() => { void refetch(); }} />
                 ) : tenants && tenants.length > 0 ? (
                     <>
                         {viewMode === 'table' ? (
@@ -277,10 +280,10 @@ export const TenantsPage: React.FC = () => {
                                 </Icon>
                                 <VStack gap={2}>
                                     <Heading size="md" color="fg.muted">
-                                        ยังไม่มีผู้เช่า
+                                        {searchTerm.trim() || statusFilter || vehiclePlateFilter.trim() ? 'ไม่พบผู้เช่าตามเงื่อนไข' : 'ยังไม่มีผู้เช่า'}
                                     </Heading>
                                     <Text color="fg.muted">
-                                        เริ่มต้นโดยการเพิ่มผู้เช่าคนแรกของคุณ
+                                        {searchTerm.trim() || statusFilter || vehiclePlateFilter.trim() ? 'ลองเปลี่ยนหรือล้างตัวกรอง' : 'เริ่มต้นโดยการเพิ่มผู้เช่าคนแรกของคุณ'}
                                     </Text>
                                 </VStack>
                                 <Button colorPalette="blue" onClick={handleAddTenant}>

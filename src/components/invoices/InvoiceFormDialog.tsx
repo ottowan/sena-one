@@ -1,3 +1,4 @@
+import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import React, { useState, useEffect } from 'react';
 import {
     DialogRoot,
@@ -330,7 +331,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                                     invalid={!!errors.billing_month}
                                     errorText={errors.billing_month}
                                 >
-                                    <Input
+                                    <ThaiDatePicker
                                         type="month"
                                         value={formData.billing_month}
                                         onChange={(e) =>
@@ -345,7 +346,7 @@ export const InvoiceFormDialog: React.FC<InvoiceFormDialogProps> = ({ open, onCl
                                     invalid={!!errors.due_date}
                                     errorText={errors.due_date}
                                 >
-                                    <Input
+                                    <ThaiDatePicker
                                         type="date"
                                         value={formData.due_date}
                                         onChange={(e) =>

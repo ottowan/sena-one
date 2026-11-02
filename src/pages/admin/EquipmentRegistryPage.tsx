@@ -6,6 +6,7 @@ import { EquipmentFormDialog } from '../../components/equipment/EquipmentFormDia
 import { EquipmentTable } from '../../components/equipment/EquipmentTable';
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
+import { DataLoadError } from '../../components/common/DataLoadError';
 import type { Room } from '../../types';
 
 export const EquipmentRegistryPage: React.FC = () => {
@@ -13,14 +14,13 @@ export const EquipmentRegistryPage: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
-    const { data: rooms, isLoading } = useRooms();
+    const { data: rooms, isLoading, isError, refetch } = useRooms();
     const seedDefaultEquipment = useSeedDefaultEquipment();
 
     const roomsWithEquipment = useMemo(() => {
         const withEquipment = (rooms || []).filter((room) => room.equipment && room.equipment.length > 0);
-        if (!searchTerm) return withEquipment;
-
-        const term = searchTerm.toLowerCase();
+        const term = searchTerm.trim().toLowerCase();
+        if (!term) return withEquipment;
         return withEquipment.filter((room) =>
             room.equipment!.some(
                 (item) =>
@@ -97,6 +97,8 @@ export const EquipmentRegistryPage: React.FC = () => {
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
+                ) : isError ? (
+                    <DataLoadError onRetry={() => { void refetch(); }} />
                 ) : roomsWithEquipment.length > 0 ? (
                     <EquipmentTable rooms={roomsWithEquipment} onEdit={handleEdit} />
                 ) : (
@@ -108,10 +110,10 @@ export const EquipmentRegistryPage: React.FC = () => {
                                 </Icon>
                                 <VStack gap={2}>
                                     <Heading size="md" color="fg.muted">
-                                        ยังไม่มีข้อมูลครุภัณฑ์
+                                        {searchTerm.trim() ? 'ไม่พบครุภัณฑ์ตามเงื่อนไข' : 'ยังไม่มีข้อมูลครุภัณฑ์'}
                                     </Heading>
                                     <Text color="fg.muted">
-                                        เริ่มต้นโดยการเพิ่มข้อมูล หรือกด "เพิ่มครุภัณฑ์เริ่มต้น" เพื่อเติมรายการมาตรฐานให้ทุกห้อง
+                                        {searchTerm.trim() ? 'ลองเปลี่ยนหรือล้างคำค้นหา' : 'เริ่มต้นโดยการเพิ่มข้อมูล หรือกด "เพิ่มครุภัณฑ์เริ่มต้น" เพื่อเติมรายการมาตรฐานให้ทุกห้อง'}
                                     </Text>
                                 </VStack>
                                 <Button colorPalette="blue" onClick={handleAdd}>

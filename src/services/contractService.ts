@@ -66,7 +66,7 @@ export const contractService = {
         let contracts = await attachRelations(snap.docs.map((d) => withId<Contract>(d)));
 
         if (filters?.searchTerm) {
-            const term = filters.searchTerm.toLowerCase();
+            const term = filters.searchTerm.trim().toLowerCase();
             contracts = contracts.filter(
                 (contract) =>
                     contract.tenant?.full_name?.toLowerCase().includes(term) ||

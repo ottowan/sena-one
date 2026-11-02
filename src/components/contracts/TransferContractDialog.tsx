@@ -1,3 +1,4 @@
+import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import React, { useState, useEffect } from 'react';
 import {
     DialogRoot,
@@ -162,7 +163,7 @@ export const TransferContractDialog: React.FC<TransferContractDialogProps> = ({
                                 invalid={!!errors.transfer_date}
                                 errorText={errors.transfer_date}
                             >
-                                <Input
+                                <ThaiDatePicker
                                     type="date"
                                     value={formData.transfer_date}
                                     onChange={(e) =>

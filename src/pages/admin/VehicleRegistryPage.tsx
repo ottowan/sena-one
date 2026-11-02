@@ -6,6 +6,7 @@ import { VehicleFormDialog } from '../../components/vehicles/VehicleFormDialog';
 import { VehicleTable } from '../../components/vehicles/VehicleTable';
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
+import { DataLoadError } from '../../components/common/DataLoadError';
 import type { VehicleRegistration } from '../../types';
 
 export const VehicleRegistryPage: React.FC = () => {
@@ -13,7 +14,7 @@ export const VehicleRegistryPage: React.FC = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleRegistration | null>(null);
 
-    const { data: vehicles, isLoading } = useVehicleRegistry({ plate: searchTerm || undefined });
+    const { data: vehicles, isLoading, isError, refetch } = useVehicleRegistry({ plate: searchTerm || undefined });
     const deleteVehicle = useDeleteVehicle();
 
     const handleAdd = () => {
@@ -71,6 +72,8 @@ export const VehicleRegistryPage: React.FC = () => {
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
+                ) : isError ? (
+                    <DataLoadError onRetry={() => { void refetch(); }} />
                 ) : vehicles && vehicles.length > 0 ? (
                     <VehicleTable vehicles={vehicles} onEdit={handleEdit} onDelete={handleDelete} searchTerm={searchTerm} />
                 ) : (
@@ -82,9 +85,9 @@ export const VehicleRegistryPage: React.FC = () => {
                                 </Icon>
                                 <VStack gap={2}>
                                     <Heading size="md" color="fg.muted">
-                                        ยังไม่มีข้อมูลรถ
+                                        {searchTerm.trim() ? 'ไม่พบข้อมูลรถตามเงื่อนไข' : 'ยังไม่มีข้อมูลรถ'}
                                     </Heading>
-                                    <Text color="fg.muted">เริ่มต้นโดยการเพิ่มข้อมูลรถคันแรก</Text>
+                                    <Text color="fg.muted">{searchTerm.trim() ? 'ลองเปลี่ยนหรือล้างคำค้นหา' : 'เริ่มต้นโดยการเพิ่มข้อมูลรถคันแรก'}</Text>
                                 </VStack>
                                 <Button colorPalette="blue" onClick={handleAdd}>
                                     <Icon mr={2}>

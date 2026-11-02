@@ -1,3 +1,4 @@
+import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import React, { useState, useEffect } from 'react';
 import {
     DialogRoot,
@@ -234,7 +235,7 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
                         <HStack gap={4}>
                             <Box flex={1}>
                                 <Text mb={1} fontSize="sm">เดือนที่เรียกเก็บ</Text>
-                                <Input
+                                <ThaiDatePicker
                                     type="month"
                                     value={billingMonth}
                                     onChange={(e) => setBillingMonth(e.target.value)}
@@ -242,7 +243,7 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
                             </Box>
                             <Box flex={1}>
                                 <Text mb={1} fontSize="sm">กำหนดชำระ</Text>
-                                <Input
+                                <ThaiDatePicker
                                     type="date"
                                     value={dueDate}
                                     onChange={(e) => setDueDate(e.target.value)}

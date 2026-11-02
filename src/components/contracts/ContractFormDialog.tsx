@@ -10,7 +10,8 @@ import {
     DialogCloseTrigger,
 } from '../ui/dialog';
 import { Button } from '../ui/button';
-import { Box, Input, VStack, Grid, Text } from '@chakra-ui/react';
+import { Input, VStack, Grid, Text } from '@chakra-ui/react';
+import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import { Field } from '../ui/field';
 import { NativeSelectField, NativeSelectRoot } from '../ui/native-select';
 import { useCreateContract, useUpdateContract, useContracts } from '../../hooks/useContracts';
@@ -18,7 +19,6 @@ import { useTenants } from '../../hooks/useTenants';
 import { useRooms } from '../../hooks/useRooms';
 import { useRentRates } from '../../hooks/useSettings';
 import type { Contract, ContractStatus } from '../../types';
-import { formatThaiShortDate } from '../../lib/utils';
 
 interface ContractFormDialogProps {
     open: boolean;
@@ -46,63 +46,14 @@ const addYearsAndDaysToDateInput = (dateValue: string, years: number, days: numb
     return `${formattedYear}-${formattedMonth}-${formattedDay}`;
 };
 
-const formatDateInputForDisplay = (dateValue: string): string => {
-    if (!dateValue) return '';
-
-    return formatThaiShortDate(dateValue);
-};
-
 interface DatePickerInputProps {
     value: string;
     onChange: (value: string) => void;
 }
 
 const DatePickerInput: React.FC<DatePickerInputProps> = ({ value, onChange }) => {
-    const pickerRef = React.useRef<HTMLInputElement>(null);
-
-    const openPicker = () => {
-        const picker = pickerRef.current as (HTMLInputElement & { showPicker?: () => void }) | null;
-        if (!picker) return;
-
-        if (picker.showPicker) {
-            picker.showPicker();
-            return;
-        }
-
-        picker.click();
-    };
-
     return (
-        <Box position="relative">
-            <Input
-                value={formatDateInputForDisplay(value)}
-                placeholder="วัน/เดือน/ปี"
-                readOnly
-                cursor="pointer"
-                onClick={openPicker}
-                onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        openPicker();
-                    }
-                }}
-            />
-            <Input
-                ref={pickerRef}
-                type="date"
-                value={value}
-                onChange={(event) => onChange(event.target.value)}
-                position="absolute"
-                top={0}
-                left={0}
-                w="1px"
-                h="1px"
-                opacity={0}
-                pointerEvents="none"
-                tabIndex={-1}
-                aria-hidden="true"
-            />
-        </Box>
+        <ThaiDatePicker value={value} onChange={event => onChange(event.target.value)} />
     );
 };
 

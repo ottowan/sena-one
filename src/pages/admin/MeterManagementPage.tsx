@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { ThaiDatePicker } from '../../components/common/ThaiDatePicker';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Box,
     Button,
@@ -26,6 +27,8 @@ import { collection, doc, getDocs, orderBy, query, where, writeBatch } from 'fir
 import { db } from '../../lib/firebase';
 import { fetchByIds, nowIso } from '../../lib/firestoreUtils';
 import { ContractStatus } from '../../types';
+import { MeterPasteImport } from '../../components/meters/MeterPasteImport';
+import { meterHistoryReadings, type MeterKind, type PastedMeterReading } from '../../lib/meterPaste';
 
 interface MeterRow {
     roomId: string;
@@ -37,6 +40,7 @@ interface MeterRow {
     electricityMeterPrev: number;
     electricityMeterCurr: number | '';
     hasHistory: boolean; // true if current value comes from history_meter
+    isDirty?: boolean;
 }
 
 interface MeterRoomRow {
@@ -76,6 +80,10 @@ export const MeterManagementPage: React.FC = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<string[]>([]);
     const [roomOptions, setRoomOptions] = useState<any>(createListCollection({ items: [] }));
+    const [pasteOpen, setPasteOpen] = useState(false);
+    const [loadedMonth, setLoadedMonth] = useState('');
+    const loadRequestId = useRef(0);
+    const dataReady = Boolean(selectedMonth) && loadedMonth === selectedMonth && !isLoading;
 
     const filteredRows = rows.filter(row => {
         if (selectedRoom.length === 0) return true;
@@ -83,10 +91,18 @@ export const MeterManagementPage: React.FC = () => {
     });
 
     useEffect(() => {
-        fetchMeterData();
+        void fetchMeterData();
+        return () => { loadRequestId.current += 1; };
     }, [selectedMonth]);
 
     const fetchMeterData = async () => {
+        const requestId = ++loadRequestId.current;
+        setLoadedMonth('');
+        if (!selectedMonth) {
+            setRows([]);
+            setIsLoading(false);
+            return;
+        }
         setIsLoading(true);
         try {
             const [year, month] = selectedMonth.split('-').map(Number);
@@ -196,8 +212,8 @@ export const MeterManagementPage: React.FC = () => {
                     statusColor: statusColor,
                     waterMeterPrev: waterPrev,
                     electricityMeterPrev: elecPrev,
-                    waterMeterCurr: currRecord ? currRecord.water_meter : '',
-                    electricityMeterCurr: currRecord ? currRecord.electricity_meter : '',
+                    waterMeterCurr: currRecord?.water_meter ?? '',
+                    electricityMeterCurr: currRecord?.electricity_meter ?? '',
                     hasHistory: !!currRecord
                 };
             });
@@ -205,34 +221,55 @@ export const MeterManagementPage: React.FC = () => {
             // Sort by room number
             mappedRows.sort((a, b) => a.roomNumber.localeCompare(b.roomNumber, undefined, { numeric: true }));
 
+            if (requestId !== loadRequestId.current) return;
             setRows(mappedRows);
+            setLoadedMonth(selectedMonth);
 
             // Create options for Select
             const options = mappedRows.map(r => ({ label: `ห้อง ${r.roomNumber}`, value: r.roomId }));
             setRoomOptions(createListCollection({ items: options }));
 
         } catch (error) {
+            if (requestId !== loadRequestId.current) return;
+            setRows([]);
             console.error('Error fetching meter data:', error);
             toaster.create({ title: 'เกิดข้อผิดพลาดในการโหลดข้อมูล', type: 'error' });
         } finally {
-            setIsLoading(false);
+            if (requestId === loadRequestId.current) setIsLoading(false);
         }
     };
 
     const handleReadingChange = (index: number, type: 'water' | 'electricity', value: string) => {
-        const meterValue = value === '' ? '' : parseFloat(value) || 0;
-        setRows(prev => {
-            const newRows = [...prev];
-            if (type === 'water') newRows[index].waterMeterCurr = meterValue;
-            else newRows[index].electricityMeterCurr = meterValue;
-            return newRows;
-        });
+        const meterValue = value === '' ? '' : Number(value);
+        setRows(prev => prev.map((row, rowIndex) => rowIndex === index ? {
+            ...row,
+            [type === 'water' ? 'waterMeterCurr' : 'electricityMeterCurr']: meterValue,
+            isDirty: true,
+        } : row));
     };
 
-    const meterNumber = (value: number | '') => value === '' ? 0 : value;
+    const handlePasteApply = (kind: MeterKind, readings: PastedMeterReading[]) => {
+        if (!dataReady || isSaving) return;
+        const byRoom = new Map(readings.map(reading => [reading.roomNumber, reading.value]));
+        setRows(prev => prev.map(row => byRoom.has(row.roomNumber) ? {
+            ...row,
+            [kind === 'water' ? 'waterMeterCurr' : 'electricityMeterCurr']: byRoom.get(row.roomNumber)!,
+            isDirty: true,
+        } : row));
+        toaster.create({ title: `นำค่ามิเตอร์ ${readings.length} ห้องใส่ในตารางแล้ว กรุณากดบันทึก`, type: 'success' });
+    };
+
     const isLowerThanPrevious = (value: number | '', previous: number) => value !== '' && value < previous;
 
     const handleSave = async () => {
+        if (!dataReady || isSaving) return;
+        const changedRows = rows.filter(row => row.isDirty && (row.waterMeterCurr !== '' || row.electricityMeterCurr !== ''));
+        if (!changedRows.length) return;
+        if (changedRows.some(row => [row.waterMeterCurr, row.electricityMeterCurr]
+            .some(value => value !== '' && (!Number.isFinite(value) || value < 0)))) {
+            toaster.create({ title: 'กรุณาตรวจสอบค่ามิเตอร์ ต้องเป็นตัวเลขตั้งแต่ 0 ขึ้นไป', type: 'error' });
+            return;
+        }
         setIsSaving(true);
         try {
             // Update history_meter
@@ -240,15 +277,14 @@ export const MeterManagementPage: React.FC = () => {
             // check constraints.
 
             const batch = writeBatch(db);
-            rows.forEach((row) => {
+            changedRows.forEach((row) => {
                 const ref = doc(db, 'history_meter', `${row.roomId}_${selectedMonth}`);
                 batch.set(
                     ref,
                     {
                         room_id: row.roomId,
                         month: selectedMonth,
-                        water_meter: meterNumber(row.waterMeterCurr),
-                        electricity_meter: meterNumber(row.electricityMeterCurr),
+                        ...meterHistoryReadings(row.waterMeterCurr, row.electricityMeterCurr),
                         updated_at: nowIso(),
                     },
                     { merge: true }
@@ -257,7 +293,7 @@ export const MeterManagementPage: React.FC = () => {
             await batch.commit();
 
             toaster.create({ title: 'บันทึกข้อมูลเรียบร้อยแล้ว', type: 'success' });
-            fetchMeterData(); // Refresh to ensure sync
+            await fetchMeterData(); // Refresh to ensure sync
         } catch (error) {
             console.error('Save error:', error);
             toaster.create({ title: 'เกิดข้อผิดพลาดในการบันทึก', type: 'error' });
@@ -293,9 +329,10 @@ export const MeterManagementPage: React.FC = () => {
                             </SelectRoot>
 
                             <Text fontWeight="medium" ml={4}>เลือกเดือน:</Text>
-                            <Input
+                            <ThaiDatePicker
                                 type="month"
                                 value={selectedMonth}
+                                disabled={isSaving}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
                                 w="200px"
                             />
@@ -303,6 +340,17 @@ export const MeterManagementPage: React.FC = () => {
                     </HStack>
 
                 </HStack>
+
+                <HStack wrap="wrap">
+                    <Button variant="outline" disabled={!dataReady || isSaving} onClick={() => setPasteOpen(open => !open)}>
+                        {pasteOpen ? 'ปิดช่องวางข้อมูล' : 'วางข้อมูลมิเตอร์จากตาราง'}
+                    </Button>
+                    <Text fontSize="sm" color="fg.muted">ช่องมิเตอร์ที่เว้นว่างจะไม่ถูกบันทึกเป็นศูนย์</Text>
+                </HStack>
+                {pasteOpen && (
+                    <MeterPasteImport key={selectedMonth} month={selectedMonth} rows={rows}
+                        disabled={!dataReady || isSaving} onApply={handlePasteApply} />
+                )}
 
                 <Card.Root>
                     <Card.Body overflowX="auto">
@@ -356,6 +404,8 @@ export const MeterManagementPage: React.FC = () => {
                                                 <Input
                                                     size="sm"
                                                     type="number"
+                                                    min={0}
+                                                    disabled={!dataReady || isSaving}
                                                     value={row.waterMeterCurr}
                                                     onChange={(e) => handleReadingChange(originalIndex, 'water', e.target.value)}
                                                     borderColor={isLowerThanPrevious(row.waterMeterCurr, row.waterMeterPrev) ? 'red.300' : 'border.default'}
@@ -373,6 +423,8 @@ export const MeterManagementPage: React.FC = () => {
                                                 <Input
                                                     size="sm"
                                                     type="number"
+                                                    min={0}
+                                                    disabled={!dataReady || isSaving}
                                                     value={row.electricityMeterCurr}
                                                     onChange={(e) => handleReadingChange(originalIndex, 'electricity', e.target.value)}
                                                     borderColor={isLowerThanPrevious(row.electricityMeterCurr, row.electricityMeterPrev) ? 'red.300' : 'border.default'}
@@ -383,7 +435,9 @@ export const MeterManagementPage: React.FC = () => {
                                             </Table.Cell>
 
                                             <Table.Cell>
-                                                {row.hasHistory ? (
+                                                {row.isDirty ? (
+                                                    <Badge colorPalette="orange">มีการแก้ไข ยังไม่บันทึก</Badge>
+                                                ) : row.hasHistory ? (
                                                     <Badge colorPalette="green">บันทึกแล้ว</Badge>
                                                 ) : (
                                                     <Badge colorPalette="gray">รอการบันทึก</Badge>
@@ -403,6 +457,7 @@ export const MeterManagementPage: React.FC = () => {
                         colorPalette="blue"
                         onClick={handleSave}
                         loading={isSaving}
+                        disabled={!dataReady || !rows.some(row => row.isDirty && (row.waterMeterCurr !== '' || row.electricityMeterCurr !== ''))}
                         px={8}
                     >
                         บันทึกการเปลี่ยนแปลง (Save Changes)

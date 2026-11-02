@@ -1,10 +1,10 @@
+import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import React, { useState, useEffect } from 'react';
 import {
     Box,
     Button,
     Card,
     HStack,
-    Input,
     Table,
     Text,
     VStack,
@@ -19,21 +19,21 @@ export const UtilitiesReport: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        fetchData();
-    }, [month]);
-
-    const fetchData = async () => {
-        setIsLoading(true);
-        try {
-            const result = await reportService.getUtilityReport(month);
-            setData(result);
-        } catch (error) {
-            console.error(error);
-            toaster.create({ title: 'เกิดข้อผิดพลาดในการโหลดข้อมูล', type: 'error' });
-        } finally {
-            setIsLoading(false);
+        let cancelled = false;
+        setData([]);
+        setIsLoading(Boolean(month));
+        if (month) {
+            void reportService.getUtilityReport(month)
+                .then(result => { if (!cancelled) setData(result); })
+                .catch(error => {
+                    if (cancelled) return;
+                    console.error(error);
+                    toaster.create({ title: 'เกิดข้อผิดพลาดในการโหลดข้อมูล', type: 'error' });
+                })
+                .finally(() => { if (!cancelled) setIsLoading(false); });
         }
-    };
+        return () => { cancelled = true; };
+    }, [month]);
 
     const handleExport = () => {
         const exportData = data.map(item => ({
@@ -60,7 +60,7 @@ export const UtilitiesReport: React.FC = () => {
             <HStack wrap="wrap" justify="space-between">
                 <HStack>
                     <Text fontWeight="medium" whiteSpace="nowrap">เลือกเดือน:</Text>
-                    <Input
+                    <ThaiDatePicker
                         type="month"
                         value={month}
                         onChange={(e) => setMonth(e.target.value)}
@@ -68,7 +68,7 @@ export const UtilitiesReport: React.FC = () => {
                     />
                 </HStack>
 
-                <Button colorPalette="green" onClick={handleExport} disabled={data.length === 0}>
+                <Button colorPalette="green" onClick={handleExport} disabled={isLoading || data.length === 0}>
                     Export Excel
                 </Button>
             </HStack>

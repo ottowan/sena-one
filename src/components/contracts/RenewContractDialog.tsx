@@ -1,3 +1,4 @@
+import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import React, { useState, useEffect } from 'react';
 import {
     DialogRoot,
@@ -149,7 +150,7 @@ export const RenewContractDialog: React.FC<RenewContractDialogProps> = ({
                                 errorText={errors.end_date}
                                 helperText="ค่าเริ่มต้น: +4 ปี จากสัญญาเดิม"
                             >
-                                <Input
+                                <ThaiDatePicker
                                     type="date"
                                     value={formData.end_date}
                                     onChange={(e) =>

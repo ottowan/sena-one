@@ -37,11 +37,25 @@ export const RoomsPage: React.FC = () => {
     const [detailsRoom, setDetailsRoom] = useState<Room | null>(null);
     const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
-    const { data: rooms, isLoading } = useRooms({
-        searchTerm: searchTerm || undefined,
-        status: statusFilter || undefined,
-        floor: floorFilter || undefined,
-    });
+    // Filter the enriched room data locally so changing floors does not require
+    // a Firestore composite index or refetch contracts and tenants.
+    const { data: allRooms, isLoading, isError, refetch } = useRooms();
+    const rooms = useMemo(() => {
+        const term = searchTerm.trim().toLowerCase();
+        return (allRooms ?? []).filter((room) =>
+            (!term || room.room_number.toLowerCase().includes(term)) &&
+            (!statusFilter || room.status === statusFilter) &&
+            (floorFilter === null || room.floor === floorFilter)
+        );
+    }, [allRooms, searchTerm, statusFilter, floorFilter]);
+
+    const hasFilters = Boolean(searchTerm.trim() || statusFilter || floorFilter !== null);
+
+    const clearFilters = () => {
+        setSearchTerm('');
+        setStatusFilter('');
+        setFloorFilter(null);
+    };
 
     const { data: stats } = useRoomStats();
     const { data: rentRates } = useRentRates();
@@ -50,12 +64,12 @@ export const RoomsPage: React.FC = () => {
 
     // Calculate floor counts
     const floorCounts = useMemo(() => {
-        if (!rooms) return {};
-        return rooms.reduce((acc, room) => {
+        if (!allRooms) return {};
+        return allRooms.reduce((acc, room) => {
             acc[room.floor] = (acc[room.floor] || 0) + 1;
             return acc;
         }, {} as Record<number, number>);
-    }, [rooms]);
+    }, [allRooms]);
 
     const handleEdit = (room: Room) => {
         if (room.has_active_contract) {
@@ -284,7 +298,16 @@ export const RoomsPage: React.FC = () => {
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
-                ) : rooms && rooms.length > 0 ? (
+                ) : isError ? (
+                    <Card.Root>
+                        <Card.Body>
+                            <VStack gap={4} py={8}>
+                                <Text color="danger.fg">ไม่สามารถโหลดข้อมูลห้องพักได้ กรุณาลองอีกครั้ง</Text>
+                                <Button variant="outline" onClick={() => refetch()}>ลองอีกครั้ง</Button>
+                            </VStack>
+                        </Card.Body>
+                    </Card.Root>
+                ) : rooms.length > 0 ? (
                     <>
                         {viewMode === 'table' ? (
                             <RoomTable
@@ -335,18 +358,22 @@ export const RoomsPage: React.FC = () => {
                             <VStack gap={4} py={8}>
                                 <VStack gap={2}>
                                     <Heading size="md" color="fg.muted">
-                                        ยังไม่มีห้องพัก
+                                        {hasFilters ? 'ไม่พบห้องพักตามเงื่อนไข' : 'ยังไม่มีห้องพัก'}
                                     </Heading>
                                     <Text color="fg.muted">
-                                        เริ่มต้นโดยการเพิ่มห้องพักแรกของคุณ
+                                        {hasFilters ? 'ลองเปลี่ยนหรือล้างตัวกรองเพื่อดูห้องพัก' : 'เริ่มต้นโดยการเพิ่มห้องพักแรกของคุณ'}
                                     </Text>
                                 </VStack>
-                                <Button colorPalette="brand" onClick={handleAddRoom}>
-                                    <Icon mr={2}>
-                                        <LuPlus />
-                                    </Icon>
-                                    เพิ่มห้องพัก
-                                </Button>
+                                {hasFilters ? (
+                                    <Button variant="outline" onClick={clearFilters}>ล้างตัวกรอง</Button>
+                                ) : (
+                                    <Button colorPalette="brand" onClick={handleAddRoom}>
+                                        <Icon mr={2}>
+                                            <LuPlus />
+                                        </Icon>
+                                        เพิ่มห้องพัก
+                                    </Button>
+                                )}
                             </VStack>
                         </Card.Body>
                     </Card.Root>

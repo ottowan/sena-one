@@ -35,17 +35,18 @@ export interface TenantStats {
 
 export const tenantService = {
     async getTenants(filters?: TenantFilters): Promise<Tenant[]> {
-        const constraints = [];
-        if (filters?.status) constraints.push(where('status', '==', filters.status));
-        if (filters?.roomId) constraints.push(where('current_room_id', '==', filters.roomId));
-
-        const snap = await getDocs(query(collection(db, 'tenants'), ...constraints, orderBy('created_at', 'desc')));
-        let tenants = snap.docs.map((d) => withId<Tenant>(d));
+        // Keep the existing creation order without requiring composite indexes
+        // for each combination of status and room filters.
+        const snap = await getDocs(query(collection(db, 'tenants'), orderBy('created_at', 'desc')));
+        let tenants = snap.docs.map((d) => withId<Tenant>(d)).filter((tenant) =>
+            (!filters?.status || tenant.status === filters.status) &&
+            (!filters?.roomId || tenant.current_room_id === filters.roomId)
+        );
 
         // Firestore has no cross-field OR/ILIKE - filter the already-fetched
         // page client-side, same as the old server's hand-rolled matchesOr().
         if (filters?.searchTerm) {
-            const term = filters.searchTerm.toLowerCase();
+            const term = filters.searchTerm.trim().toLowerCase();
             tenants = tenants.filter(
                 (tenant) =>
                     tenant.full_name?.toLowerCase().includes(term) ||
@@ -83,16 +84,18 @@ export const tenantService = {
         });
 
         if (filters?.vehiclePlate) {
-            const searchPlate = filters.vehiclePlate.toLowerCase();
-            tenantsWithRooms = tenantsWithRooms.filter((tenant) => {
-                const legacyMatch = tenant.vehicles?.some((vehicle) =>
-                    vehicle.plate?.toLowerCase().includes(searchPlate)
-                );
-                const registryMatch = tenant.registered_vehicles?.some((vehicle) =>
-                    vehicle.plate?.toLowerCase().includes(searchPlate)
-                );
-                return !!legacyMatch || !!registryMatch;
-            });
+            const searchPlate = filters.vehiclePlate.trim().toLowerCase();
+            if (searchPlate) {
+                tenantsWithRooms = tenantsWithRooms.filter((tenant) => {
+                    const legacyMatch = tenant.vehicles?.some((vehicle) =>
+                        vehicle.plate?.toLowerCase().includes(searchPlate)
+                    );
+                    const registryMatch = tenant.registered_vehicles?.some((vehicle) =>
+                        vehicle.plate?.toLowerCase().includes(searchPlate)
+                    );
+                    return !!legacyMatch || !!registryMatch;
+                });
+            }
         }
 
         // Tenants without an active contract have no room - keep them last,

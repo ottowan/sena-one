@@ -1,3 +1,4 @@
+import { ThaiDatePicker } from '../../components/common/ThaiDatePicker';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
     Box,
@@ -8,7 +9,6 @@ import {
     HStack,
     VStack,
     Icon,
-    Input,
 } from '@chakra-ui/react';
 import { LuPlus, LuFileText, LuDownload, LuFiles, LuCalendar, LuFileSpreadsheet } from 'react-icons/lu';
 import { exportMonthlyInvoices, exportRoomInvoices } from '../../lib/exportInvoice';
@@ -23,6 +23,7 @@ import { BulkInvoiceDialog } from '../../components/invoices/BulkInvoiceDialog';
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
+import { DataLoadError } from '../../components/common/DataLoadError';
 import { useQueryClient } from '@tanstack/react-query';
 import {
     NativeSelectField,
@@ -52,10 +53,10 @@ export const InvoicesPage: React.FC = () => {
         return () => window.clearTimeout(timer);
     }, [searchTerm]);
 
-    const { data: latestInvoiceMonth, isLoading: isLatestMonthLoading } = useLatestInvoiceMonth();
+    const { data: latestInvoiceMonth, isLoading: isLatestMonthLoading, isError: isLatestMonthError, refetch: refetchLatestMonth } = useLatestInvoiceMonth();
     const effectiveMonthFilter = monthFilter === undefined ? latestInvoiceMonth : monthFilter;
 
-    const { data: invoices, isLoading } = useInvoices({
+    const { data: invoices, isLoading, isError, refetch } = useInvoices({
         searchTerm: debouncedSearchTerm || undefined,
         status: statusFilter || undefined,
         month: effectiveMonthFilter || undefined,
@@ -265,7 +266,7 @@ export const InvoicesPage: React.FC = () => {
                                     </NativeSelectField>
                                 </NativeSelectRoot>
 
-                                <Input
+                                <ThaiDatePicker
                                     type="month"
                                     value={effectiveMonthFilter || ''}
                                     onChange={(e) => setMonthFilter(e.target.value)}
@@ -284,7 +285,15 @@ export const InvoicesPage: React.FC = () => {
                 </Card.Root>
 
                 {/* Invoice List */}
-                {isLatestMonthLoading || isLoading ? (
+                {isError || (monthFilter === undefined && isLatestMonthError) ? (
+                    <DataLoadError onRetry={() => {
+                        if (monthFilter === undefined && isLatestMonthError) {
+                            void refetchLatestMonth();
+                        } else {
+                            void refetch();
+                        }
+                    }} />
+                ) : (monthFilter === undefined && isLatestMonthLoading) || isLoading ? (
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
@@ -331,10 +340,10 @@ export const InvoicesPage: React.FC = () => {
                                 </Icon>
                                 <VStack gap={2}>
                                     <Heading size="md" color="fg.muted">
-                                        ยังไม่มีใบแจ้งหนี้
+                                        {debouncedSearchTerm || statusFilter || effectiveMonthFilter ? 'ไม่พบใบแจ้งหนี้ตามเงื่อนไข' : 'ยังไม่มีใบแจ้งหนี้'}
                                     </Heading>
                                     <Text color="fg.muted">
-                                        เริ่มต้นโดยการออกใบแจ้งหนี้ใบแรกของคุณ
+                                        {debouncedSearchTerm || statusFilter || effectiveMonthFilter ? 'ลองเปลี่ยนหรือล้างตัวกรอง' : 'เริ่มต้นโดยการออกใบแจ้งหนี้ใบแรกของคุณ'}
                                     </Text>
                                 </VStack>
                                 <Button colorPalette="blue" onClick={handleAddInvoice}>

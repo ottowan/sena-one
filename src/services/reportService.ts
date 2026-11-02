@@ -10,6 +10,7 @@ import {
     where,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { billingMonthBounds } from '../lib/billingMonth';
 import { fetchByIds } from '../lib/firestoreUtils';
 
 export interface RoomStatusStats {
@@ -77,11 +78,8 @@ export const reportService = {
     },
 
     getFinancialReport: async (month: string, status?: string): Promise<any[]> => {
-        const startDate = `${month}-01`;
-        const [year, m] = month.split('-').map(Number);
-        const endDate = new Date(year, m, 0).toISOString().split('T')[0];
-
-        const constraints = [where('billing_month', '>=', startDate), where('billing_month', '<=', endDate)];
+        const { start, end } = billingMonthBounds(month);
+        const constraints = [where('billing_month', '>=', start), where('billing_month', '<', end)];
         if (status) constraints.push(where('status', '==', status));
 
         const snap = await getDocs(

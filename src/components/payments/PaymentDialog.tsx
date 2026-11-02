@@ -1,3 +1,4 @@
+import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import React, { useState } from 'react';
 import {
     DialogRoot,
@@ -122,7 +123,7 @@ export const PaymentDialog: React.FC<PaymentDialogProps> = ({
                             </Field>
 
                             <Field label="วันที่โอน/ชำระ" required>
-                                <Input
+                                <ThaiDatePicker
                                     type="date"
                                     value={paymentDate}
                                     onChange={(e) => setPaymentDate(e.target.value)}

@@ -1,10 +1,10 @@
+import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import React, { useState, useEffect } from 'react';
 import {
     Box,
     Button,
     Card,
     HStack,
-    Input,
     Table,
     Text,
     Badge,
@@ -40,21 +40,21 @@ export const FinancialReport: React.FC = () => {
     });
 
     useEffect(() => {
-        fetchData();
-    }, [month, status]);
-
-    const fetchData = async () => {
-        setIsLoading(true);
-        try {
-            const result = await reportService.getFinancialReport(month, status[0] || undefined);
-            setData(result);
-        } catch (error) {
-            console.error(error);
-            toaster.create({ title: 'เกิดข้อผิดพลาดในการโหลดข้อมูล', type: 'error' });
-        } finally {
-            setIsLoading(false);
+        let cancelled = false;
+        setData([]);
+        setIsLoading(Boolean(month));
+        if (month) {
+            void reportService.getFinancialReport(month, status[0] || undefined)
+                .then(result => { if (!cancelled) setData(result); })
+                .catch(error => {
+                    if (cancelled) return;
+                    console.error(error);
+                    toaster.create({ title: 'เกิดข้อผิดพลาดในการโหลดข้อมูล', type: 'error' });
+                })
+                .finally(() => { if (!cancelled) setIsLoading(false); });
         }
-    };
+        return () => { cancelled = true; };
+    }, [month, status]);
 
     const handleExport = () => {
         const exportData = data.map(item => ({
@@ -92,7 +92,7 @@ export const FinancialReport: React.FC = () => {
             <HStack wrap="wrap" justify="space-between">
                 <HStack>
                     <Text fontWeight="medium" whiteSpace="nowrap">เดือน:</Text>
-                    <Input
+                    <ThaiDatePicker
                         type="month"
                         value={month}
                         onChange={(e) => setMonth(e.target.value)}
@@ -119,7 +119,7 @@ export const FinancialReport: React.FC = () => {
                     </SelectRoot>
                 </HStack>
 
-                <Button colorPalette="green" onClick={handleExport} disabled={data.length === 0}>
+                <Button colorPalette="green" onClick={handleExport} disabled={isLoading || data.length === 0}>
                     Export Excel
                 </Button>
             </HStack>

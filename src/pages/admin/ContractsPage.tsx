@@ -22,6 +22,7 @@ import { CancelContractDialog } from '../../components/contracts/CancelContractD
 import { ViewModeToggle, type ViewMode } from '../../components/common/ViewModeToggle';
 import { Button } from '../../components/ui/button';
 import { SearchInput } from '../../components/common/SearchInput';
+import { DataLoadError } from '../../components/common/DataLoadError';
 import type { Contract, ContractStatus } from '../../types';
 import {
     NativeSelectField,
@@ -44,7 +45,7 @@ export const ContractsPage: React.FC = () => {
     const [sortKey, setSortKey] = useState<ContractSortKey>('end_date');
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
-    const { data: contracts, isLoading } = useContracts({
+    const { data: contracts, isLoading, isError, refetch } = useContracts({
         searchTerm: searchTerm || undefined,
         status: statusFilter || undefined,
     });
@@ -262,6 +263,8 @@ export const ContractsPage: React.FC = () => {
                     <Box p={8} textAlign="center">
                         <Text color="fg.muted">กำลังโหลด...</Text>
                     </Box>
+                ) : isError ? (
+                    <DataLoadError onRetry={() => { void refetch(); }} />
                 ) : sortedContracts.length > 0 ? (
                     <>
                         {viewMode === 'table' ? (
@@ -310,10 +313,10 @@ export const ContractsPage: React.FC = () => {
                                 </Icon>
                                 <VStack gap={2}>
                                     <Heading size="md" color="fg.muted">
-                                        ยังไม่มีสัญญา
+                                        {searchTerm.trim() || statusFilter ? 'ไม่พบสัญญาตามเงื่อนไข' : 'ยังไม่มีสัญญา'}
                                     </Heading>
                                     <Text color="fg.muted">
-                                        เริ่มต้นโดยการสร้างสัญญาเช่าแรกของคุณ
+                                        {searchTerm.trim() || statusFilter ? 'ลองเปลี่ยนหรือล้างตัวกรอง' : 'เริ่มต้นโดยการสร้างสัญญาเช่าแรกของคุณ'}
                                     </Text>
                                 </VStack>
                                 <Button colorPalette="blue" onClick={handleAddContract}>

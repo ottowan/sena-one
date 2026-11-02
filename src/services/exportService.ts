@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { billingMonthBounds } from '../lib/billingMonth';
 import { fetchByIds } from '../lib/firestoreUtils';
 import { format } from 'date-fns';
 import { th } from 'date-fns/locale';
@@ -20,14 +21,13 @@ export const exportService = {
 
         // 2. Fetch invoices for the month
         const [year, m] = month.split('-').map(Number);
-        const startDate = `${month}-01`;
-        const endDate = new Date(year, m, 0).toISOString().split('T')[0];
+        const { start, end } = billingMonthBounds(month);
 
         const invoicesSnap = await getDocs(
             query(
                 collection(db, 'invoices'),
-                where('billing_month', '>=', startDate),
-                where('billing_month', '<=', endDate)
+                where('billing_month', '>=', start),
+                where('billing_month', '<', end)
             )
         );
         const rawInvoices = invoicesSnap.docs.map((d) => ({ id: d.id, ...d.data() }) as any);

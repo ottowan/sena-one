@@ -13,6 +13,7 @@ import {
     writeBatch,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { billingMonthBounds } from '../lib/billingMonth';
 import { fetchByIds, nowIso, withId } from '../lib/firestoreUtils';
 import type { AppSettings, Contract, Invoice, InvoiceFormData, RentRate } from '../types';
 
@@ -139,30 +140,24 @@ export const invoiceService = {
         const constraints = [];
         if (status) constraints.push(where('status', '==', status));
 
-        // Firestore requires the first orderBy to match any range-filtered
-        // field, so billing_month takes priority over created_at when a
-        // month filter is active. Final display order is re-sorted by room
-        // number below regardless, so this only affects fetch order.
-        let orderConstraints;
+        // The final display is sorted by room. Only order by billing_month
+        // for range queries; status alone needs no composite index.
+        const orderConstraints = [];
         if (month) {
-            const startDate = `${month}-01`;
-            const [year, m] = month.split('-').map(Number);
-            const endDate = new Date(year, m, 0).toISOString().split('T')[0];
-            constraints.push(where('billing_month', '>=', startDate), where('billing_month', '<=', endDate));
-            orderConstraints = [orderBy('billing_month', 'desc')];
-        } else {
-            orderConstraints = [orderBy('created_at', 'desc')];
+            const { start, end } = billingMonthBounds(month);
+            constraints.push(where('billing_month', '>=', start), where('billing_month', '<', end));
+            orderConstraints.push(orderBy('billing_month', 'desc'));
         }
 
         const snap = await getDocs(query(collection(db, 'invoices'), ...constraints, ...orderConstraints));
         let invoices = await attachInvoiceRelations(snap.docs.map((d) => withId<Invoice>(d)));
 
         if (searchTerm) {
-            const lowerTerm = searchTerm.toLowerCase();
+            const lowerTerm = searchTerm.trim().toLowerCase();
             invoices = invoices.filter(
                 (inv) =>
-                    inv.tenant?.full_name.toLowerCase().includes(lowerTerm) ||
-                    inv.room?.room_number.toLowerCase().includes(lowerTerm)
+                    inv.tenant?.full_name?.toLowerCase().includes(lowerTerm) ||
+                    inv.room?.room_number?.toLowerCase().includes(lowerTerm)
             );
         }
 

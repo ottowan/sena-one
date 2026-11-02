@@ -20,6 +20,7 @@ import { MaintenanceRequestDialog } from '../../components/maintenance/Maintenan
 import { MaintenanceStatusBadge } from '../../components/maintenance/MaintenanceStatusBadge';
 import { toaster } from '../../components/ui/toaster';
 import { EmptyState } from '../../components/ui/empty-state';
+import { DataLoadError } from '../../components/common/DataLoadError';
 import { MaintenanceStatus, type MaintenanceRequest } from '../../types';
 
 export const MaintenancePage: React.FC = () => {
@@ -28,7 +29,7 @@ export const MaintenancePage: React.FC = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [requestToEdit, setRequestToEdit] = useState<MaintenanceRequest | null>(null);
 
-    const { data: requests, isLoading } = useQuery({
+    const { data: requests, isLoading, isError, refetch } = useQuery({
         queryKey: ['maintenance-requests', selectedStatus],
         queryFn: () => maintenanceService.getMaintenanceRequests(selectedStatus === 'all' ? undefined : selectedStatus),
     });
@@ -95,6 +96,8 @@ export const MaintenancePage: React.FC = () => {
                 <Card.Body p={0}>
                     {isLoading ? (
                         <Box p={8} textAlign="center"><Text>Loading...</Text></Box>
+                    ) : isError ? (
+                        <DataLoadError onRetry={() => { void refetch(); }} />
                     ) : requests?.length === 0 ? (
                         <EmptyState
                             icon={<LuCircleCheck />}

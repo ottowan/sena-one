@@ -1,3 +1,4 @@
+import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import React, { useState, useEffect } from 'react';
 import {
     DialogRoot,
@@ -115,7 +116,7 @@ export const CancelContractDialog: React.FC<CancelContractDialogProps> = ({
                                 invalid={!!errors.cancellation_date}
                                 errorText={errors.cancellation_date}
                             >
-                                <Input
+                                <ThaiDatePicker
                                     type="date"
                                     value={formData.cancellation_date}
                                     onChange={(e) =>

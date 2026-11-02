@@ -41,7 +41,7 @@ export const vehicleService = {
         });
 
         if (filters?.plate) {
-            const term = filters.plate.toLowerCase();
+            const term = filters.plate.trim().toLowerCase();
             vehiclesWithRoom = vehiclesWithRoom.filter((vehicle) => vehicle.plate?.toLowerCase().includes(term));
         }
 
