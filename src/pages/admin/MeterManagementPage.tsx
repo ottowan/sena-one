@@ -31,7 +31,8 @@ import { meterProgress, meterNeedsReview } from '../../lib/meterProgress';
 import { PageHeader } from '../../components/common/PageHeader';
 import { SummaryCard } from '../../components/common/SummaryCard';
 import { SearchInput } from '../../components/common/SearchInput';
-import { MeterReadingEditor } from '../../components/meters/MeterReadingEditor';
+import { MeterReadingEditor, MeterReadingInput, MeterReadingUsage } from '../../components/meters/MeterReadingEditor';
+import { thaiCalendarLabel } from '../../lib/thaiCalendar';
 import { LuClipboardPaste, LuDroplets, LuZap, LuCircleCheck, LuTriangleAlert, LuSave } from 'react-icons/lu';
 
 interface MeterRow {
@@ -88,6 +89,7 @@ export const MeterManagementPage: React.FC = () => {
     const [loadedMonth, setLoadedMonth] = useState('');
     const [rowFilter, setRowFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
+    const [meterKind, setMeterKind] = useState<MeterKind>('water');
     const loadRequestId = useRef(0);
     const dataReady = Boolean(selectedMonth) && loadedMonth === selectedMonth && !isLoading;
 
@@ -309,13 +311,13 @@ export const MeterManagementPage: React.FC = () => {
         }
     };
 
-    const editor = (row: MeterRow, kind: MeterKind) => (
-        <MeterReadingEditor kind={kind} roomNumber={row.roomNumber}
-            previous={kind === 'water' ? row.waterMeterPrev : row.electricityMeterPrev}
-            current={kind === 'water' ? row.waterMeterCurr : row.electricityMeterCurr}
-            disabled={!dataReady || isSaving}
-            onChange={value => handleReadingChange(rows.findIndex(item => item.roomId === row.roomId), kind, value)} />
-    );
+    const readingProps = (row: MeterRow) => ({
+        kind: meterKind, roomNumber: row.roomNumber,
+        previous: meterKind === 'water' ? row.waterMeterPrev : row.electricityMeterPrev,
+        current: meterKind === 'water' ? row.waterMeterCurr : row.electricityMeterCurr,
+        disabled: !dataReady || isSaving,
+        onChange: (value: string) => handleReadingChange(rows.findIndex(item => item.roomId === row.roomId), meterKind, value),
+    });
     const statusBadge = (row: MeterRow) => (
         <Badge colorPalette={meterNeedsReview(row) ? 'red' : row.isDirty ? 'orange' : row.hasHistory ? 'green' : 'gray'}>
             {meterNeedsReview(row) ? 'ต้องตรวจสอบ' : row.isDirty ? 'ยังไม่บันทึก' : row.hasHistory ? 'บันทึกแล้ว' : 'รอกรอก'}
@@ -343,6 +345,19 @@ export const MeterManagementPage: React.FC = () => {
                 <SummaryCard label="ต้องตรวจสอบ" value={dataReady ? progress.review : '—'} hint="ค่าต่ำกว่าครั้งก่อนหรือไม่ถูกต้อง" tone={progress.review ? 'danger' : 'brand'} icon={<LuTriangleAlert />} />
             </Grid>
             {pasteOpen && <MeterPasteImport key={selectedMonth} month={selectedMonth} rows={rows} disabled={!dataReady || isSaving} onApply={handlePasteApply} />}
+            <Card.Root borderColor={meterKind === 'water' ? 'blue.fg' : 'orange.fg'} borderTopWidth="4px">
+                <Card.Body p={{ base: 4, md: 5 }} gap={4}>
+                    <Flex justify="space-between" gap={3} wrap="wrap" align="center">
+                        <Box><Text fontSize="sm" color="fg.muted">กำลังกรอกข้อมูลประจำเดือน</Text>
+                            <Text fontSize={{ base: 'xl', md: '2xl' }} fontWeight="bold">{thaiCalendarLabel(selectedMonth, 'month') || 'กรุณาเลือกเดือน'}</Text></Box>
+                        <HStack gap={2} wrap="wrap" aria-label="ประเภทมิเตอร์ที่กรอก">
+                            <Button colorPalette="blue" variant={meterKind === 'water' ? 'solid' : 'outline'} aria-pressed={meterKind === 'water'} onClick={() => setMeterKind('water')}><LuDroplets />กรอกมิเตอร์น้ำ</Button>
+                            <Button colorPalette="orange" variant={meterKind === 'electricity' ? 'solid' : 'outline'} aria-pressed={meterKind === 'electricity'} onClick={() => setMeterKind('electricity')}><LuZap />กรอกมิเตอร์ไฟฟ้า</Button>
+                        </HStack>
+                    </Flex>
+                    <Text fontSize="sm" color="fg.muted">กรอกเลขสะสมบนหน้าปัดในช่อง “เลขครั้งนี้” ระบบคำนวณหน่วยที่ใช้ให้ · กด Enter เพื่อไปห้องถัดไป</Text>
+                </Card.Body>
+            </Card.Root>
             <Card.Root>
                 <Card.Body gap={4} p={{ base: 4, md: 5 }}>
                     <Flex gap={3} direction={{ base: 'column', md: 'row' }}>
@@ -381,20 +396,22 @@ export const MeterManagementPage: React.FC = () => {
                 </Card.Body></Card.Root> :
                 !filteredRows.length ? <Card.Root><Card.Body py={10}><Text textAlign="center" color="fg.muted">ไม่พบห้องตามเงื่อนไข ลองเปลี่ยนตัวกรองหรือคำค้นหา</Text></Card.Body></Card.Root> : <>
                     <Box className="table-panel" display={{ base: 'none', md: 'block' }} maxH="70vh">
-                        <Table.Root size="sm" interactive stickyHeader minW="850px">
+                        <Table.Root size="md" interactive stickyHeader minW="700px">
                             <Table.Header><Table.Row>
                                 <Table.ColumnHeader w="210px" position="sticky" left={0} zIndex={1}>ห้อง / ผู้เช่า</Table.ColumnHeader>
-                                <Table.ColumnHeader bg="blue.subtle" color="blue.fg">มิเตอร์น้ำ</Table.ColumnHeader>
-                                <Table.ColumnHeader bg="orange.subtle" color="orange.fg">มิเตอร์ไฟฟ้า</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="right">เลขครั้งก่อน</Table.ColumnHeader>
+                                <Table.ColumnHeader minW="210px" bg={meterKind === 'water' ? 'blue.subtle' : 'orange.subtle'} color={meterKind === 'water' ? 'blue.fg' : 'orange.fg'}>กรอกเลขครั้งนี้ · {meterKind === 'water' ? 'น้ำ' : 'ไฟฟ้า'}</Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="right">ใช้เดือนนี้</Table.ColumnHeader>
                                 <Table.ColumnHeader>สถานะ</Table.ColumnHeader>
                             </Table.Row></Table.Header>
                             <Table.Body>{filteredRows.map(row => <Table.Row key={row.roomId}>
                                 <Table.Cell position="sticky" left={0} bg="bg.panel" zIndex={1}>
-                                    <Text fontSize="lg" fontWeight="semibold">{row.roomNumber}</Text>
+                                    <Text fontSize="xl" fontWeight="bold">{row.roomNumber}</Text>
                                     <Text fontSize="xs" color={row.statusColor || 'fg.muted'} maxW="185px" lineClamp={2}>{row.tenantName}</Text>
                                 </Table.Cell>
-                                <Table.Cell minW="230px">{editor(row, 'water')}</Table.Cell>
-                                <Table.Cell minW="230px">{editor(row, 'electricity')}</Table.Cell>
+                                <Table.Cell textAlign="right" fontSize="lg" color="fg.muted" fontVariantNumeric="tabular-nums">{readingProps(row).previous.toLocaleString('th-TH')}</Table.Cell>
+                                <Table.Cell bg={meterKind === 'water' ? 'blue.subtle' : 'orange.subtle'}><MeterReadingInput {...readingProps(row)} /></Table.Cell>
+                                <Table.Cell textAlign="right"><MeterReadingUsage {...readingProps(row)} /></Table.Cell>
                                 <Table.Cell>{statusBadge(row)}</Table.Cell>
                             </Table.Row>)}</Table.Body>
                         </Table.Root>
@@ -402,14 +419,14 @@ export const MeterManagementPage: React.FC = () => {
                     <VStack align="stretch" gap={3} display={{ base: 'flex', md: 'none' }}>
                         {filteredRows.map(row => <Card.Root key={row.roomId}><Card.Body p={4} gap={4}>
                             <HStack justify="space-between"><Box><Text fontSize="lg" fontWeight="semibold">ห้อง {row.roomNumber}</Text><Text fontSize="xs" color={row.statusColor || 'fg.muted'}>{row.tenantName}</Text></Box>{statusBadge(row)}</HStack>
-                            <Grid templateColumns="repeat(2, minmax(0, 1fr))" gap={3}>{editor(row, 'water')}{editor(row, 'electricity')}</Grid>
+                            <MeterReadingEditor {...readingProps(row)} />
                         </Card.Body></Card.Root>)}
                     </VStack>
                 </>}
             <Flex className="save-bar" position="sticky" bottom={4} zIndex={10} bg="bg.panel" borderWidth="1px" borderColor={progress.changed ? 'brand.emphasized' : 'border.default'}
                 borderRadius="xl" boxShadow="lg" p={{ base: 3, md: 4 }} gap={3} align="center" justify="space-between">
                 <Box><Text fontWeight="semibold" fontSize="sm">{progress.changed ? `มี ${progress.changed} ห้องที่ยังไม่บันทึก` : 'ข้อมูลการจดมิเตอร์'}</Text>
-                    <Text fontSize="xs" color="fg.muted" display={{ base: 'none', md: 'block' }}>บันทึกเฉพาะห้องที่แก้ไข · ช่องว่างจะไม่กลายเป็นศูนย์</Text></Box>
+                    <Text fontSize="sm" color="fg.muted">{thaiCalendarLabel(selectedMonth, 'month')} · น้ำและไฟที่แก้ไข</Text></Box>
                 <Button size="lg" colorPalette="brand" onClick={handleSave} loading={isSaving}
                     disabled={!dataReady || !progress.changed}><LuSave /><Box as="span" display={{ base: 'none', md: 'inline' }}>บันทึกการเปลี่ยนแปลง</Box><Box as="span" display={{ base: 'inline', md: 'none' }}>บันทึก</Box></Button>
             </Flex>

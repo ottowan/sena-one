@@ -151,6 +151,7 @@ test('page applies by room number despite a room filter, saves changed rooms onl
         },
         '../../lib/firebase': { db: {} },
         '../../lib/firestoreUtils': { nowIso: () => 'now', fetchByIds: async () => new Map() },
+        '../../lib/thaiCalendar': load('src/lib/thaiCalendar.ts'),
         '../../types': { ContractStatus: { ACTIVE: 'active' } },
     });
     let nodes = h.render();
