@@ -51,12 +51,18 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
     // Fetch active contracts when dialog opens
     useEffect(() => {
         if (open) {
+            if (!billingMonth) {
+                setDueDate('');
+                setRows([]);
+                return;
+            }
             fetchActiveContracts();
-            // Set default due date to 5th of next month
-            const nextMonth = new Date();
-            nextMonth.setMonth(nextMonth.getMonth() + 1);
-            nextMonth.setDate(5);
-            setDueDate(nextMonth.toISOString().slice(0, 10));
+            // Keep the existing due day (5th), relative to the selected billing month.
+            // Build the calendar date directly to avoid timezone shifts and month-end overflow.
+            const [year, month] = billingMonth.split('-').map(Number);
+            const nextYear = month === 12 ? year + 1 : year;
+            const nextMonth = month === 12 ? 1 : month + 1;
+            setDueDate(`${nextYear}-${String(nextMonth).padStart(2, '0')}-05`);
         }
     }, [open, billingMonth]);
 
@@ -248,6 +254,7 @@ export const BulkInvoiceDialog: React.FC<BulkInvoiceDialogProps> = ({ open, onCl
                                     value={dueDate}
                                     onChange={(e) => setDueDate(e.target.value)}
                                 />
+                                <Text mt={1} fontSize="xs" color="fg.muted">ค่าเริ่มต้นวันที่ 5 ของเดือนถัดจากเดือนที่เรียกเก็บ สามารถปรับวันได้</Text>
                             </Box>
                         </HStack>
 
