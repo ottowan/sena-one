@@ -82,11 +82,80 @@ service cloud.firestore {
 
     match /equipment_survey_rounds/{year} {
       allow read: if isAdminOrOwner() || isTenant();
-      // Open/close and validated submissions go through callable functions.
-      allow write: if false;
+      allow create: if isAdminOrOwner()
+        && request.resource.data.keys().hasOnly(['year', 'status', 'room_count', 'opened_at', 'opened_by'])
+        && request.resource.data.year is int && request.resource.data.year == int(year)
+        && request.resource.data.year >= 2000 && request.resource.data.year <= 2100
+        && request.resource.data.status == 'open'
+        && request.resource.data.room_count is int && request.resource.data.room_count > 0 && request.resource.data.room_count <= 450
+        && request.resource.data.opened_at == request.time && request.resource.data.opened_by == request.auth.uid;
+      allow update: if isAdminOrOwner()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updated_at', 'updated_by'])
+        && request.resource.data.status in ['open', 'closed']
+        && request.resource.data.updated_at == request.time && request.resource.data.updated_by == request.auth.uid;
+      allow delete: if false;
       match /rooms/{roomId} {
+        function canAnswer() {
+          return isTenant() && ownsRoom(roomId)
+            && resource.data.status == 'pending'
+            && get(/databases/$(db)/documents/equipment_survey_rounds/$(year)).data.status == 'open';
+        }
+        function advancesOneAnswer() {
+          let id = request.resource.data.last_answer_id;
+          let answerPath = /databases/$(db)/documents/equipment_survey_rounds/$(year)/rooms/$(roomId)/responses/$(id);
+          return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['answered_count', 'last_answer_id'])
+            && id in resource.data.item_ids
+            && request.resource.data.answered_count == resource.data.answered_count + 1
+            && !exists(answerPath)
+            && getAfter(answerPath).data.equipment_id == id;
+        }
+        function finalSubmission() {
+          return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'submitted_at', 'submitted_by', 'submitted_by_name'])
+            && request.resource.data.status == 'submitted'
+            && resource.data.answered_count == resource.data.item_ids.size()
+            && request.resource.data.submitted_by == request.auth.uid
+            && request.resource.data.submitted_by_name == get(/databases/$(db)/documents/users/$(request.auth.uid)).data.get('full_name', '')
+            && request.resource.data.submitted_at == request.time;
+        }
         allow read: if isAdminOrOwner() || (isTenant() && ownsRoom(roomId));
-        allow write: if false;
+        allow create: if isAdminOrOwner()
+          && !exists(/databases/$(db)/documents/equipment_survey_rounds/$(year))
+          && getAfter(/databases/$(db)/documents/equipment_survey_rounds/$(year)).data.status == 'open'
+          && request.resource.data.room_id == roomId && request.resource.data.year == int(year)
+          && request.resource.data.status == 'pending' && request.resource.data.answers == []
+          && request.resource.data.items is list && request.resource.data.items.size() > 0
+          && request.resource.data.item_ids is list
+          && request.resource.data.item_ids.size() == request.resource.data.items.size()
+          && request.resource.data.item_ids.toSet().size() == request.resource.data.item_ids.size()
+          && request.resource.data.answered_count == 0
+          && request.resource.data.created_at == request.time;
+        allow update: if canAnswer() && (advancesOneAnswer() || finalSubmission());
+        allow delete: if false;
+
+        match /responses/{itemId} {
+          function validResponse() {
+            let answer = request.resource.data;
+            let parent = get(/databases/$(db)/documents/equipment_survey_rounds/$(year)/rooms/$(roomId)).data;
+            return isTenant() && ownsRoom(roomId)
+              && parent.status == 'pending'
+              && getAfter(/databases/$(db)/documents/equipment_survey_rounds/$(year)/rooms/$(roomId)).data.status == 'pending'
+              && get(/databases/$(db)/documents/equipment_survey_rounds/$(year)).data.status == 'open'
+              && itemId in parent.item_ids
+              && answer.keys().hasOnly(['equipment_id', 'condition', 'reason', 'answered_by', 'updated_at'])
+              && answer.equipment_id == itemId
+              && answer.answered_by == request.auth.uid && answer.updated_at == request.time
+              && answer.condition in ['normal', 'damaged', 'deteriorated', 'lost', 'unnecessary']
+              && answer.reason is string && answer.reason.size() <= 2000
+              && (answer.condition == 'normal' || (answer.reason.trim().size() >= 2 && !(answer.reason.trim() in ['-', '_', '0', 'ปกติ'])));
+          }
+          allow read: if isAdminOrOwner() || (isTenant() && ownsRoom(roomId));
+          allow create: if validResponse()
+            && getAfter(/databases/$(db)/documents/equipment_survey_rounds/$(year)/rooms/$(roomId)).data.last_answer_id == itemId
+            && getAfter(/databases/$(db)/documents/equipment_survey_rounds/$(year)/rooms/$(roomId)).data.answered_count
+              == get(/databases/$(db)/documents/equipment_survey_rounds/$(year)/rooms/$(roomId)).data.answered_count + 1;
+          allow update: if validResponse();
+          allow delete: if false;
+        }
       }
     }
 

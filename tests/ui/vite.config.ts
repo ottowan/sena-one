@@ -10,7 +10,6 @@ export default defineConfig({
         { find: /^.*\/lib\/firebase(?:\.ts)?$/, replacement: resolve('tests/ui/firebase.ts') },
         { find: /^(?:\.{1,2}\/)+(?:lib\/)?firebase(?:\.ts)?$/, replacement: resolve('tests/ui/firebase.ts') },
         { find: 'firebase/firestore', replacement: resolve('tests/ui/firestore.ts') },
-        { find: 'firebase/functions', replacement: resolve('tests/ui/functions.ts') },
     ] },
     server: { host: '127.0.0.1', port: 4179, strictPort: true },
 });

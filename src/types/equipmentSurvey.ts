@@ -1,6 +1,6 @@
-import type { SurveyAsset, SurveyAnswer } from '../../functions/src/equipmentSurveyDomain';
-export type { SurveyAsset, SurveyAnswer, EquipmentCondition } from '../../functions/src/equipmentSurveyDomain';
-export { EQUIPMENT_CONDITIONS, validateSurveyAnswers } from '../../functions/src/equipmentSurveyDomain';
+import type { SurveyAsset, SurveyAnswer } from '../lib/equipmentSurveyDomain';
+export type { SurveyAsset, SurveyAnswer, EquipmentCondition } from '../lib/equipmentSurveyDomain';
+export { EQUIPMENT_CONDITIONS, validateSurveyAnswers } from '../lib/equipmentSurveyDomain';
 
 export interface EquipmentSurveyRound {
     id: string;
@@ -19,6 +19,8 @@ export interface RoomEquipmentSurvey {
     occupied_at_open: boolean;
     items: SurveyAsset[];
     answers: SurveyAnswer[];
+    item_ids?: string[];
+    answered_count?: number;
     submitted_at?: string;
     submitted_by?: string;
     submitted_by_name?: string;

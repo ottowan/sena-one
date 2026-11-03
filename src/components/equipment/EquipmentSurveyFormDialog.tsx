@@ -10,7 +10,8 @@ import { equipmentSurveyService } from '../../services/equipmentSurveyService';
 import { EQUIPMENT_CONDITIONS, validateSurveyAnswers, type EquipmentCondition, type RoomEquipmentSurvey } from '../../types/equipmentSurvey';
 
 export function EquipmentSurveyFormDialog({ survey, onClose }: { survey: RoomEquipmentSurvey | null; onClose: () => void }) {
-    const [answers, setAnswers] = useState<Record<string, { condition: EquipmentCondition | ''; reason: string }>>({});
+    const [answers, setAnswers] = useState<Record<string, { condition: EquipmentCondition | ''; reason: string }>>(() =>
+        Object.fromEntries((survey?.answers || []).map(answer => [answer.equipment_id, { condition: answer.condition, reason: answer.reason }])));
     const [error, setError] = useState('');
     const client = useQueryClient();
     const submit = useMutation({
@@ -19,7 +20,7 @@ export function EquipmentSurveyFormDialog({ survey, onClose }: { survey: RoomEqu
             void client.invalidateQueries({ queryKey: ['equipment-surveys'] });
             toaster.create({ title: 'ส่งผลสำรวจเรียบร้อยแล้ว', type: 'success' }); onClose();
         },
-        onError: (error: Error) => { setError(error.message); },
+        onError: (error: Error) => { setError(error.message); void client.invalidateQueries({ queryKey: ['equipment-surveys'] }); },
     });
     const change = (id: string, field: 'condition' | 'reason', value: string) => {
         setAnswers(prev => ({ ...prev, [id]: { condition: '', reason: '', ...prev[id], [field]: value, ...(field === 'condition' && value === 'normal' ? { reason: '' } : {}) } }));

@@ -1,5 +1,15 @@
 import { test, expect } from '@playwright/test';
 
+test('registry can search by room and exposes the registered asset numbers', async ({ page }) => {
+    await page.goto('/admin/equipment');
+    await page.getByPlaceholder('ค้นหาเลขห้อง ชื่อรายการ หรือเลขครุภัณฑ์...').fill('301');
+    const details = page.getByRole('button', { name: 'ดูครุภัณฑ์ห้อง 301', exact: true });
+    await expect(details).toBeVisible();
+    await expect(page.getByRole('button', { name: 'ดูครุภัณฑ์ห้อง 302', exact: true })).toHaveCount(0);
+    await details.click();
+    await expect(page.getByRole('dialog').getByText('AC-101', { exact: true })).toBeVisible();
+});
+
 test('residents survey all assets, supply an abnormal cause, and read annual history', async ({ page }, info) => {
     const year = new Date().getFullYear();
     await page.goto('/tenant/equipment');

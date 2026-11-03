@@ -6,7 +6,6 @@ import { setGlobalOptions } from 'firebase-functions/v2';
 
 initializeApp();
 setGlobalOptions({ region: 'asia-southeast1' });
-export { adminOpenEquipmentSurvey, adminSetEquipmentSurveyStatus, submitEquipmentSurvey } from './equipmentSurveys';
 
 const db = getFirestore();
 const auth = getAuth();

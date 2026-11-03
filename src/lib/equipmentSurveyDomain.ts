@@ -1,4 +1,4 @@
-// Pure shared validation: imported by the web app and callable functions.
+// Shared form and transaction validation. Firestore rules independently validate writes.
 export const EQUIPMENT_CONDITIONS = {
     normal: 'ปกติ', damaged: 'ชำรุด', deteriorated: 'เสื่อมสภาพ', lost: 'สูญไป', unnecessary: 'ไม่จำเป็นต้องใช้',
 } as const;

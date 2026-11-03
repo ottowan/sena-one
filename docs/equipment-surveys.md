@@ -59,22 +59,20 @@ npm run import:assets -- --apply
 
 ## การเปิดใช้บนระบบจริง
 
-ฟีเจอร์ใหม่ต้อง deploy **Functions, Firestore rules และ Hosting** พร้อมกัน
-`npm run deploy` เดิมไม่ได้ deploy Functions ให้ ใช้คำสั่งด้านล่างเมื่อจะเผยแพร่รุ่นนี้:
+แบบสำรวจใช้ Firestore transactions และ Security Rules โดยตรง ไม่ต้องเปิด Cloud Functions
+เว็บใช้งานจริงอยู่ที่ `https://sena-one.netlify.app/` ให้ deploy กฎและเผยแพร่เว็บบน Netlify:
 
 ```powershell
 npm run build
-firebase deploy --only functions,firestore:rules,hosting
+firebase deploy --only firestore:rules --project sena-one
 ```
 
-Callable Functions ใหม่อยู่ใน `asia-southeast1`:
-
-- `adminOpenEquipmentSurvey`
-- `adminSetEquipmentSurveyStatus`
-- `submitEquipmentSurvey`
-
 การอ่านใช้ `equipment_survey_rounds/{year}` และเอกสาร `rooms/{roomId}` ใต้รอบนั้น
-การเปิด/ปิด/ส่งผลใช้ Functions ตรวจสิทธิ์และตรวจข้อมูลฝั่งเซิร์ฟเวอร์ทั้งหมด
+คำตอบรายชิ้นอยู่ใน `rooms/{roomId}/responses/{equipmentId}` เพื่อให้ Rules ตรวจครบทุกชิ้นได้
+แต่ละคำตอบบันทึกพร้อมเพิ่มจำนวนคำตอบอย่างเป็น transaction และแก้ไขได้ระหว่างที่ยังไม่ส่งผล
+การส่งผลสุดท้ายต้องตอบครบทุกชิ้น รอบต้องยังเปิด และผู้ตอบต้องเป็นผู้พักห้องนั้นในปัจจุบัน
+หลังส่งแล้ว Rules ป้องกันการแก้ไขทั้งผลรวมและคำตอบรายชิ้น
+เอกสารประวัติเดิมที่เก็บคำตอบแบบรวมยังอ่านได้
 ลูกบ้านไม่สามารถแก้บทบาทตนเองเป็นแอดมินหรือเขียนผลสำรวจตรงเพื่อข้ามการตรวจสอบได้
 
 ## ตรวจสอบ
@@ -82,11 +80,11 @@ Callable Functions ใหม่อยู่ใน `asia-southeast1`:
 ```powershell
 npm test
 npm run type-check
-npm --prefix functions run build
 npm run test:surveys
 npm run test:ui
 ```
 
 `test:surveys` ใช้ Firestore Emulator โปรเจกต์ `demo-sena-one` และ Java 21 ขึ้นไป
-ไม่เชื่อมฐานข้อมูลจริง ทดสอบสิทธิ์ สาเหตุบังคับ ปีซ้ำ ผลส่งซ้ำ การปิด/เปิดรอบ
-การส่งพร้อมกัน และประวัติที่ไม่เปลี่ยนตามทะเบียน
+ไม่เชื่อมฐานข้อมูลจริง ทดสอบ transaction ของ client กับ Rules จริง ได้แก่ สิทธิ์ สาเหตุบังคับ
+ปีซ้ำ ผลส่งซ้ำ การปิด/เปิดรอบ การส่งพร้อมกัน การปลอมจำนวนคำตอบ
+แบบสำรวจ 30 ชิ้น และประวัติที่ไม่เปลี่ยนตามทะเบียน

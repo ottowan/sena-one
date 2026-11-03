@@ -12,7 +12,7 @@ function load(file) {
     vm.runInThisContext(`(function(exports, require){${code}\n})`, { filename })(output, name => name.startsWith('.') ? load(path.relative(root, path.resolve(path.dirname(filename), `${name}.ts`))) : require(name));
     return output;
 }
-const { validateSurveyAnswers, validateSurveyYear } = load('functions/src/equipmentSurveyDomain.ts');
+const { validateSurveyAnswers, validateSurveyYear } = load('src/lib/equipmentSurveyDomain.ts');
 const { parseAssetRows, planAssetImport, isMissingAssetNumber } = load('src/lib/assetImport.ts');
 const items = [{ id: 'a', name: 'เตียง' }, { id: 'b', name: 'ตู้' }];
 test('abnormal conditions require a real reason and only the five allowed states are accepted', () => {

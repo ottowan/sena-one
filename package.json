@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test scripts/filter-regression.test.cjs scripts/meter-paste.test.cjs scripts/thai-date-picker.test.cjs scripts/equipment-survey.test.cjs",
-    "test:surveys": "npm --prefix functions run build && node scripts/test-survey-rules.cjs",
+    "test:surveys": "node scripts/test-survey-rules.cjs",
     "import:assets": "node scripts/import-room-assets.cjs",
     "test:ui": "playwright test --workers=2",
     "dev": "vite --host",

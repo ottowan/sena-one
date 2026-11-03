@@ -47,6 +47,7 @@ for (const year of [surveyYear, surveyYear - 1]) {
     tables[`equipment_survey_rounds/${year}/rooms`] = rooms.map((room, i) => ({
         id: room.id, room_id: room.id, room_number: room.room_number, year, occupied_at_open: i < 10,
         status: year < surveyYear || i === 1 ? 'submitted' : 'pending',
+        ...(year === surveyYear && i !== 1 ? { item_ids: ['asset1', 'asset2'], answered_count: 0 } : {}),
         items: [{ id: 'asset1', name: 'เครื่องปรับอากาศ', asset_number: year < surveyYear ? 'OLD-AC-101' : 'AC-101' }, { id: 'asset2', name: 'ตู้เสื้อผ้า', asset_number: 'C-101' }],
         answers: year < surveyYear || i === 1 ? [{ equipment_id: 'asset1', condition: 'normal', reason: '' }, { equipment_id: 'asset2', condition: 'deteriorated', reason: 'บานพับเสื่อมสภาพจากการใช้งาน' }] : [],
         ...(year < surveyYear || i === 1 ? { submitted_at: created, submitted_by: 'preview', submitted_by_name: 'สมชาย ใจดี' } : {}),
@@ -57,6 +58,7 @@ type Ref = { name: string; id?: string; constraints?: any[] };
 export const collection = (_: unknown, ...parts: string[]): Ref => ({ name: parts.join('/') });
 export const doc = (ref: any, ...parts: string[]): Ref => ref?.name ? { name: ref.name, id: parts[0] || 'new' } : { name: parts.slice(0, -1).join('/'), id: parts.at(-1) };
 export const documentId = () => 'id';
+export const serverTimestamp = () => new Date().toISOString();
 export const where = (field: string, op: string, value: any) => ({ field, op, value });
 export const orderBy = (field: string, direction = 'asc') => ({ field, direction });
 export const limit = (count: number) => ({ count });

@@ -26,6 +26,7 @@ export const EquipmentRegistryPage: React.FC = () => {
         const term = searchTerm.trim().toLowerCase();
         if (!term) return withEquipment;
         return withEquipment.filter((room) =>
+            (room.room_number || '').toLowerCase().includes(term) ||
             room.equipment!.some(
                 (item) =>
                     item.name.toLowerCase().includes(term) ||
@@ -93,7 +94,7 @@ export const EquipmentRegistryPage: React.FC = () => {
                 <Card.Root>
                     <Card.Body>
                         <SearchInput
-                            placeholder="ค้นหาจากชื่อรายการหรือเลขครุภัณฑ์..."
+                            placeholder="ค้นหาเลขห้อง ชื่อรายการ หรือเลขครุภัณฑ์..."
                             value={searchTerm}
                             onChange={setSearchTerm}
                         />
