@@ -3,6 +3,7 @@ import { createDefaultRoomEquipment, ROOM_EQUIPMENT_NAMES } from './defaultRoomE
 
 export type AssetCategory = 'air' | 'bed' | 'mattress' | 'wardrobe' | 'sink' | 'fan' | 'stove' | 'water' | 'electricity';
 export interface AssetCandidate { room_number: string; category: AssetCategory; asset_number: string; source_row: number }
+export type AssetCategoryConfirmation = Pick<AssetCandidate, 'room_number' | 'category' | 'asset_number'>;
 export interface AssetImportRoom { id: string; room_number: string; equipment?: RoomEquipmentItem[] }
 const categoryNames: Record<AssetCategory, string> = {
     air: ROOM_EQUIPMENT_NAMES[0], bed: ROOM_EQUIPMENT_NAMES[1], mattress: ROOM_EQUIPMENT_NAMES[2],
@@ -27,7 +28,7 @@ export function isMissingAssetNumber(value?: string) {
     return !text || /^[-_\s0]+$/.test(text) || /^(ไม่มี|ไม่พบ|ไม่ปรากฏ|ไม่เจอ|หาไม่เจอ)/.test(text);
 }
 
-function codesFromCell(value: unknown): string[] {
+export function codesFromCell(value: unknown): string[] {
     const text = String(value ?? '').trim();
     const codes: string[] = [];
     const regex = /(\d{3,}(?:-\d{2,})*)\/(\d+)(?:\s*-\s*(\d+))?/g;
@@ -45,7 +46,7 @@ function codesFromCell(value: unknown): string[] {
     return [...new Map(codes.map(code => [assetKey(code), code])).values()];
 }
 
-export function parseAssetRows(rows: unknown[][]) {
+export function parseAssetRows(rows: unknown[][], confirmations: AssetCategoryConfirmation[] = []) {
     const header = rows[0] || [];
     if (!String(header[1]).includes('ห้อง') || !String(header[2]).includes('ปรับอากาศ') || !String(header[14]).includes('พัดลม')) {
         throw new Error('รูปแบบไฟล์ไม่ตรงกับแบบสำรวจครุภัณฑ์ที่รองรับ');
@@ -65,8 +66,11 @@ export function parseAssetRows(rows: unknown[][]) {
             for (const code of codesFromCell(row[column])) {
                 // A fan code in the air-conditioner column cannot be matched safely.
                 if (category === 'air' && assetKey(code).startsWith('4140')) {
-                    warnings.push(`ห้อง ${room} แถว ${index + 2}: เลขในช่องเครื่องปรับอากาศคล้ายเลขพัดลม ข้ามเพื่อให้ตรวจสอบ`);
-                    continue;
+                    const confirmed = confirmations.some(item => item.room_number === room && item.category === category && assetKey(item.asset_number) === assetKey(code));
+                    if (!confirmed) {
+                        warnings.push(`ห้อง ${room} เซลล์ C${index + 2}: ${code} อยู่ในช่องเครื่องปรับอากาศ แต่รูปแบบคล้ายเลขพัดลม ไม่นำเข้าอัตโนมัติ ต้องยืนยันประเภทหากเลขนี้ยังไม่มีในทะเบียน`);
+                        continue;
+                    }
                 }
                 add(category, code);
             }
@@ -108,7 +112,7 @@ export function planAssetImport(rooms: AssetImportRoom[], candidates: AssetCandi
                 continue;
             }
             if (newCodes.length > blanks.length) {
-                warnings.push(`ห้อง ${roomNumber}: เลข ${categoryNames[category]} ไม่ตรงกับช่องว่างที่มี ข้ามรายการที่อาจเขียนทับ/จับคู่ผิด`);
+                warnings.push(`ห้อง ${roomNumber}: ${categoryNames[category]} ในไฟล์ ${newCodes.map(item => item.asset_number).join(', ')} ไม่ตรงกับทะเบียน ${targets.filter(item => !isMissingAssetNumber(item.asset_number)).map(item => item.asset_number).join(', ') || '(ไม่มีเลขเดิม)'} ข้ามรายการที่อาจเขียนทับ/จับคู่ผิด`);
                 continue;
             }
             newCodes.forEach((candidate, index) => {

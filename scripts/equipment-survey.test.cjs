@@ -14,6 +14,7 @@ function load(file) {
 }
 const { validateSurveyAnswers, validateSurveyYear } = load('src/lib/equipmentSurveyDomain.ts');
 const { parseAssetRows, planAssetImport, isMissingAssetNumber } = load('src/lib/assetImport.ts');
+const { auditAssetRows } = load('src/lib/assetAudit.ts');
 const items = [{ id: 'a', name: 'เตียง' }, { id: 'b', name: 'ตู้' }];
 test('abnormal conditions require a real reason and only the five allowed states are accepted', () => {
     for (const condition of ['damaged', 'deteriorated', 'lost', 'unnecessary']) {
@@ -50,6 +51,64 @@ test('placeholder numbers and an obvious category mismatch are skipped', () => {
     const result = parseAssetRows(sheet({ 1: '1470/306', 2: '4140-005-0001/128', 5: '0', 8: 'ไม่มีสติ๊กเกอร์ครุภัณฑ์', 20: 'มี', 23: 'ไม่มี' }));
     assert.equal(result.candidates.length, 0);
     assert.equal(result.warnings.length, 1);
+    assert(result.warnings[0].includes('C2'));
+    assert(result.warnings[0].includes('4140-005-0001/128'));
+});
+
+test('audit accounts for all source codes including skipped room 306 code without changing the registry', () => {
+    const rows = sheet({ 0: 'private respondent', 1: '1470/306', 2: '4140-005-0001/128', 3: 'private condition', 5: '7105-002-0003/219', 8: '7105-009-0001/215', 20: 'มี', 23: 'มี' });
+    const rooms = [{ id: 'r306', room_number: '306', equipment: [
+        { id: 'air', name: 'เครื่องปรับอากาศ', asset_number: '' },
+        { id: 'bed', name: 'เตียงนอน', asset_number: '7105-002-0003/219' },
+        { id: 'wardrobe', name: 'ตู้เสื้อผ้า', asset_number: '7105-009-0001/215' },
+    ] }];
+    const before = JSON.stringify(rooms);
+    const result = auditAssetRows(rows, rooms);
+    assert.equal(result.summary[0].source_codes, 3);
+    assert.equal(result.summary[0].matched, 2);
+    assert.equal(result.summary[0].needs_review, 1);
+    assert.equal(result.cells.find(cell => cell.cell === 'C2').codes[0].status, 'needs_classification');
+    assert.equal(result.cells.find(cell => cell.cell === 'U2').codes.length, 0);
+    assert(!JSON.stringify(result).includes('private respondent'));
+    assert(!JSON.stringify(result).includes('private condition'));
+    assert.equal(JSON.stringify(rooms), before);
+});
+
+test('category confirmation allows only the exact source room, category and code without globally disabling checks', () => {
+    const rows = sheet({ 1: '1470/306', 2: '4140-005-0001/128' }, { 1: '1470/307', 2: '4140-005-0001/129' });
+    const confirmed = [{ room_number: '306', category: 'air', asset_number: '4140-005-0001/128' }];
+    const result = parseAssetRows(rows, confirmed);
+    assert.equal(result.candidates.length, 1);
+    assert.equal(result.candidates[0].category, 'air');
+    assert.equal(result.candidates[0].room_number, '306');
+    assert.equal(result.warnings.length, 1);
+    assert(result.warnings[0].includes('307'));
+    for (const changed of [{ room_number: '305' }, { category: 'fan' }, { asset_number: '4140-005-0001/127' }]) {
+        assert.equal(parseAssetRows(rows, [{ ...confirmed[0], ...changed }]).candidates.length, 0);
+    }
+});
+
+test('audit distinguishes formatting, conflicts, duplicate answers, duplicate ownership and rooms absent from the file', () => {
+    const rows = sheet({ 1: '1470/301', 2: '41200040002/232', 5: '7105-006-0003/214', 17: '7310-004-0001/542' },
+        { 1: '1470/301', 2: '41200040002/232' }, { 1: '1470/302', 17: '7310-004-0001/542' });
+    const rooms = [{ id: 'r301', room_number: '301', equipment: [
+        { id: 'a', name: 'เครื่องปรับอากาศ', asset_number: '4120-004-0002/232' },
+        { id: 'b', name: 'เตียงนอน', asset_number: '7105-006-0001/214' },
+        { id: 's', name: 'เตาไฟฟ้า', asset_number: '7310-004-0001/542' },
+    ] }, { id: 'r302', room_number: '302', equipment: [{ id: 's2', name: 'เตาไฟฟ้า', asset_number: '7310-004-0001/542' }] },
+    { id: 'r303', room_number: '303', equipment: [] }];
+    const result = auditAssetRows(rows, rooms);
+    assert.equal(result.source_rows, 3);
+    assert.equal(result.source_rooms, 2);
+    assert.equal(result.summary[0].source_codes, 3, 'Repeated answers must not inflate the room total');
+    assert.equal(result.cells.find(cell => cell.cell === 'C2').codes[0].status, 'format_difference');
+    assert.equal(result.cells.find(cell => cell.cell === 'F2').codes[0].status, 'conflict');
+    assert.equal(result.cells.find(cell => cell.cell === 'R2').codes[0].status, 'registered_elsewhere');
+    assert.deepEqual(result.rooms_without_source, ['303']);
+    assert.equal(result.duplicate_registry_codes.length, 1);
+    assert.equal(result.duplicate_source_codes.length, 1);
+    const empty = auditAssetRows(sheet({ 1: '1470/330', 2: 'ไม่มีเลข', 5: '0' }), []);
+    assert.equal(empty.summary[0].source_codes, 0);
 });
 test('fill missing numbers only, preserve IDs and other fields, and repeat imports are idempotent', () => {
     const rooms = [{ id: 'r1', room_number: '301', equipment: [

@@ -353,6 +353,7 @@ npm run deploy:functions
 | --- | --- |
 | `npm run migrate:firestore -- --dry-run` | ตรวจการย้าย seed ก่อนเขียนจริง ต้องมี Admin credentials ตาม README |
 | `npm run import:assets -- --dry-run` | ตรวจไฟล์เลขครุภัณฑ์และรายการที่จะเติม |
+| `npm run import:assets -- --audit` | อ่านทะเบียนจริงแล้วเทียบทุกช่องเลขครุภัณฑ์ใน Excel สรุปเลขที่ตรง/ขัดแย้ง/ข้ามประเภท เลขซ้ำ และห้องที่ไม่มีในไฟล์ พร้อมรายงาน Markdown/JSON ใน `backups/` โดยไม่แก้ข้อมูล |
 | `npm run import:assets -- --apply` | สำรองเอกสารห้องแล้วเติมเฉพาะเลขที่ขาด พร้อม precondition ป้องกันเขียนทับข้อมูลที่เปลี่ยนพร้อมกัน |
 | `node scripts/clear-meter-month.cjs YYYY-MM` | ตรวจจำนวนรายการมิเตอร์เดือนที่ระบุโดยไม่ลบ |
 | `node scripts/clear-meter-month.cjs YYYY-MM --apply` | สำรองใน `backups/` แล้วลบเฉพาะประวัติมิเตอร์เดือนนั้นแบบ atomic พร้อมตรวจ updateTime และตรวจผลหลังลบ; ไม่ลบใบแจ้งหนี้ |

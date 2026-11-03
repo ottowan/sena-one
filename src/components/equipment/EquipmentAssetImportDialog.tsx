@@ -20,7 +20,9 @@ export function EquipmentAssetImportDialog({ open, onClose, rooms }: { open: boo
         onSuccess: result => {
             void client.invalidateQueries({ queryKey: ['rooms'] });
             toaster.create({ title: `เติมเลขครุภัณฑ์ ${result.filled} รายการ ใน ${result.rooms} ห้องแล้ว`, type: 'success' });
-            if (result.warnings.length) { setWarnings(result.warnings); setCandidates([]); }
+            // Parser warnings (such as a code in the wrong column) must remain
+            // visible after importing other valid numbers.
+            if (warnings.length || result.warnings.length) { setWarnings([...new Set([...warnings, ...result.warnings])]); setCandidates([]); }
             else onClose();
         },
         onError: (error: Error) => setError(error.message),
