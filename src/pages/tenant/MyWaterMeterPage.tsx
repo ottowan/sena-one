@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Card, Heading, HStack, Icon, Table, Text, VStack } from '@chakra-ui/react';
 import { LuDroplet } from 'react-icons/lu';
 import { useAuth } from '../../contexts/AuthContext';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { MeterReadingDialog, formatThaiMonth } from '../../components/tenant/MeterReadingDialog';
+import { NativeSelectField, NativeSelectRoot } from '../../components/ui/native-select';
+import { toaster } from '../../components/ui/toaster';
 
 export const MyWaterMeterPage: React.FC = () => {
     const { profile } = useAuth();
@@ -13,9 +15,12 @@ export const MyWaterMeterPage: React.FC = () => {
     const [meterHistory, setMeterHistory] = useState<any[]>([]);
     const [meterLoading, setMeterLoading] = useState(false);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const historyRequest = useRef(0);
 
     const fetchMeterHistory = async (roomId: string, year: number) => {
+        const request = ++historyRequest.current;
         setMeterLoading(true);
+        setMeterHistory([]);
         try {
             const snap = await getDocs(
                 query(
@@ -26,10 +31,15 @@ export const MyWaterMeterPage: React.FC = () => {
                 )
             );
             const rows = snap.docs.map((d) => d.data());
+            if (request !== historyRequest.current) return;
             rows.sort((a, b) => String(b.month).localeCompare(String(a.month)));
             setMeterHistory(rows);
+        } catch (error) {
+            if (request !== historyRequest.current) return;
+            console.error(error);
+            toaster.create({ title: 'ไม่สามารถโหลดประวัติมิเตอร์น้ำได้', type: 'error' });
         } finally {
-            setMeterLoading(false);
+            if (request === historyRequest.current) setMeterLoading(false);
         }
     };
 
@@ -75,6 +85,7 @@ export const MyWaterMeterPage: React.FC = () => {
         }
 
         void fetchMeterHistory(contract.room_id, selectedYear);
+        return () => { historyRequest.current += 1; };
     }, [contract?.room_id, selectedYear]);
 
     return (
@@ -99,21 +110,15 @@ export const MyWaterMeterPage: React.FC = () => {
                             </HStack>
                             <HStack>
                                 <Box w="150px">
-                                    <select
-                                        className="chakra-select"
-                                        style={{
-                                            padding: '8px',
-                                            borderRadius: '6px',
-                                            border: '1px solid #e2e8f0',
-                                            width: '100%'
-                                        }}
+                                    <NativeSelectRoot><NativeSelectField
+                                        aria-label="ปีประวัติมิเตอร์น้ำของฉัน"
                                         value={selectedYear}
                                         onChange={(e) => setSelectedYear(Number(e.target.value))}
                                     >
                                         {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((year) => (
                                             <option key={year} value={year}>พ.ศ. {year + 543}</option>
                                         ))}
-                                    </select>
+                                    </NativeSelectField></NativeSelectRoot>
                                 </Box>
                                 <MeterReadingDialog
                                     contract={contract}

@@ -66,6 +66,10 @@ export const query = (ref: Ref, ...constraints: any[]) => ({ ...ref, constraints
 const snapshot = (row: any, name: string) => ({ id: row?.id, ref: { name, id: row?.id }, data: () => row, exists: () => !!row });
 export async function getDoc(ref: Ref) { return snapshot((tables[ref.name] || []).find(row => row.id === ref.id), ref.name); }
 export async function getDocs(ref: Ref) {
+    const lowerMonth = ref.constraints?.find(c => c.field === 'month' && c.op === '>=')?.value;
+    const delays = (window as Window & { __fixtureQueryDelays?: Record<string, number> }).__fixtureQueryDelays;
+    const delay = delays?.[`${ref.name}:${lowerMonth}`];
+    if (delay) await new Promise(resolve => setTimeout(resolve, delay));
     let rows = [...(tables[ref.name] || [])];
     for (const c of ref.constraints || []) {
         if (c.direction) rows.sort((a, b) => String(a[c.field] || '').localeCompare(String(b[c.field] || '')) * (c.direction === 'desc' ? -1 : 1));

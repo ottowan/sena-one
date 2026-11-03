@@ -1,7 +1,6 @@
 import { ThaiDatePicker } from '../common/ThaiDatePicker';
 import React, { useState, useEffect } from 'react';
 import {
-    Box,
     Button,
     Card,
     HStack,
@@ -10,41 +9,33 @@ import {
     Badge,
     VStack,
     Grid,
-    createListCollection,
 } from '@chakra-ui/react';
-import {
-    SelectContent,
-    SelectItem,
-    SelectLabel,
-    SelectRoot,
-    SelectTrigger,
-    SelectValueText,
-} from '../../components/ui/select';
+import { NativeSelectField, NativeSelectRoot } from '../ui/native-select';
 import { reportService } from '../../services/reportService';
 import { toaster } from '../../components/ui/toaster';
 import * as XLSX from 'xlsx';
 
 export const FinancialReport: React.FC = () => {
     const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
-    const [status, setStatus] = useState<string[]>([]);
+    const [status, setStatus] = useState('');
     const [data, setData] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const statusOptions = createListCollection({
-        items: [
-            { label: 'ทั้งหมด (All)', value: '' },
-            { label: 'ชำระแล้ว (Paid)', value: 'paid' },
-            { label: 'รอชำระ (Pending)', value: 'pending' },
-            { label: 'ยกเลิก (Cancelled)', value: 'cancelled' },
-        ]
-    });
+    const statusOptions = [
+        { label: 'ทั้งหมด (All)', value: '' },
+        { label: 'ชำระแล้ว (Paid)', value: 'paid' },
+        { label: 'รอชำระ (Pending)', value: 'pending' },
+        { label: 'เกินกำหนด (Overdue)', value: 'overdue' },
+        { label: 'ยกเลิก (Cancelled)', value: 'cancelled' },
+    ];
+    const statusLabel = (value: string) => statusOptions.find(item => item.value === value)?.label.split(' (')[0] || value;
 
     useEffect(() => {
         let cancelled = false;
         setData([]);
         setIsLoading(Boolean(month));
         if (month) {
-            void reportService.getFinancialReport(month, status[0] || undefined)
+            void reportService.getFinancialReport(month, status || undefined)
                 .then(result => { if (!cancelled) setData(result); })
                 .catch(error => {
                     if (cancelled) return;
@@ -69,7 +60,7 @@ export const FinancialReport: React.FC = () => {
             'ค่าไฟ/บาท': item.electricity_cost,
             'ค่าอื่นๆ': item.additional_charges?.reduce((s: number, i: any) => s + (Number(i.amount) || 0), 0) || 0,
             'รวมทั้งสิ้น': item.total_amount,
-            'สถานะ': item.status === 'paid' ? 'ชำระแล้ว' : item.status === 'pending' ? 'รอชำระ' : 'ยกเลิก'
+            'สถานะ': statusLabel(item.status)
         }));
 
         const ws = XLSX.utils.json_to_sheet(exportData);
@@ -100,23 +91,11 @@ export const FinancialReport: React.FC = () => {
                     />
 
                     <Text fontWeight="medium" whiteSpace="nowrap">สถานะ:</Text>
-                    <SelectRoot
-                        collection={statusOptions}
-                        value={status}
-                        onValueChange={(e) => setStatus(e.value)}
-                        width="200px"
-                    >
-                        <SelectTrigger clearable>
-                            <SelectValueText placeholder="ทั้งหมด" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {statusOptions.items.map((item) => (
-                                <SelectItem item={item} key={item.value}>
-                                    {item.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </SelectRoot>
+                    <NativeSelectRoot width="200px">
+                        <NativeSelectField aria-label="สถานะรายงานการเงิน" value={status} onChange={event => setStatus(event.target.value)}>
+                            {statusOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                        </NativeSelectField>
+                    </NativeSelectRoot>
                 </HStack>
 
                 <Button colorPalette="green" onClick={handleExport} disabled={isLoading || data.length === 0}>
@@ -178,10 +157,10 @@ export const FinancialReport: React.FC = () => {
                                         <Badge
                                             colorPalette={
                                                 item.status === 'paid' ? 'green' :
-                                                    item.status === 'pending' ? 'yellow' : 'red'
+                                                    item.status === 'pending' ? 'yellow' : item.status === 'overdue' ? 'red' : 'gray'
                                             }
                                         >
-                                            {item.status === 'paid' ? 'ชำระแล้ว' : item.status === 'pending' ? 'รอชำระ' : 'ยกเลิก'}
+                                            {statusLabel(item.status)}
                                         </Badge>
                                     </Table.Cell>
                                 </Table.Row>

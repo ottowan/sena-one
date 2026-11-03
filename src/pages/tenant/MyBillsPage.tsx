@@ -6,6 +6,7 @@ import { db } from '../../lib/firebase';
 import { fetchByIds } from '../../lib/firestoreUtils';
 import { formatCurrency } from '../../lib/utils';
 import { LuFileText } from 'react-icons/lu';
+import { NativeSelectField, NativeSelectRoot } from '../../components/ui/native-select';
 import {
     DialogRoot,
     DialogTrigger,
@@ -234,21 +235,15 @@ export const MyBillsPage: React.FC = () => {
 
     const yearSelect = (
         <Box w="150px">
-            <select
-                className="chakra-select"
-                style={{
-                    padding: '8px',
-                    borderRadius: '6px',
-                    border: '1px solid #e2e8f0',
-                    width: '100%'
-                }}
+            <NativeSelectRoot><NativeSelectField
+                aria-label="ปีใบแจ้งหนี้ของฉัน"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(Number(e.target.value))}
             >
                 {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((year) => (
                     <option key={year} value={year}>พ.ศ. {year + 543}</option>
                 ))}
-            </select>
+            </NativeSelectField></NativeSelectRoot>
         </Box>
     );
 

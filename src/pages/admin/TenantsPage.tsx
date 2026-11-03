@@ -211,6 +211,7 @@ export const TenantsPage: React.FC = () => {
 
                                 <NativeSelectRoot>
                                     <NativeSelectField
+                                        aria-label="กรองสถานะผู้เช่า"
                                         value={statusFilter}
                                         onChange={(e) =>
                                             setStatusFilter(e.target.value as 'active' | 'inactive' | 'pending' | '')

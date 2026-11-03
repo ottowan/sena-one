@@ -238,6 +238,7 @@ export const ContractsPage: React.FC = () => {
 
                                 <NativeSelectRoot>
                                     <NativeSelectField
+                                        aria-label="กรองสถานะสัญญา"
                                         value={statusFilter}
                                         onChange={(e) => setStatusFilter(e.target.value as ContractStatus | '')}
                                     >

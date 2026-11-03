@@ -9,17 +9,10 @@ import {
     VStack,
     Card,
     Badge,
-    createListCollection,
     Grid,
     Flex,
 } from '@chakra-ui/react';
-import {
-    SelectContent,
-    SelectItem,
-    SelectRoot,
-    SelectTrigger,
-    SelectValueText,
-} from '../../components/ui/select';
+import { NativeSelectField, NativeSelectRoot } from '../../components/ui/native-select';
 import { toaster } from '../../components/ui/toaster';
 import { collection, doc, getDocs, orderBy, query, where, writeBatch } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -84,7 +77,7 @@ export const MeterManagementPage: React.FC = () => {
     const [rows, setRows] = useState<MeterRow[]>([]);
     const [isSaving, setIsSaving] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState<string[]>([]);
-    const [roomOptions, setRoomOptions] = useState<any>(createListCollection({ items: [] }));
+    const [roomOptions, setRoomOptions] = useState<{ items: { label: string; value: string }[] }>({ items: [] });
     const [pasteOpen, setPasteOpen] = useState(false);
     const [loadedMonth, setLoadedMonth] = useState('');
     const [rowFilter, setRowFilter] = useState('all');
@@ -238,7 +231,7 @@ export const MeterManagementPage: React.FC = () => {
 
             // Create options for Select
             const options = mappedRows.map(r => ({ label: `ห้อง ${r.roomNumber}`, value: r.roomId }));
-            setRoomOptions(createListCollection({ items: options }));
+            setRoomOptions({ items: options });
 
         } catch (error) {
             if (requestId !== loadRequestId.current) return;
@@ -363,10 +356,12 @@ export const MeterManagementPage: React.FC = () => {
                     <Flex gap={3} direction={{ base: 'column', md: 'row' }}>
                         <Box flex={1}><SearchInput placeholder="ค้นหาเลขห้องหรือชื่อผู้เช่า..." value={searchTerm} onChange={setSearchTerm} /></Box>
                         <Box minW={{ md: '200px' }}>
-                            <SelectRoot collection={roomOptions} value={selectedRoom} onValueChange={e => setSelectedRoom(e.value)}>
-                                <SelectTrigger clearable><SelectValueText placeholder="ห้องทั้งหมด" /></SelectTrigger>
-                                <SelectContent>{roomOptions.items.map((item: any) => <SelectItem item={item} key={item.value}>{item.label}</SelectItem>)}</SelectContent>
-                            </SelectRoot>
+                            <NativeSelectRoot disabled={!dataReady || isSaving}>
+                                <NativeSelectField aria-label="กรองมิเตอร์ตามห้อง" value={selectedRoom[0] || ''} onChange={event => setSelectedRoom(event.target.value ? [event.target.value] : [])}>
+                                    <option value="">ห้องทั้งหมด</option>
+                                    {roomOptions.items.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                                </NativeSelectField>
+                            </NativeSelectRoot>
                         </Box>
                     </Flex>
                     <Flex justify="space-between" gap={3} wrap="wrap" align="center">
@@ -381,7 +376,9 @@ export const MeterManagementPage: React.FC = () => {
                                 {item.label}<Badge colorPalette={item.value === 'review' ? 'red' : 'gray'}>{item.count}</Badge>
                             </Button>)}
                         </HStack>
-                        <Text fontSize="xs" color="fg.muted">แสดง {filteredRows.length} ห้อง</Text>
+                        <HStack><Text fontSize="xs" color="fg.muted">แสดง {filteredRows.length} ห้อง</Text>
+                            {(selectedRoom.length > 0 || searchTerm.trim() || rowFilter !== 'all') && <Button size="sm" variant="ghost" onClick={() => { setSelectedRoom([]); setSearchTerm(''); setRowFilter('all'); }}>ล้างตัวกรอง</Button>}
+                        </HStack>
                     </Flex>
                     <Box h="5px" bg="bg.muted" borderRadius="full" overflow="hidden" role="progressbar"
                         aria-label="ความคืบหน้าการกรอกมิเตอร์" aria-valuenow={progress.percent} aria-valuemin={0} aria-valuemax={100}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     DialogRoot as Dialog,
     DialogContent,
@@ -12,22 +12,13 @@ import { Button } from '../../components/ui/button';
 import {
     Table,
     Input,
-    Select,
     HStack,
     VStack,
     Text,
     Box,
     Spinner,
-    createListCollection,
 } from '@chakra-ui/react';
-import {
-    SelectContent,
-    SelectItem,
-    SelectLabel,
-    SelectRoot,
-    SelectTrigger,
-    SelectValueText,
-} from '../../components/ui/select';
+import { NativeSelectField, NativeSelectRoot } from '../ui/native-select';
 import { roomService } from '../../services/roomService';
 import { toaster } from '../../components/ui/toaster';
 import { LuSave } from 'react-icons/lu';
@@ -55,27 +46,27 @@ export const MeterHistoryDialog: React.FC<MeterHistoryDialogProps> = ({
     const [selectedYear, setSelectedYear] = useState<number>(currentYear);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const historyRequest = useRef(0);
 
     // 12 months data
     const [meterData, setMeterData] = useState<MeterData[]>([]);
 
-    const years = createListCollection({
-        items: Array.from({ length: 5 }, (_, i) => ({
-            label: (currentYear - 2 + i).toString(),
-            value: (currentYear - 2 + i).toString()
-        })),
-    });
+    const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
 
     useEffect(() => {
         if (open && roomId) {
             fetchHistory();
         }
+        return () => { historyRequest.current += 1; };
     }, [open, roomId, selectedYear]);
 
     const fetchHistory = async () => {
+        const request = ++historyRequest.current;
         setLoading(true);
+        setMeterData([]);
         try {
             const data = await roomService.getMeterHistory(roomId, selectedYear);
+            if (request !== historyRequest.current) return;
 
             // Generate empty 12 months structure
             const months = Array.from({ length: 12 }, (_, i) => {
@@ -91,6 +82,7 @@ export const MeterHistoryDialog: React.FC<MeterHistoryDialogProps> = ({
 
             setMeterData(months);
         } catch (error) {
+            if (request !== historyRequest.current) return;
             console.error('Error fetching history:', error);
             toaster.create({
                 title: 'เกิดข้อผิดพลาด',
@@ -98,7 +90,7 @@ export const MeterHistoryDialog: React.FC<MeterHistoryDialogProps> = ({
                 type: 'error',
             });
         } finally {
-            setLoading(false);
+            if (request === historyRequest.current) setLoading(false);
         }
     };
 
@@ -159,23 +151,11 @@ export const MeterHistoryDialog: React.FC<MeterHistoryDialogProps> = ({
                     <VStack gap={4} align="stretch">
                         <HStack>
                             <Text whiteSpace="nowrap">เลือกปี:</Text>
-                            <SelectRoot
-                                collection={years}
-                                value={[selectedYear.toString()]}
-                                onValueChange={(e) => setSelectedYear(Number(e.value[0]))}
-                                width="150px"
-                            >
-                                <SelectTrigger>
-                                    <SelectValueText />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {years.items.map((year) => (
-                                        <SelectItem item={year} key={year.value}>
-                                            {year.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </SelectRoot>
+                            <NativeSelectRoot width="170px" disabled={saving}>
+                                <NativeSelectField aria-label="ปีประวัติมิเตอร์ห้องพัก" value={selectedYear} onChange={event => setSelectedYear(Number(event.target.value))}>
+                                    {years.map(year => <option key={year} value={year}>พ.ศ. {year + 543}</option>)}
+                                </NativeSelectField>
+                            </NativeSelectRoot>
                         </HStack>
 
                         {loading ? (
@@ -199,6 +179,7 @@ export const MeterHistoryDialog: React.FC<MeterHistoryDialogProps> = ({
                                                 <Table.Cell>
                                                     <Input
                                                         type="number"
+                                                        aria-label={`มิเตอร์น้ำ ${getMonthName(item.month)} ${selectedYear + 543}`}
                                                         value={item.water}
                                                         onChange={(e) => handleInputChange(index, 'water', e.target.value)}
                                                         size="sm"
@@ -224,7 +205,7 @@ export const MeterHistoryDialog: React.FC<MeterHistoryDialogProps> = ({
                     <DialogActionTrigger asChild>
                         <Button variant="outline" onClick={onClose}>ปิด</Button>
                     </DialogActionTrigger>
-                    <Button onClick={handleSave} loading={saving} colorPalette="brand">
+                    <Button onClick={handleSave} loading={saving} disabled={loading || !meterData.length} colorPalette="brand">
                         <LuSave /> บันทึก
                     </Button>
                 </DialogFooter>

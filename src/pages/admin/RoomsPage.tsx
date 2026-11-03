@@ -240,6 +240,7 @@ export const RoomsPage: React.FC = () => {
 
                                 <NativeSelectRoot>
                                     <NativeSelectField
+                                        aria-label="กรองสถานะห้องพัก"
                                         value={statusFilter}
                                         onChange={(e) =>
                                             setStatusFilter(e.target.value as RoomStatus | '')
@@ -255,6 +256,7 @@ export const RoomsPage: React.FC = () => {
 
                                 <NativeSelectRoot>
                                     <NativeSelectField
+                                        aria-label="กรองชั้นห้องพัก"
                                         value={floorFilter ?? ''}
                                         onChange={(e) =>
                                             setFloorFilter(e.target.value ? Number(e.target.value) : null)

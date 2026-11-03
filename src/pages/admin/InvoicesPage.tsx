@@ -265,6 +265,7 @@ export const InvoicesPage: React.FC = () => {
 
                                 <NativeSelectRoot>
                                     <NativeSelectField
+                                        aria-label="กรองสถานะใบแจ้งหนี้"
                                         value={statusFilter}
                                         onChange={(e) => setStatusFilter(e.target.value)}
                                     >
